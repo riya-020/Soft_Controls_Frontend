@@ -4,6 +4,6 @@
 
 @layer base {
   body {
-    @apply bg-kpmg-gray text-gray-900 font-sans;
+    @apply bg-kpmg-gray text-kpmg-darkGray font-sans antialiased;
   }
 }

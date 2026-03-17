@@ -1,12 +1,13 @@
 const SoftControlCard = ({ title, description, number }) => {
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 text-gray-50 opacity-50 text-[100px] font-black pointer-events-none group-hover:scale-110 transition-transform">
+        <div className="bg-white border border-gray-200 border-t-2 border-t-transparent hover:border-t-kpmg-blue p-6 shadow-card hover:shadow-card-hover transition-all relative overflow-hidden group min-h-[160px] flex flex-col justify-between">
+            <div className="absolute -right-2 -top-6 text-gray-50 opacity-40 text-[120px] font-black pointer-events-none group-hover:text-gray-100 transition-colors">
                 {number}
             </div>
-            <div className="relative z-10">
-                <h3 className="text-lg font-bold text-kpmg-blue mb-2 pb-2 border-b border-gray-100">{title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
+            <div className="relative z-10 flex-1">
+                <h3 className="text-lg font-bold text-kpmg-navy mb-3">{title}</h3>
+                <div className="h-px bg-gray-200 w-12 mb-3 group-hover:bg-kpmg-blue transition-colors"></div>
+                <p className="text-kpmg-mediumGray text-sm leading-relaxed">{description}</p>
             </div>
         </div>
     );

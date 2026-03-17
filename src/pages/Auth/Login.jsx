@@ -17,11 +17,11 @@ const Login = ({ role }) => {
         }
     }, [navigate]);
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
 
-        const result = loginUser(email, password, role);
+        const result = await loginUser(email, password, role);
 
         if (result.success) {
             navigate(`/${role}-dashboard`, { replace: true });
@@ -31,45 +31,47 @@ const Login = ({ role }) => {
     };
 
     return (
-        <div className="min-h-screen bg-kpmg-gray flex flex-col justify-center items-center p-6">
-            <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 p-8">
-                <div className="flex justify-center mb-6">
-                    <div className="h-16 w-16 bg-kpmg-blue rounded-2xl flex items-center justify-center shadow-inner">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-kpmg-gray">
+            <div className="w-full max-w-md bg-white border border-gray-200 border-t-4 border-t-kpmg-blue p-10 shadow-card">
+                <div className="flex justify-center mb-8">
+                    <div className="h-16 w-16 bg-kpmg-navy flex items-center justify-center border border-kpmg-blue">
                         <Building2 size={32} className="text-white" />
                     </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-center text-gray-900 mb-2 capitalize">
-                    {role} Login
-                </h2>
-                <p className="text-center text-gray-500 mb-8">
-                    Sign in to access your dashboard
-                </p>
+                <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-kpmg-navy capitalize mb-2">
+                        {role} Login
+                    </h2>
+                    <p className="text-kpmg-mediumGray text-sm">
+                        Access your {role} dashboard
+                    </p>
+                </div>
 
                 {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-6 border border-red-100">
+                    <div className="bg-red-50 text-red-700 p-4 text-sm mb-6 border-l-4 border-red-500">
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <label className="block text-sm font-semibold text-kpmg-darkGray mb-2">Email Address</label>
                         <input
                             type="email"
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kpmg-blue focus:border-kpmg-blue outline-none transition-colors"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-300 focus:bg-white focus:ring-0 focus:border-kpmg-blue focus:outline-none transition-colors"
                             placeholder={role === 'admin' ? "sanjana@kpmg.com" : "you@company.com"}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <label className="block text-sm font-semibold text-kpmg-darkGray mb-2">Password</label>
                         <input
                             type="password"
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kpmg-blue focus:border-kpmg-blue outline-none transition-colors"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-300 focus:bg-white focus:ring-0 focus:border-kpmg-blue focus:outline-none transition-colors"
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -77,18 +79,18 @@ const Login = ({ role }) => {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-kpmg-blue text-white py-2.5 rounded-lg font-medium hover:bg-blue-800 transition-colors shadow-sm mt-2"
+                        className="w-full bg-kpmg-blue text-white py-3 font-semibold hover:bg-kpmg-navy transition-colors mt-4 shadow-solid"
                     >
                         Sign In
                     </button>
                 </form>
 
                 {role !== 'admin' && (
-                    <div className="mt-6 text-center text-sm border-t pt-6">
-                        <span className="text-gray-600">Don't have an account? </span>
+                    <div className="mt-8 text-center text-sm border-t border-gray-200 pt-6">
+                        <span className="text-kpmg-mediumGray">Don't have an account? </span>
                         <Link
                             to={`/${role}-signup`}
-                            className="text-kpmg-blue font-semibold hover:underline"
+                            className="text-kpmg-blue font-semibold hover:text-kpmg-navy"
                         >
                             Requirements to Create Account
                         </Link>

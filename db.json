@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": "529a",
+      "email": "ghadgesanjana0504@gmail.com",
+      "password": "zxcvbnm",
+      "role": "employee"
+    },
+    {
+      "id": "7146",
+      "email": "ghadgesanjana0504@gmail.com",
+      "password": "zxcvbnm",
+      "role": "leader"
+    },
+    {
+      "id": "816b",
+      "email": "Yashi@kpmg",
+      "password": "Hello@1234",
+      "role": "leader"
+    },
+    {
+      "id": "6f86",
+      "email": "Hello@kpmg.com",
+      "password": "zxcvbnm",
+      "role": "leader"
+    },
+    {
+      "id": "3b71",
+      "email": "Abc@kpmg.com",
+      "password": "zxcvbnm",
+      "role": "employee"
+    },
+    {
+      "id": "bc9b",
+      "email": "Abc@kpmg.com",
+      "password": "zxcvbnm",
+      "role": "leader"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -11,6 +11,7 @@ import AdminDashboard from './pages/Dashboards/AdminDashboard';
 import LeaderDashboard from './pages/Dashboards/LeaderDashboard';
 import EmployeeDashboard from './pages/Dashboards/EmployeeDashboard';
 
+import ReportPage from './pages/Report/ReportPage';
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
 
