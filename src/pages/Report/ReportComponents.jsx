@@ -1,20 +1,20 @@
 // ─── Introduction Page ────────────────────────────────────────────────────────
 export function IntroductionPage() {
     const controls = [
-        { name: 'Clarity',        desc: 'Clear expectations and responsibilities' },
+        { name: 'Clarity', desc: 'Clear expectations and responsibilities' },
         { name: 'Role Modelling', desc: 'Leadership demonstrating desired behaviour' },
-        { name: 'Commitment',     desc: 'Employee ownership and responsibility' },
-        { name: 'Transparency',   desc: 'Open communication and information sharing' },
+        { name: 'Commitment', desc: 'Employee ownership and responsibility' },
+        { name: 'Transparency', desc: 'Open communication and information sharing' },
         { name: 'Discussability', desc: 'Comfort discussing risks and concerns' },
-        { name: 'Enforcement',    desc: 'Consistent application of policies' },
-        { name: 'Achievability',  desc: 'Targets are practical and attainable' },
+        { name: 'Enforcement', desc: 'Consistent application of policies' },
+        { name: 'Achievability', desc: 'Targets are practical and attainable' },
         { name: 'Call Someone to Account', desc: 'Peer accountability for non-compliant behaviour' },
     ];
 
     return (
         <div style={{
             padding: '50px', boxSizing: 'border-box', border: '1px solid #d9d9d9',
-            borderTop: '6px solid #00338D', width: '210mm', minHeight: '297mm',
+            borderTop: '6px solid #00338D', width: '210mm', height: '296mm', overflow: 'hidden',
             pageBreakAfter: 'always', fontFamily: 'Arial, sans-serif', background: '#fff',
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #00338D', paddingBottom: 10, marginBottom: 28 }}>
@@ -69,22 +69,22 @@ export function IntroductionPage() {
 // ─── Recommendations Page ─────────────────────────────────────────────────────
 export function RecommendationsPage({ recommendations }) {
     const defaultRecs = [
-        { theme: 'Discussability Forums',    action: 'Establish structured risk discussion forums across teams',           impact: 'Improves transparency and open dialogue',                        priority: 'High' },
-        { theme: 'Leadership Role Modelling',action: 'Strengthen tone-at-the-top messaging on risk management',           impact: 'Encourages behavioural alignment across employees',               priority: 'High' },
-        { theme: 'Policy Awareness',         action: 'Enhance communication of risk policies and procedures',             impact: 'Improves clarity of responsibilities and expectations',           priority: 'Medium' },
-        { theme: 'Enforcement',              action: 'Introduce scenario-based risk management training',                 impact: 'Builds employee confidence in managing risks',                    priority: 'Medium' },
-        { theme: 'Transparency',             action: 'Promote awareness of speak-up and escalation channels',            impact: 'Strengthens psychological safety for reporting concerns',         priority: 'High' },
-        { theme: 'Accountability Framework', action: 'Embed risk ownership within performance objectives',               impact: 'Reinforces accountability and behavioural consistency',           priority: 'Medium' },
+        { theme: 'Discussability Forums', action: 'Establish structured risk discussion forums across teams', impact: 'Improves transparency and open dialogue', priority: 'High' },
+        { theme: 'Leadership Role Modelling', action: 'Strengthen tone-at-the-top messaging on risk management', impact: 'Encourages behavioural alignment across employees', priority: 'High' },
+        { theme: 'Policy Awareness', action: 'Enhance communication of risk policies and procedures', impact: 'Improves clarity of responsibilities and expectations', priority: 'Medium' },
+        { theme: 'Enforcement', action: 'Introduce scenario-based risk management training', impact: 'Builds employee confidence in managing risks', priority: 'Medium' },
+        { theme: 'Transparency', action: 'Promote awareness of speak-up and escalation channels', impact: 'Strengthens psychological safety for reporting concerns', priority: 'High' },
+        { theme: 'Accountability Framework', action: 'Embed risk ownership within performance objectives', impact: 'Reinforces accountability and behavioural consistency', priority: 'Medium' },
     ];
 
     const recs = recommendations?.length > 0 ? recommendations : defaultRecs;
     const priorityColor = p => p === 'High' ? '#C62828' : p === 'Medium' ? '#F9A825' : '#2E7D32';
-    const priorityBg    = p => p === 'High' ? '#ffebee' : p === 'Medium' ? '#fff8e1' : '#e8f5e9';
+    const priorityBg = p => p === 'High' ? '#ffebee' : p === 'Medium' ? '#fff8e1' : '#e8f5e9';
 
     return (
         <div style={{
             padding: '50px', boxSizing: 'border-box', border: '1px solid #d9d9d9',
-            borderTop: '6px solid #00338D', width: '210mm', minHeight: '297mm',
+            borderTop: '6px solid #00338D', width: '210mm', height: '296mm', overflow: 'hidden',
             pageBreakAfter: 'auto', fontFamily: 'Arial, sans-serif', background: '#fff',
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #00338D', paddingBottom: 10, marginBottom: 28 }}>

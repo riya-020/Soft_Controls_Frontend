@@ -8,7 +8,7 @@ export default function CoverPage({ date, respondents }) {
             overflow: 'hidden',
             position: 'relative',
             width: '210mm',
-            minHeight: '297mm',
+            height: '296mm',
             boxSizing: 'border-box',
             padding: '60px 60px 40px',
             display: 'flex',

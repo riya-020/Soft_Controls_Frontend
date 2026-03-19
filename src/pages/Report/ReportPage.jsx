@@ -61,7 +61,7 @@ export default function ReportPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const res = await fetch('/data/soft_control_data.xlsx');
+                const res = await fetch('/data/soft_control_data1.xlsx');
                 if (!res.ok) throw new Error('Excel not found');
                 const buf = await res.arrayBuffer();
                 const wb  = XLSX.read(buf, { type: 'array' });

@@ -64,7 +64,7 @@ const FunctionRadarProfile = () => {
     useEffect(() => {
         const load = async () => {
             try {
-                const res = await fetch(`/data/soft_control_data.xlsx?v=${Date.now()}`);
+                const res = await fetch(`/data/soft_control_data1.xlsx?v=${Date.now()}`);
                 if (!res.ok) throw new Error('Failed to fetch Excel');
                 const buf = await res.arrayBuffer();
                 const wb  = XLSX.read(buf, { type: 'array' });

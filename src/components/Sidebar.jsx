@@ -66,7 +66,7 @@ const Sidebar = () => {
             <div className="border-t border-gray-800">
 
                 {/* Download Report — leaders only */}
-                {user?.role === 'leader' && (
+                {/* {user?.role === 'leader' && (
                     <button
                         onClick={handleDownloadReport}
                         className="flex items-center gap-3 px-6 py-4 w-full transition-colors text-left text-gray-300 hover:text-white hover:bg-gray-800 border-b border-gray-800"
@@ -74,7 +74,7 @@ const Sidebar = () => {
                         <Download size={20} />
                         <span className="font-medium">Download Report</span>
                     </button>
-                )}
+                )} */}
 
                 {/* Logout */}
                 <button

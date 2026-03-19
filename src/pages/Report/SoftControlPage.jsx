@@ -8,7 +8,7 @@ export default function SoftControlPage({
     const riskBg = riskClass === 'high' ? '#C62828' : riskClass === 'medium' ? '#F9A825' : '#2E7D32';
 
     const dimColor = c => c === 'green' ? '#2E7D32' : c === 'amber' ? '#F9A825' : '#C62828';
-    const dimBg    = c => c === 'green' ? '#e8f5e9' : c === 'amber' ? '#fff8e1' : '#ffebee';
+    const dimBg = c => c === 'green' ? '#e8f5e9' : c === 'amber' ? '#fff8e1' : '#ffebee';
 
     return (
         <div style={{
@@ -18,8 +18,8 @@ export default function SoftControlPage({
             border: '1px solid #d9d9d9',
             borderTop: '6px solid #00338D',
             width: '210mm',
-            minHeight: '297mm',
-            pageBreakAfter: 'always',
+            minHeight: '296mm',        // ✅ changed
+            overflow: 'visible',       // ✅ changed
             fontFamily: 'Arial, sans-serif',
             background: '#fff',
         }}>

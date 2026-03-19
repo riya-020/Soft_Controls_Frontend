@@ -4,9 +4,9 @@ LEADER_1,Last quarter we declined a 40 crore partnership because the third party
 LEADER_1,We terminated two vendor relationships after investigation confirmed violation of our anti bribery policy.,enforcement,L3
 LEADER_1,We implemented a formal governance framework and maintain a quarterly review process through board oversight.,commitment,L2
 LEADER_1,We publish a monthly risk dashboard and investigation report with incident metrics and trend analysis.,transparency,L2
-LEADER_1,Case closure rate reached 98 percent within 60 days during the last audit cycle.,transparency,L3
+LEADER_1,Case closure rate reached 98 percent within 60 days during the last audit cycle.,enforcement,L3
 LEADER_1,We conducted an internal audit in 2024 and introduced new controls based on audit findings.,commitment,L3
-LEADER_1,However adoption remains inconsistent in smaller regions and cultural hesitation is still evolving.,commitment,L4
+LEADER_1,However adoption remains inconsistent in smaller regions and cultural hesitation is still evolving.,achievability,L4
 LEADER_1,We maintain anonymous hotline and whistleblower mechanism with retaliation protection policy.,open_to_discussion,L2
 LEADER_1,Last year three cases were escalated within 48 hours and disciplinary action was imposed.,enforcement,L3
 LEADER_1,A senior executive was removed from role following confirmed conflict of interest breach.,call_someone_to_account,L3
@@ -20,7 +20,7 @@ LEADER_1,Lessons learned are published quarterly to improve transparency framewo
 LEADER_1,We strengthened policy portal clarity and clarified thresholds for gift policy and conflict of interest policy.,clarity,L3
 LEADER_1,Still psychological safety requires reinforcement and employee voice adoption remains gradual.,open_to_discussion,L4
 LEADER_1,We initiated investigation protocol revisions during Q3 and updated procedures to enhance enforcement governance.,enforcement,L3
-LEADER_1,We reported findings to the board and increased oversight structure.,transparency,L3
+LEADER_1,We reported findings to the board and increased oversight structure.,commitment,L3
 LEADER_1,Risk reduction metrics show measurable improvement over the past 12 months.,transparency,L3
 LEADER_2,Executive mandate reinforces zero tolerance across functions.,commitment,L1
 LEADER_2,Compliance investment and budget allocation were approved this year.,commitment,L3
@@ -34,7 +34,7 @@ LEADER_2,Lessons learned and investigation outcomes are shared with leadership.,
 LEADER_2,"However, reporting visibility outside executive levels remains limited.",transparency,L4
 LEADER_2,We established compliance portal and formal process documentation.,clarity,L3
 LEADER_2,Clear escalation path and conflict of interest policy are communicated.,clarity,L2
-LEADER_2,Training workshops improved employee understanding.,clarity,L2
+LEADER_2,Training workshops improved employee understanding.,clarity,L3
 LEADER_2,Clarity enhancement is ongoing as policy updates continue.,clarity,L4
 LEADER_2,Speak up culture is encouraged through anonymous reporting and employee forum.,open_to_discussion,L1
 LEADER_2,Retaliation protection and non retaliation policy are emphasized.,open_to_discussion,L1
@@ -70,11 +70,11 @@ LEADER_3,Investigation conducted and disciplinary measure applied in four incide
 LEADER_3,Sanction consistency maintained regardless of hierarchy.,enforcement,L2
 LEADER_3,Case tracking system ensures remediation audit.,enforcement,L2
 LEADER_3,A senior leader was demoted after performance consequence review.,call_someone_to_account,L3
-LEADER_3,Formal accountability reinforced across teams.,call_someone_to_account,L1
+LEADER_3,Formal accountability reinforced across teams.,call_someone_to_account,L2
 LEADER_3,We recalibrated performance expectation in high pressure markets.,achievability,L3
 LEADER_3,Resource allocation and capacity expansion improved feasibility.,achievability,L2
 LEADER_3,Operational complexity remains a balancing act.,achievability,L4
-LEADER_4,Top management commitment is demonstrated through ethics oversight.,commitment,L2
+LEADER_4,Top management commitment is demonstrated through ethics oversight.,commitment,L1
 LEADER_4,Budget allocation for compliance investment increased this year.,commitment,L3
 LEADER_4,Governance enhancement and control reinforcement were implemented.,commitment,L3
 LEADER_4,We introduced new controls and updated procedures last quarter.,commitment,L3
@@ -99,29 +99,29 @@ LEADER_4,Sales pressure in expansion markets created resource constraint.,achiev
 LEADER_4,We adjusted realistic implementation timelines.,achievability,L3
 LEADER_4,Control feasibility improved after capacity reinforcement.,achievability,L3
 LEADER_4,"However, execution gap still requires strengthening.",achievability,L4
-LEADER_5,Organizational commitment to compliance is reflected in leadership accountability.,call_someone_to_account,L1
+LEADER_5,Organizational commitment to compliance is reflected in leadership accountability.,commitment,L1
 LEADER_5,Ethics agenda remains standing agenda in quarterly review.,commitment,L2
 LEADER_5,Compliance allocation increased by 20 percent over the past year.,commitment,L3
 LEADER_5,We strengthened controls and enhanced governance culture.,commitment,L3
 LEADER_5,Earlier this quarter we walked away from a partnership due to risk exposure.,role_modelling,L3
-LEADER_5,The opportunity was attractive but non negotiable standards prevailed.,role_modelling,L1
-LEADER_5,Incident transparency improved through risk bulletin and compliance update.,transparency,L2
+LEADER_5,The opportunity was attractive but non negotiable standards prevailed.,commitment,L1
+LEADER_5,Incident transparency improved through risk bulletin and compliance update.,transparency,L3
 LEADER_5,Investigation disclosure shared with board summary.,transparency,L3
 LEADER_5,"However, transparency at grassroots level needs improvement.",transparency,L4
 LEADER_5,Compliance handbook and guidelines provide clarity framework.,clarity,L2
-LEADER_5,Micro learning modules and case study examples improved awareness reinforcement.,clarity,L2
+LEADER_5,Micro learning modules and case study examples improved awareness reinforcement.,clarity,L3
 LEADER_5,Training completion rate is 98 percent.,clarity,L3
 LEADER_5,Some alignment issue persists in international offices.,clarity,L4
 LEADER_5,Anonymous hotline and grievance mechanism are active.,open_to_discussion,L2
-LEADER_5,Employee empowerment and trust culture improved.,open_to_discussion,L1
+LEADER_5,Employee empowerment and trust culture improved.,open_to_discussion,L3
 LEADER_5,Reporting encouragement continues.,open_to_discussion,L1
 LEADER_5,Disciplinary action applied after investigation process.,enforcement,L3
 LEADER_5,Three cases were closed within 30 days.,enforcement,L3
 LEADER_5,Enforcement oversight ensures fairness.,enforcement,L1
 LEADER_5,A director was held accountable and removed from role.,call_someone_to_account,L3
 LEADER_5,Leadership discipline reinforced ethical accountability.,call_someone_to_account,L3
-LEADER_5,Workload management improved through staffing adequacy.,achievability,L2
-LEADER_5,Risk trade off discussed openly.,achievability,L2
+LEADER_5,Workload management improved through staffing adequacy.,achievability,L3
+LEADER_5,Risk trade off discussed openly.,achievability,L3
 LEADER_5,Operational scalability remains a challenge under growth pressure.,achievability,L4
 LEADER_6,Board accountability and governance commitment define our culture.,commitment,L1
 LEADER_6,Executive compliance strategy was strengthened last year.,commitment,L3
@@ -130,21 +130,21 @@ LEADER_6,Over recent months we increased oversight and revised framework.,commit
 LEADER_6,We terminated vendor relationship after audit finding resolution.,enforcement,L3
 LEADER_6,Sanction decision was escalated and documented.,enforcement,L3
 LEADER_6,Risk dashboard and governance reporting cycle ensure transparency.,transparency,L2
-LEADER_6,Compliance broadcast and internal communication improved data transparency.,transparency,L2
+LEADER_6,Compliance broadcast and internal communication improved data transparency.,transparency,L3
 LEADER_6,"However, monitoring difficulty persists in smaller regions.",transparency,L4
-LEADER_6,Policy reinforcement session improved clarity of standards.,clarity,L2
-LEADER_6,Conduct training and awareness initiative enhanced employee guidance.,clarity,L2
+LEADER_6,Policy reinforcement session improved clarity of standards.,clarity,L3
+LEADER_6,Conduct training and awareness initiative enhanced employee guidance.,clarity,L3
 LEADER_6,Completion rate reached 95 percent.,clarity,L3
 LEADER_6,"Still, escalation awareness remains low in some departments.",open_to_discussion,L4
 LEADER_6,Whistleblower awareness and confidential support channels are active.,open_to_discussion,L2
-LEADER_6,Psychological safety initiative improved engagement forum participation.,open_to_discussion,L2
+LEADER_6,Psychological safety initiative improved engagement forum participation.,open_to_discussion,L3
 LEADER_6,"However, communication trust varies across hierarchy.",open_to_discussion,L4
 LEADER_6,Violation escalation handled through disciplinary consistency.,enforcement,L2
 LEADER_6,Penalty enforcement applied uniformly.,enforcement,L3
 LEADER_6,Case outcome reporting documented in audit framework.,transparency,L2
 LEADER_6,Senior accountability enforced after breach accountability review.,call_someone_to_account,L3
 LEADER_6,Formal reprimand issued following investigation review.,call_someone_to_account,L3
-LEADER_6,Realistic targets aligned with governance capacity.,achievability,L1
+LEADER_6,Realistic targets aligned with governance capacity.,achievability,L2
 LEADER_6,Resource deployment increased in high risk units.,achievability,L3
-LEADER_6,Operational alignment review improved execution capacity.,achievability,L2
+LEADER_6,Operational alignment review improved execution capacity.,achievability,L3
 LEADER_6,Pressure balancing remains an ongoing effort.,achievability,L4
