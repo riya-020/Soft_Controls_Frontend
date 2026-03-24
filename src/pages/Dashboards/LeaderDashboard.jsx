@@ -588,14 +588,14 @@ const LeaderDashboard = () => {
         <div className="space-y-6">
 
             {/* ── DOWNLOAD REPORT BUTTON ── */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button onClick={() => navigate('/report')}
                     style={{ background: '#00338D', color: 'white', border: 'none', padding: '12px 24px', borderRadius: 6, fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 8px rgba(0,51,141,0.3)' }}
                     onMouseEnter={e => e.currentTarget.style.background = '#001B41'}
                     onMouseLeave={e => e.currentTarget.style.background = '#00338D'}>
-                    📄 Download Report
+                    📄 View Report
                 </button>
-            </div>
+            </div> */}
 
             {/* ── KPI CARDS ── */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, alignItems: "stretch" }}>

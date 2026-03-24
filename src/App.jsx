@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PersonaSelection from './pages/PersonaSelection';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
+import ReportPage from './pages/Report/ReportPage';
 
 // Dashboards
 import DashboardLayout from './layouts/DashboardLayout';
@@ -11,7 +12,6 @@ import AdminDashboard from './pages/Dashboards/AdminDashboard';
 import LeaderDashboard from './pages/Dashboards/LeaderDashboard';
 import EmployeeDashboard from './pages/Dashboards/EmployeeDashboard';
 
-import ReportPage from './pages/Report/ReportPage';
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -63,6 +63,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Report — no DashboardLayout, needs full A4 page */}
+        <Route
+          path="/report"
+          element={
+            <ProtectedRoute allowedRole="leader">
+              <ReportPage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </Router>
   );
