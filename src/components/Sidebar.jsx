@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, BarChart3, LogOut, Download, Sparkles, FileText } from 'lucide-react';
+import { UploadCloud, BarChart3, LogOut, Sparkles, FileText } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logoutUser, getCurrentUser } from '../utils/auth.js';
 import kpmgLogo from '../assets/kpmg-logo.svg';
@@ -14,13 +14,25 @@ const Sidebar = () => {
         navigate('/', { replace: true });
     };
 
+    const handleRecommendationsClick = (e) => {
+        e.preventDefault();
+        setShowNotif(false);
+        if (window.location.pathname === '/leader-dashboard') {
+            // Already on dashboard — just scroll
+            const el = document.getElementById('recommendations-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            // Navigate first, then scroll after render
+            navigate('/leader-dashboard');
+            setTimeout(() => {
+                const el = document.getElementById('recommendations-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 600);
+        }
+    };
+
     const adminLinks = [
         { name: 'Upload Transcript', path: '/admin-dashboard', icon: <UploadCloud size={18} /> },
-    ];
-
-    const leaderLinks = [
-        { name: 'Overview', path: '/leader-dashboard', icon: <BarChart3 size={18} /> },
-        { name: 'Recommendations', path: '/recommendations', icon: <Sparkles size={18} />, special: true },
     ];
 
     const employeeLinks = [
@@ -28,8 +40,7 @@ const Sidebar = () => {
     ];
 
     let links = [];
-    if (user?.role === 'admin') links = adminLinks;
-    if (user?.role === 'leader') links = leaderLinks;
+    if (user?.role === 'admin')    links = adminLinks;
     if (user?.role === 'employee') links = employeeLinks;
 
     return (
@@ -42,45 +53,67 @@ const Sidebar = () => {
 
             {/* Nav */}
             <nav className="flex-1 mt-6 flex flex-col gap-2 px-3">
+
+                {/* Overview — for leader */}
+                {user?.role === 'leader' && (
+                    <NavLink
+                        to="/leader-dashboard"
+                        end
+                        className={({ isActive }) =>
+                            `group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden ${
+                                isActive
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg'
+                                    : 'hover:bg-white/5'
+                            }`
+                        }
+                    >
+                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-blue-500/10 to-transparent blur-xl" />
+                        <div className="relative z-10 flex items-center gap-3">
+                            <BarChart3 size={18} className="text-blue-300 group-hover:text-white transition" />
+                            <span className="font-medium tracking-wide text-sm">Overview</span>
+                        </div>
+                    </NavLink>
+                )}
+
+                {/* Recommendations — scroll button, only for leader */}
+                {user?.role === 'leader' && (
+                    <button
+                        onClick={handleRecommendationsClick}
+                        className="group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden bg-gradient-to-r from-purple-600/20 to-blue-500/20 hover:from-purple-600 hover:to-blue-500 hover:shadow-xl text-left w-full"
+                    >
+                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-purple-500/30 via-blue-400/20 to-transparent blur-2xl" />
+                        <div className="relative z-10 flex items-center justify-between w-full">
+                            <div className="flex items-center gap-3">
+                                <Sparkles size={18} className="text-purple-300 group-hover:text-white transition" />
+                                <span className="font-medium tracking-wide text-sm">Recommendations</span>
+                            </div>
+                            {showNotif && (
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500" />
+                                </span>
+                            )}
+                        </div>
+                    </button>
+                )}
+
+                {/* Other role links */}
                 {links.map((link) => (
                     <NavLink
                         key={link.name}
                         to={link.path}
-                        onClick={() => {
-                            if (link.name === 'Recommendations') setShowNotif(false);
-                        }}
                         className={({ isActive }) =>
-                            `group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden ${link.special
-                                ? 'bg-gradient-to-r from-purple-600/20 to-blue-500/20 hover:from-purple-600 hover:to-blue-500 hover:shadow-xl'
-                                : isActive
-                                ? 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg'
-                                : 'hover:bg-white/5'
+                            `group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden ${
+                                isActive
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg'
+                                    : 'hover:bg-white/5'
                             }`
                         }
                     >
-                        {/* Glow effect */}
-                        <span className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 ${link.special
-                            ? 'bg-gradient-to-r from-purple-500/30 via-blue-400/20 to-transparent blur-2xl'
-                            : 'bg-gradient-to-r from-blue-500/10 to-transparent blur-xl'
-                        }`}></span>
-
-                        <div className="relative z-10 flex items-center justify-between w-full">
-                            <div className="flex items-center gap-3">
-                                <span className={`${link.special ? 'text-purple-300' : 'text-blue-300'} group-hover:text-white transition`}>
-                                    {link.icon}
-                                </span>
-                                <span className="font-medium tracking-wide text-sm">
-                                    {link.name}
-                                </span>
-                            </div>
-
-                            {/* Notification dot */}
-                            {link.name === 'Recommendations' && showNotif && (
-                                <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-                                </span>
-                            )}
+                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-blue-500/10 to-transparent blur-xl" />
+                        <div className="relative z-10 flex items-center gap-3">
+                            <span className="text-blue-300 group-hover:text-white transition">{link.icon}</span>
+                            <span className="font-medium tracking-wide text-sm">{link.name}</span>
                         </div>
                     </NavLink>
                 ))}
