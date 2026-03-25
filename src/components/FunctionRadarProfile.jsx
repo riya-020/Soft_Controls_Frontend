@@ -169,7 +169,7 @@ const FunctionRadarProfile = () => {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
                 <div>
-                    <h2 className="text-lg font-bold text-kpmg-navy">Soft Control Radar Profile</h2>
+                    <h2 className="text-lg font-bold text-kpmg-navy">Soft Control Scores by Function</h2>
                     <p style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>Function score vs organisation average</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>

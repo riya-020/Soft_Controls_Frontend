@@ -231,7 +231,7 @@ export default function ReportPage() {
                     <span style={{ fontSize: 12, padding: '3px 10px', borderRadius: 12, fontWeight: 600,
                         background: leaderOnline ? '#22c55e22' : '#f59e0b22',
                         color:      leaderOnline ? '#86efac'   : '#fcd34d' }}>
-                        {leaderOnline ? '✓ Leader scores live from FastAPI' : '⚠ Leader scores: fallback (FastAPI offline)'}
+                        {/* {leaderOnline ? '✓ Leader scores live from FastAPI' : '⚠ Leader scores: fallback (FastAPI offline)'} */}
                     </span>
                 </div>
                 <button onClick={handleDownload} disabled={generating}

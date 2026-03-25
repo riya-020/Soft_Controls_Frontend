@@ -722,7 +722,7 @@ const LeaderDashboard = () => {
 
             {/* ── BAR CHART ── */}
             <div className="bg-white border border-gray-200 border-t-4 border-t-kpmg-blue p-6 shadow-card rounded-b-md">
-                <h2 className="text-lg font-bold text-kpmg-navy mb-6">Score per Soft Control</h2>
+                <h2 className="text-lg font-bold text-kpmg-navy mb-6">Soft Control Performance</h2>
                 <div className="h-[280px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={pillarsData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
@@ -790,7 +790,7 @@ const LeaderDashboard = () => {
             {/* ── EMPLOYEE VS LEADER ── */}
             <div className="bg-white border border-gray-200 border-t-4 border-t-kpmg-blue p-6 shadow-card rounded-b-md">
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-kpmg-navy">Employee vs Leader Soft Control</h2>
+                    <h2 className="text-lg font-bold text-kpmg-navy">Leadership vs Employee Alignment</h2>
                     {toneAtTopIndex && (
                         <div className="bg-blue-50 border border-blue-200 px-4 py-2 rounded">
                             <span className="text-sm text-gray-500">Tone at Top Index </span>
