@@ -46,7 +46,7 @@ const RecommendationCard = ({ rec, index }) => {
     const config = SEVERITY_CONFIG[rec.severity] || SEVERITY_CONFIG.Medium;
 
     return (
-        <div className={`border-l-4 ${config.border} ${config.bg} rounded-r-lg mb-3 overflow-hidden`}>
+        <div className={`group mb-3 overflow-hidden rounded-[22px] border border-white/70 border-l-4 ${config.border} ${config.bg} shadow-[0_16px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(15,23,42,0.1)]`}>
             <button onClick={() => setExpanded(!expanded)} className="w-full flex items-center justify-between p-4 text-left">
                 <div className="flex items-center gap-3">
                     <span className={`w-2 h-2 rounded-full ${config.dot} flex-shrink-0`} />
@@ -145,7 +145,7 @@ const RecommendationsSection = () => {
 
     // ── Loading state ─────────────────────────────────────────────────────────
     if (loading) return (
-        <div className="bg-white border border-gray-200 border-t-4 border-t-kpmg-navy p-8 shadow-card rounded-b-md">
+        <div className="relative overflow-hidden rounded-[28px] border border-white/70 border-t-4 border-t-kpmg-navy bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,249,253,0.96))] p-8 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
             <h2 className="text-lg font-bold text-kpmg-navy mb-6">AI-Powered CEO Recommendations</h2>
             <div className="flex flex-col items-center justify-center h-40 gap-3">
                 <div className="w-8 h-8 border-4 border-kpmg-blue border-t-transparent rounded-full animate-spin" />
@@ -156,7 +156,7 @@ const RecommendationsSection = () => {
 
     // ── Error state ───────────────────────────────────────────────────────────
     if (error && history.length === 0) return (
-        <div className="bg-white border border-gray-200 border-t-4 border-t-red-500 p-8 shadow-card rounded-b-md">
+        <div className="relative overflow-hidden rounded-[28px] border border-white/70 border-t-4 border-t-red-500 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(252,247,247,0.96))] p-8 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-kpmg-navy">AI-Powered CEO Recommendations</h2>
                 <button onClick={() => fetchFromAPI(false)} className="flex items-center gap-2 text-sm text-kpmg-blue font-medium hover:underline">
@@ -173,7 +173,7 @@ const RecommendationsSection = () => {
     if (!activeSet || !activeSet.parameters) return null;
 
     return (
-        <div id="recommendations-section" className="bg-white border border-gray-200 border-t-4 border-t-kpmg-navy p-6 shadow-card rounded-b-md">
+        <div id="recommendations-section" className="relative overflow-hidden rounded-[28px] border border-white/70 border-t-4 border-t-kpmg-navy bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,249,253,0.96))] p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
 
             {/* ── Header row ── */}
             <div className="flex items-start justify-between mb-2 flex-wrap gap-3">

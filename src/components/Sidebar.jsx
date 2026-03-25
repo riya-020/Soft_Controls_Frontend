@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { UploadCloud, BarChart3, LogOut, Sparkles, FileText } from 'lucide-react';
+import { UploadCloud, BarChart3, LogOut, Sparkles, X, FileText } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logoutUser, getCurrentUser } from '../utils/auth.js';
 import kpmgLogo from '../assets/kpmg-logo.svg';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, isMobile, onClose }) => {
     const user = getCurrentUser();
     const navigate = useNavigate();
     const [showNotif, setShowNotif] = useState(true);
@@ -17,18 +17,18 @@ const Sidebar = () => {
     const handleRecommendationsClick = (e) => {
         e.preventDefault();
         setShowNotif(false);
+        const triggerScroll = () => {
+            window.dispatchEvent(new CustomEvent('leader-dashboard-scroll-recommendations'));
+        };
         if (window.location.pathname === '/leader-dashboard') {
-            // Already on dashboard — just scroll
-            const el = document.getElementById('recommendations-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            triggerScroll();
         } else {
-            // Navigate first, then scroll after render
             navigate('/leader-dashboard');
             setTimeout(() => {
-                const el = document.getElementById('recommendations-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 600);
+                triggerScroll();
+            }, 220);
         }
+        onClose?.();
     };
 
     const adminLinks = [
@@ -40,108 +40,120 @@ const Sidebar = () => {
     ];
 
     let links = [];
-    if (user?.role === 'admin')    links = adminLinks;
+    if (user?.role === 'admin') links = adminLinks;
     if (user?.role === 'employee') links = employeeLinks;
 
+    const showLabels = isOpen || isMobile;
+    const baseNavItem = (isActive) =>
+        `group relative flex items-center overflow-hidden rounded-2xl px-5 py-3 transition-all duration-300 ${
+            isActive
+                ? 'bg-gradient-to-r from-[#0f7ae5] via-[#0b66d0] to-[#00338d] shadow-[0_16px_32px_rgba(0,84,180,0.35)]'
+                : 'hover:bg-white/8 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+        } ${showLabels ? 'justify-start gap-3' : 'justify-center'}`;
+
+    const sidebarClasses = isMobile
+        ? `fixed inset-y-0 left-0 z-50 flex min-h-screen w-72 flex-col border-r border-white/10 bg-gradient-to-b from-[#07172d] via-[#0b1f3a] to-[#040913] text-white shadow-[0_30px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`
+        : `flex min-h-screen flex-col border-r border-white/10 bg-gradient-to-b from-[#07172d] via-[#0b1f3a] to-[#040913] text-white shadow-[0_30px_60px_rgba(0,0,0,0.18)] transition-all duration-300 ${isOpen ? 'w-72' : 'w-24'}`;
+
     return (
-        <div className="w-72 bg-gradient-to-b from-[#0b1f3a] via-[#0b1f3a] to-black text-white min-h-screen flex flex-col border-r border-white/10 shadow-2xl">
+        <>
+            {isMobile && isOpen && (
+                <button
+                    type="button"
+                    aria-label="Close sidebar overlay"
+                    className="fixed inset-0 z-40 bg-[#020817]/50 backdrop-blur-[2px]"
+                    onClick={onClose}
+                />
+            )}
 
-            {/* Logo */}
-            <div className="p-5 flex items-center justify-center border-b border-white/10 bg-white/95 backdrop-blur">
-                <img src={kpmgLogo} alt="KPMG Logo" className="h-10 object-contain" />
-            </div>
+            <aside className={sidebarClasses}>
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top,_rgba(61,144,255,0.22),_transparent_72%)]" />
 
-            {/* Nav */}
-            <nav className="flex-1 mt-6 flex flex-col gap-2 px-3">
-
-                {/* Overview — for leader */}
-                {user?.role === 'leader' && (
-                    <NavLink
-                        to="/leader-dashboard"
-                        end
-                        className={({ isActive }) =>
-                            `group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden ${
-                                isActive
-                                    ? 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg'
-                                    : 'hover:bg-white/5'
-                            }`
-                        }
-                    >
-                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-blue-500/10 to-transparent blur-xl" />
-                        <div className="relative z-10 flex items-center gap-3">
-                            <BarChart3 size={18} className="text-blue-300 group-hover:text-white transition" />
-                            <span className="font-medium tracking-wide text-sm">Overview</span>
+                <div className={`relative flex items-center border-b border-slate-200/80 bg-white px-4 py-5 ${showLabels ? 'justify-between' : 'justify-center'}`}>
+                    <div className={`flex items-center ${showLabels ? 'gap-3' : ''}`}>
+                        <div className="rounded-2xl bg-white p-2 shadow-[0_10px_30px_rgba(11,31,58,0.12)]">
+                            <img src={kpmgLogo} alt="KPMG Logo" className="h-9 object-contain" />
                         </div>
-                    </NavLink>
-                )}
+                    </div>
 
-                {/* Recommendations — scroll button, only for leader */}
-                {user?.role === 'leader' && (
-                    <button
-                        onClick={handleRecommendationsClick}
-                        className="group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden bg-gradient-to-r from-purple-600/20 to-blue-500/20 hover:from-purple-600 hover:to-blue-500 hover:shadow-xl text-left w-full"
-                    >
-                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-purple-500/30 via-blue-400/20 to-transparent blur-2xl" />
-                        <div className="relative z-10 flex items-center justify-between w-full">
-                            <div className="flex items-center gap-3">
-                                <Sparkles size={18} className="text-purple-300 group-hover:text-white transition" />
-                                <span className="font-medium tracking-wide text-sm">Recommendations</span>
+                    {isMobile && (
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#0b1f3a] shadow-sm"
+                            aria-label="Close sidebar"
+                        >
+                            <X size={18} />
+                        </button>
+                    )}
+                </div>
+
+                <nav className="mt-6 flex flex-1 flex-col gap-2 px-3">
+                    {user?.role === 'leader' && (
+                        <NavLink to="/leader-dashboard" end onClick={onClose} className={({ isActive }) => baseNavItem(isActive)}>
+                            <span className="absolute inset-0 translate-x-[-120%] bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent)] opacity-0 transition duration-500 group-hover:translate-x-[120%] group-hover:opacity-100" />
+                            <BarChart3 size={18} className="relative z-10 text-blue-200 transition group-hover:text-white" />
+                            {showLabels && <span className="relative z-10 text-sm font-medium tracking-wide">Overview</span>}
+                        </NavLink>
+                    )}
+
+                    {user?.role === 'leader' && (
+                        <button
+                            onClick={handleRecommendationsClick}
+                            className={`group relative flex w-full items-center overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500/12 via-blue-500/16 to-indigo-500/12 px-5 py-3 text-left transition-all duration-300 hover:from-cyan-500 hover:via-blue-500 hover:to-indigo-600 hover:shadow-[0_16px_30px_rgba(55,120,255,0.25)] ${showLabels ? 'justify-between gap-3' : 'justify-center'}`}
+                        >
+                            <span className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.32),_transparent_48%)]" />
+                            <div className={`relative z-10 flex items-center ${showLabels ? 'gap-3' : ''}`}>
+                                <Sparkles size={18} className="text-cyan-200 transition group-hover:text-white" />
+                                {showLabels && <span className="text-sm font-medium tracking-wide">Recommendations</span>}
                             </div>
-                            {showNotif && (
+                            {showLabels && showNotif && (
                                 <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75" />
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500" />
+                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-300 opacity-75" />
+                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
                                 </span>
                             )}
-                        </div>
-                    </button>
-                )}
+                        </button>
+                    )}
 
-                {/* Other role links */}
-                {links.map((link) => (
-                    <NavLink
-                        key={link.name}
-                        to={link.path}
-                        className={({ isActive }) =>
-                            `group relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300 overflow-hidden ${
-                                isActive
-                                    ? 'bg-gradient-to-r from-blue-600 to-blue-400 shadow-lg'
-                                    : 'hover:bg-white/5'
-                            }`
-                        }
-                    >
-                        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-blue-500/10 to-transparent blur-xl" />
-                        <div className="relative z-10 flex items-center gap-3">
-                            <span className="text-blue-300 group-hover:text-white transition">{link.icon}</span>
-                            <span className="font-medium tracking-wide text-sm">{link.name}</span>
-                        </div>
-                    </NavLink>
-                ))}
-            </nav>
+                    {links.map((link) => (
+                        <NavLink key={link.name} to={link.path} onClick={onClose} className={({ isActive }) => baseNavItem(isActive)}>
+                            <span className="absolute inset-0 translate-x-[-120%] bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent)] opacity-0 transition duration-500 group-hover:translate-x-[120%] group-hover:opacity-100" />
+                            <span className="relative z-10 text-blue-200 transition group-hover:text-white">{link.icon}</span>
+                            {showLabels && <span className="relative z-10 text-sm font-medium tracking-wide">{link.name}</span>}
+                        </NavLink>
+                    ))}
 
-            {/* Bottom actions */}
-            <div className="border-t border-white/10 p-3 space-y-2">
+                    {user?.role === 'leader' && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                navigate('/report');
+                                onClose?.();
+                            }}
+                            className={`group report-cta relative flex w-full items-center overflow-hidden rounded-2xl border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(3,51,141,0.88),rgba(0,92,185,0.88),rgba(34,211,238,0.76))] px-5 py-3 text-left text-white shadow-[0_18px_36px_rgba(0,84,180,0.24)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(0,84,180,0.3)] ${showLabels ? 'justify-between gap-3' : 'justify-center'}`}
+                        >
+                            <span className="absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.28),_transparent_42%)]" />
+                            <span className="absolute inset-y-[-140%] left-[-45%] w-[42%] rotate-[20deg] bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.85),transparent)] transition-transform duration-700 group-hover:translate-x-[380%]" />
+                            <div className={`relative z-10 flex items-center ${showLabels ? 'gap-3' : ''}`}>
+                                <FileText size={18} className="text-cyan-50 transition group-hover:text-white" />
+                                {showLabels && <span className="text-sm font-semibold tracking-wide">View Report</span>}
+                            </div>
+                        </button>
+                    )}
+                </nav>
 
-                {/* View Report — only for leader */}
-                {user?.role === 'leader' && (
+                <div className="border-t border-white/10 p-3">
                     <button
-                        onClick={() => navigate('/report')}
-                        className="group w-full flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-400 transition-all duration-300"
+                        onClick={handleLogout}
+                        className={`group flex w-full items-center rounded-2xl px-5 py-3 transition-all duration-300 hover:bg-red-500/18 ${showLabels ? 'justify-start gap-3' : 'justify-center'}`}
                     >
-                        <FileText size={18} className="text-blue-300 group-hover:text-white transition" />
-                        <span className="font-medium text-sm group-hover:text-white transition">View Report</span>
+                        <LogOut size={18} className="text-gray-400 group-hover:text-white" />
+                        {showLabels && <span className="text-sm font-medium text-gray-400 group-hover:text-white">Logout</span>}
                     </button>
-                )}
-
-                <button
-                    onClick={handleLogout}
-                    className="group w-full flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-red-500/20 transition-all duration-300"
-                >
-                    <LogOut size={18} className="text-gray-400 group-hover:text-white" />
-                    <span className="font-medium text-sm text-gray-400 group-hover:text-white">Logout</span>
-                </button>
-            </div>
-        </div>
+                </div>
+            </aside>
+        </>
     );
 };
 
