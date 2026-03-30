@@ -5,7 +5,6 @@ import {
     PolarRadiusAxis, Legend, Cell, PieChart, Pie
 } from 'recharts';
 import * as XLSX from 'xlsx';
-import { Sparkles } from 'lucide-react';
 import FunctionRadarProfile from '../../components/FunctionRadarProfile';
 import RecommendationsSection from '../../components/RecommendationSection';
 
@@ -32,16 +31,15 @@ const PARAM_MAP = {
     'call_someone_to_account': 'Call Someone to Account'
 };
 
-const premiumPanelClass = 'premium-panel bg-[linear-gradient(180deg,rgba(255,255,255,0.38),rgba(219,234,254,0.24))] border border-white/45 rounded-[28px] shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur-[18px]';
+const premiumPanelClass = 'premium-panel bg-[#fbfcff] border border-[#e8edf7] rounded-[32px] shadow-[0_18px_38px_rgba(15,23,42,0.06)]';
 const premiumCardStyle = {
-    background: 'linear-gradient(180deg, rgba(255,255,255,0.42), rgba(219,234,254,0.26))',
-    borderRadius: 24,
-    padding: '20px 20px 16px',
-    boxShadow: '0 20px 45px rgba(15, 23, 42, 0.08)',
-    border: '1px solid rgba(255,255,255,0.48)',
+    background: '#ffffff',
+    borderRadius: 28,
+    padding: '14px 14px 12px',
+    boxShadow: '0 10px 22px rgba(15, 23, 42, 0.045)',
+    border: '1px solid #e8edf7',
     position: 'relative',
     overflow: 'hidden',
-    backdropFilter: 'blur(18px)',
     transition: 'transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease'
 };
 
@@ -316,7 +314,7 @@ const RCIGauge = ({ score }) => {
     const riskCol   = score >= 70 ? '#22c55e' : score >= 60 ? '#f59e0b' : '#ef4444';
 
     return (
-        <div className="premium-kpi-card" style={{ ...premiumCardStyle, borderTop: '4px solid #f97316', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className="premium-kpi-card" style={{ ...premiumCardStyle, minHeight: 186, borderTop: '4px solid #f97316', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 8px', alignSelf: 'flex-start' }}>Risk Culture Index</p>
             <div style={{ position: 'relative' }}>
                 <svg width={W} height={H + 8} viewBox={`0 0 ${W} ${H + 8}`}>
@@ -400,6 +398,7 @@ const LeaderDashboard = () => {
     const [toneAtTopIndex,     setToneAtTopIndex]     = useState(null);
     const [isLoading,          setIsLoading]          = useState(true);
     const [leaderChartLoading, setLeaderChartLoading] = useState(true);
+    const [activeDashboardView, setActiveDashboardView] = useState('overview');
 
     const reportingData = [
         { name: 'HR Department',                   value: 6 },
@@ -601,25 +600,94 @@ const LeaderDashboard = () => {
         </div>
     );
 
-    const rciColor  = kpiData.rci >= 80 ? '#22c55e' : kpiData.rci >= 65 ? '#B5C833' : '#f97316';
-    const pct       = kpiData.respondents > 0 ? Math.round((kpiData.respondents / (kpiData.respondents + 225)) * 100) : 10;
-    const pctColor  = pct >= 60 ? '#22c55e' : pct >= 30 ? '#f59e0b' : '#ef4444';
+    const rciColor = kpiData.rci >= 80 ? '#22c55e' : kpiData.rci >= 65 ? '#B5C833' : '#f97316';
+    const targetPopulation = kpiData.respondents + 225;
+    const coverageRate = targetPopulation > 0 ? Math.round((kpiData.respondents / targetPopulation) * 100) : 0;
+    const coverageColor = coverageRate >= 60 ? '#22c55e' : coverageRate >= 30 ? '#f59e0b' : '#ef4444';
+
+    const scrollToDashboardSection = (view) => {
+        setActiveDashboardView(view);
+        const sectionMap = {
+            overview: 'dashboard-overview',
+            'soft-controls': 'soft-controls-anchor',
+            analytics: 'analytics-anchor',
+        };
+        const section = document.getElementById(sectionMap[view]);
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     return (
         <div className="space-y-6 text-slate-900">
             <style>{`
+                .dashboard-shell {
+                    position: relative;
+                }
+                .dashboard-shell::before {
+                    content: '';
+                    position: absolute;
+                    inset: -40px -24px auto auto;
+                    width: 320px;
+                    height: 320px;
+                    border-radius: 999px;
+                    background: radial-gradient(circle, rgba(37,99,235,0.12), transparent 68%);
+                    pointer-events: none;
+                }
+                .dashboard-topbar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 16px;
+                    padding: 0 4px 16px;
+                    margin-bottom: 2px;
+                    flex-wrap: wrap;
+                }
+                .dashboard-chip-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    width: fit-content;
+                    padding: 8px;
+                    border-radius: 999px;
+                    background: rgba(255,255,255,0.82);
+                    border: 1px solid rgba(232,237,247,0.96);
+                    box-shadow: 0 12px 28px rgba(15,23,42,0.06);
+                    backdrop-filter: blur(10px);
+                }
+                .dashboard-chip {
+                    appearance: none;
+                    border: 1px solid #eaedf4;
+                    background: #f7f8fc;
+                    color: #49526a;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    line-height: 1;
+                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+                    transition: all 0.25s ease;
+                }
+                .dashboard-chip.is-active {
+                    background: linear-gradient(135deg, #111111, #242b42);
+                    color: white;
+                    box-shadow: 0 14px 30px rgba(15,23,42,0.16);
+                    border-color: rgba(17,17,17,0.92);
+                }
+                .dashboard-chip:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 10px 20px rgba(15,23,42,0.08);
+                }
                 .dashboard-hero {
                     position: relative;
                     overflow: hidden;
-                    border-radius: 32px;
-                    padding: 28px;
+                    border-radius: 36px;
+                    padding: 28px 30px;
                     background:
-                        radial-gradient(circle at top left, rgba(34,211,238,0.26), transparent 32%),
-                        radial-gradient(circle at top right, rgba(37,99,235,0.2), transparent 30%),
-                        linear-gradient(135deg, rgba(255,255,255,0.34), rgba(219,234,254,0.22));
-                    border: 1px solid rgba(255,255,255,0.46);
-                    backdrop-filter: blur(22px);
-                    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.09);
+                        radial-gradient(circle at top left, rgba(34,211,238,0.18), transparent 30%),
+                        radial-gradient(circle at top right, rgba(109,40,217,0.16), transparent 32%),
+                        linear-gradient(180deg, #ffffff 0%, #f6f8fd 100%);
+                    border: 1px solid #e8edf7;
+                    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.06);
                 }
                 .dashboard-hero::after {
                     content: '';
@@ -647,8 +715,8 @@ const LeaderDashboard = () => {
                 .premium-panel:hover,
                 .premium-kpi-card:hover {
                     transform: translateY(-6px);
-                    box-shadow: 0 30px 70px rgba(8, 47, 73, 0.16);
-                    border-color: rgba(125, 211, 252, 0.3);
+                    box-shadow: 0 26px 44px rgba(15, 23, 42, 0.1);
+                    border-color: rgba(99, 102, 241, 0.18);
                 }
                 .premium-panel:hover::before,
                 .premium-kpi-card:hover::before {
@@ -672,44 +740,57 @@ const LeaderDashboard = () => {
                     transform: rotate(18deg) translateX(420%);
                 }
                 @media (max-width: 768px) {
+                    .dashboard-topbar {
+                        padding-bottom: 10px;
+                    }
                     .dashboard-hero {
                         padding: 22px;
                         border-radius: 28px;
                     }
+                    .dashboard-chip-row {
+                        width: 100%;
+                        justify-content: center;
+                    }
                 }
             `}</style>
+
+            <div className="dashboard-shell" id="dashboard-overview">
+            <section className="dashboard-topbar">
+                <div className="dashboard-chip-row">
+                    <button type="button" onClick={() => scrollToDashboardSection('overview')} className={`dashboard-chip ${activeDashboardView === 'overview' ? 'is-active' : ''}`}>Overview</button>
+                    <button type="button" onClick={() => scrollToDashboardSection('soft-controls')} className={`dashboard-chip ${activeDashboardView === 'soft-controls' ? 'is-active' : ''}`}>Soft Controls</button>
+                    <button type="button" onClick={() => scrollToDashboardSection('analytics')} className={`dashboard-chip ${activeDashboardView === 'analytics' ? 'is-active' : ''}`}>Analytics</button>
+                </div>
+            </section>
 
             <section className="dashboard-hero">
                 <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                     <div className="max-w-3xl">
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.28em] text-[#0b5cad] shadow-sm backdrop-blur">
-                            <Sparkles size={14} />
-                            Executive Overview
-                        </div>
-                        <h2 className="text-3xl font-bold tracking-tight text-[#0b1f3a] md:text-4xl">
-                            Risk culture intelligence built for clarity, action, and executive decision-making.
+                        <h2 className="text-[42px] leading-[1.02] font-semibold tracking-[-0.05em] text-[#121826] md:text-[54px]">
+                            Leadership risk culture overview
                         </h2>
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-3">
-                        <div className="rounded-2xl border border-white/50 bg-white/28 px-4 py-4 shadow-sm backdrop-blur-xl">
+                        <div className="rounded-[28px] border border-[#edf1f8] bg-white px-5 py-5 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
                             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-500">RCI</p>
                             <p className="mt-2 text-3xl font-bold text-[#0b1f3a]">{kpiData.rci}</p>
                             <p className="mt-1 text-xs text-slate-500">Current culture pulse</p>
                         </div>
-                        <div className="rounded-2xl border border-white/50 bg-white/28 px-4 py-4 shadow-sm backdrop-blur-xl">
+                        <div className="rounded-[28px] border border-[#edf1f8] bg-white px-5 py-5 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
                             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-500">Respondents</p>
                             <p className="mt-2 text-3xl font-bold text-[#0b1f3a]">{kpiData.respondents}</p>
                             <p className="mt-1 text-xs text-slate-500">Live participation count</p>
                         </div>
-                        <div className="rounded-2xl border border-white/50 bg-white/28 px-4 py-4 shadow-sm backdrop-blur-xl">
-                            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-500">Readiness</p>
-                            <p className="mt-2 text-3xl font-bold" style={{ color: pctColor }}>{pct}%</p>
-                            <p className="mt-1 text-xs text-slate-500">Response coverage signal</p>
+                        <div className="rounded-[28px] border border-[#edf1f8] bg-white px-5 py-5 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-500">Coverage Rate</p>
+                            <p className="mt-2 text-3xl font-bold" style={{ color: coverageColor }}>{coverageRate}%</p>
+                            <p className="mt-1 text-xs text-slate-500">Respondents / target population</p>
                         </div>
                     </div>
                 </div>
             </section>
+            </div>
 
             {/* ── DOWNLOAD REPORT BUTTON ── */}
             {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -722,13 +803,13 @@ const LeaderDashboard = () => {
             </div> */}
 
             {/* ── KPI CARDS ── */}
-            <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
 
                 {/* RCI Gauge */}
                 <RCIGauge score={kpiData.rci} />
 
                 {/* Strong Controls Donut */}
-                <div className="premium-kpi-card" style={{ ...premiumCardStyle, borderTop: '4px solid #22c55e', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                <div className="premium-kpi-card" style={{ ...premiumCardStyle, minHeight: 186, borderTop: '4px solid #22c55e', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                         <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Strong Controls</p>
                         <div style={{ background: '#dcfce7', borderRadius: 20, padding: '2px 10px' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a' }}>Low Risk</span></div>
@@ -763,7 +844,7 @@ const LeaderDashboard = () => {
                 </div>
 
                 {/* Weak Controls Donut */}
-                <div className="premium-kpi-card" style={{ ...premiumCardStyle, borderTop: '4px solid #ef4444', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                <div className="premium-kpi-card" style={{ ...premiumCardStyle, minHeight: 186, borderTop: '4px solid #ef4444', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                         <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Weak Controls</p>
                         <div style={{ background: '#fee2e2', borderRadius: 20, padding: '2px 10px' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#dc2626' }}>High Risk</span></div>
@@ -799,7 +880,7 @@ const LeaderDashboard = () => {
                 </div>
 
                 {/* Survey Respondents — live from Functions sheet */}
-                <div className="premium-kpi-card" style={{ ...premiumCardStyle, borderTop: '4px solid #0091DA', display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'space-between' }}>
+                <div className="premium-kpi-card" style={{ ...premiumCardStyle, minHeight: 186, borderTop: '4px solid #0091DA', display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Respondents</p>
                         <div style={{ background: '#e0f2fe', borderRadius: 20, padding: '2px 10px' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#0091DA' }}>Live</span></div>
@@ -814,7 +895,7 @@ const LeaderDashboard = () => {
                 </div>
 
                 {/* Flagged Questions — hardcoded */}
-                <div className="premium-kpi-card" style={{ ...premiumCardStyle, borderTop: '4px solid #f59e0b', display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'space-between' }}>
+                <div className="premium-kpi-card" style={{ ...premiumCardStyle, minHeight: 186, borderTop: '4px solid #f59e0b', display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Flagged Questions</p>
                         <div style={{ background: '#fef3c7', borderRadius: 20, padding: '2px 10px' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#d97706' }}>Review</span></div>
@@ -829,7 +910,7 @@ const LeaderDashboard = () => {
                 </div>
 
                 {/* Recommended Actions — hardcoded */}
-                <div className="premium-kpi-card" style={{ ...premiumCardStyle, borderTop: '4px solid #00338D', display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'space-between' }}>
+                <div className="premium-kpi-card" style={{ ...premiumCardStyle, minHeight: 186, borderTop: '4px solid #00338D', display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <p style={{ fontSize: 12, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>Recommended Actions</p>
                         <div style={{ background: '#eff6ff', borderRadius: 20, padding: '2px 10px' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#00338D' }}>Action</span></div>
@@ -845,7 +926,7 @@ const LeaderDashboard = () => {
             </div>
 
             {/* ── BAR CHART ── */}
-            <div className={`${premiumPanelClass} border-t-4 border-t-kpmg-blue p-6`}>
+            <div id="soft-controls-anchor" className={`${premiumPanelClass} border-t-4 border-t-kpmg-blue p-6`}>
                 <h2 className="text-lg font-bold text-kpmg-navy mb-6">Soft Control Performance</h2>
                 <div className="h-[280px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
@@ -871,10 +952,12 @@ const LeaderDashboard = () => {
             </div>
 
             {/* ── SPIDER CHART ── */}
-            <SpiderChartWithDimensions radarData={radarData} selectedControl={selectedControl} setSelectedControl={setSelectedControl} dimensionData={dimensionData} />
+            <div id="soft-controls-thresholds">
+                <SpiderChartWithDimensions radarData={radarData} selectedControl={selectedControl} setSelectedControl={setSelectedControl} dimensionData={dimensionData} />
+            </div>
 
             {/* ── INCIDENT REPORTING ── */}
-            <div className={`${premiumPanelClass} border-t-4 border-t-kpmg-blue p-6`}>
+            <div id="analytics-anchor" className={`${premiumPanelClass} border-t-4 border-t-kpmg-blue p-6`}>
                 <h2 className="text-lg font-bold text-kpmg-navy mb-2">Incident Reporting Preferences</h2>
                 <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 20 }}>How employees prefer to report risk incidents</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
@@ -912,7 +995,7 @@ const LeaderDashboard = () => {
             </div>
 
             {/* ── EMPLOYEE VS LEADER ── */}
-            <div className={`${premiumPanelClass} border-t-4 border-t-kpmg-blue p-6`}>
+            <div id="leadership-alignment" className={`${premiumPanelClass} border-t-4 border-t-kpmg-blue p-6`}>
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-lg font-bold text-kpmg-navy">Leadership vs Employee Alignment</h2>
                     {toneAtTopIndex && (
@@ -945,7 +1028,9 @@ const LeaderDashboard = () => {
             <FunctionRadarProfile />
 
             {/* ── DONUT RINGS — fully live ── */}
-            <DonutFunctionSection functionData={functionData} dimensionData={dimensionData} />
+            <div id="soft-controls-function">
+                <DonutFunctionSection functionData={functionData} dimensionData={dimensionData} />
+            </div>
             <RecommendationsSection />
         </div>
     );

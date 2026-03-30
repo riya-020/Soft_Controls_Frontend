@@ -47,13 +47,19 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
     const baseNavItem = (isActive) =>
         `group relative flex items-center overflow-hidden rounded-2xl px-5 py-3 transition-all duration-300 ${
             isActive
-                ? 'bg-gradient-to-r from-[#0f7ae5] via-[#0b66d0] to-[#00338d] shadow-[0_16px_32px_rgba(0,84,180,0.35)]'
-                : 'hover:bg-white/8 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+                ? 'bg-[linear-gradient(135deg,_#ffffff,_#f1f3ff)] text-[#121826] shadow-[0_14px_30px_rgba(255,255,255,0.14)]'
+                : 'bg-white/6 hover:bg-white/12 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+        } ${showLabels ? 'justify-start gap-3' : 'justify-center'}`;
+    const leaderOverviewNavItem = (isActive) =>
+        `group relative flex items-center overflow-hidden rounded-2xl border px-5 py-3 transition-all duration-300 ${
+            isActive
+                ? 'border-white/20 bg-[linear-gradient(135deg,_rgba(85,169,255,0.36),_rgba(109,40,217,0.42))] text-white shadow-[0_18px_34px_rgba(55,120,255,0.28)]'
+                : 'border-white/10 bg-[linear-gradient(135deg,_rgba(255,255,255,0.12),_rgba(255,255,255,0.04))] text-white hover:border-white/20 hover:bg-[linear-gradient(135deg,_rgba(85,169,255,0.36),_rgba(109,40,217,0.42))] hover:shadow-[0_18px_34px_rgba(55,120,255,0.28)]'
         } ${showLabels ? 'justify-start gap-3' : 'justify-center'}`;
 
     const sidebarClasses = isMobile
-        ? `fixed inset-y-0 left-0 z-50 flex min-h-screen w-72 flex-col border-r border-white/10 bg-gradient-to-b from-[#07172d] via-[#0b1f3a] to-[#040913] text-white shadow-[0_30px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`
-        : `flex min-h-screen flex-col border-r border-white/10 bg-gradient-to-b from-[#07172d] via-[#0b1f3a] to-[#040913] text-white shadow-[0_30px_60px_rgba(0,0,0,0.18)] transition-all duration-300 ${isOpen ? 'w-72' : 'w-24'}`;
+        ? `fixed inset-y-0 left-0 z-50 flex min-h-screen w-72 flex-col border-r border-white/10 bg-[linear-gradient(180deg,_#07152f_0%,_#0b2c67_48%,_#4c1d95_100%)] text-white shadow-[0_30px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`
+        : `flex min-h-screen flex-col border-r border-white/10 bg-[linear-gradient(180deg,_#07152f_0%,_#0b2c67_48%,_#4c1d95_100%)] text-white shadow-[0_30px_60px_rgba(0,0,0,0.18)] transition-all duration-300 ${isOpen ? 'w-72' : 'w-24'}`;
 
     return (
         <>
@@ -67,11 +73,12 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
             )}
 
             <aside className={sidebarClasses}>
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(circle_at_top,_rgba(61,144,255,0.22),_transparent_72%)]" />
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(circle_at_top,_rgba(61,144,255,0.22),_transparent_68%)]" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(circle_at_bottom,_rgba(167,139,250,0.22),_transparent_68%)]" />
 
-                <div className={`relative flex items-center border-b border-slate-200/80 bg-white px-4 py-5 ${showLabels ? 'justify-between' : 'justify-center'}`}>
+                <div className={`relative flex items-center border-b border-white/10 bg-white px-4 py-5 ${showLabels ? 'justify-between' : 'justify-center'}`}>
                     <div className={`flex items-center ${showLabels ? 'gap-3' : ''}`}>
-                        <div className="rounded-2xl bg-white p-2 shadow-[0_10px_30px_rgba(11,31,58,0.12)]">
+                        <div className="rounded-[22px] bg-white p-2 shadow-[0_12px_28px_rgba(11,31,58,0.12)]">
                             <img src={kpmgLogo} alt="KPMG Logo" className="h-9 object-contain" />
                         </div>
                     </div>
@@ -90,9 +97,9 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
 
                 <nav className="mt-6 flex flex-1 flex-col gap-2 px-3">
                     {user?.role === 'leader' && (
-                        <NavLink to="/leader-dashboard" end onClick={onClose} className={({ isActive }) => baseNavItem(isActive)}>
-                            <span className="absolute inset-0 translate-x-[-120%] bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent)] opacity-0 transition duration-500 group-hover:translate-x-[120%] group-hover:opacity-100" />
-                            <BarChart3 size={18} className="relative z-10 text-blue-200 transition group-hover:text-white" />
+                        <NavLink to="/leader-dashboard" end onClick={onClose} className={({ isActive }) => leaderOverviewNavItem(isActive)}>
+                            <span className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.32),_transparent_48%)]" />
+                            <BarChart3 size={18} className="relative z-10 text-cyan-200 transition group-hover:text-white" />
                             {showLabels && <span className="relative z-10 text-sm font-medium tracking-wide">Overview</span>}
                         </NavLink>
                     )}
@@ -100,7 +107,7 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
                     {user?.role === 'leader' && (
                         <button
                             onClick={handleRecommendationsClick}
-                            className={`group relative flex w-full items-center overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500/12 via-blue-500/16 to-indigo-500/12 px-5 py-3 text-left transition-all duration-300 hover:from-cyan-500 hover:via-blue-500 hover:to-indigo-600 hover:shadow-[0_16px_30px_rgba(55,120,255,0.25)] ${showLabels ? 'justify-between gap-3' : 'justify-center'}`}
+                            className={`group relative flex w-full items-center overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,_rgba(255,255,255,0.12),_rgba(255,255,255,0.04))] px-5 py-3 text-left transition-all duration-300 hover:border-white/20 hover:bg-[linear-gradient(135deg,_rgba(85,169,255,0.36),_rgba(109,40,217,0.42))] hover:shadow-[0_18px_34px_rgba(55,120,255,0.28)] ${showLabels ? 'justify-between gap-3' : 'justify-center'}`}
                         >
                             <span className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.32),_transparent_48%)]" />
                             <div className={`relative z-10 flex items-center ${showLabels ? 'gap-3' : ''}`}>
