@@ -1,4 +1,4 @@
-import { Menu, PanelLeftClose, Search, User } from 'lucide-react';
+import { Menu, PanelLeftClose, User } from 'lucide-react';
 import { getCurrentUser } from '../utils/auth.js';
 
 const Navbar = ({ isSidebarOpen, onToggleSidebar }) => {
@@ -27,11 +27,6 @@ const Navbar = ({ isSidebarOpen, onToggleSidebar }) => {
                 </div>
 
                 <div className="flex items-center gap-3 md:gap-4">
-                    <div className="hidden items-center gap-2 rounded-full bg-[#f5f7fb] px-4 py-3 text-sm text-[#6b7280] md:flex">
-                        <Search size={16} />
-                        <span>Search dashboard...</span>
-                    </div>
-
                     <div className="flex items-center gap-3 rounded-2xl border border-white/80 bg-white px-3 py-2 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
                         <div className="hidden flex-col items-end md:flex">
                             <span className="text-sm font-semibold text-[#0b1f3a]">{user?.email}</span>
