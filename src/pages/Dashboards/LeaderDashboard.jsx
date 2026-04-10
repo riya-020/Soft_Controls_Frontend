@@ -48,13 +48,16 @@ const premiumCardStyle = {
 const normSC = (n) => {
     const map = {
         'call someone to account': 'Call Someone to Account',
-        'role modelling': 'Role Modelling',
-        discussability: 'Discussability',
-        achievability: 'Achievability',
-        enforcement: 'Enforcement',
-        clarity: 'Clarity',
-        transparency: 'Transparency',
-        commitment: 'Commitment'
+        'role modelling':          'Role Modelling',
+        'discussability':          'Discussability',
+        'open_to_discussion':      'Discussability',
+        'open to discussion':      'Discussability',
+        'openness to discussion':  'Discussability',
+        'achievability':           'Achievability',
+        'enforcement':             'Enforcement',
+        'clarity':                 'Clarity',
+        'transparency':            'Transparency',
+        'commitment':              'Commitment',
     };
     return map[(n || '').toLowerCase().trim()] || n;
 };

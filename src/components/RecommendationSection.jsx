@@ -5,6 +5,26 @@ import { AlertTriangle, TrendingUp, User, Clock, Zap, RefreshCw, ChevronDown, Ch
 const STORAGE_KEY = 'kpmg_rec_history';  // stores array of sets
 const MAX_VERSIONS = 10;                  // keep last 10 versions
 
+// ─── normalize soft control names from API ────────────────────────────────────
+const normSC = n => {
+    const map = {
+        'open_to_discussion':      'Discussability',
+        'open to discussion':      'Discussability',
+        'openness to discussion':  'Discussability',
+        'discussability':          'Discussability',
+        'role_modelling':          'Role Modelling',
+        'role modelling':          'Role Modelling',
+        'call_someone_to_account': 'Call Someone to Account',
+        'call someone to account': 'Call Someone to Account',
+        'achievability':           'Achievability',
+        'enforcement':             'Enforcement',
+        'clarity':                 'Clarity',
+        'transparency':            'Transparency',
+        'commitment':              'Commitment',
+    };
+    return map[(n || '').toLowerCase().trim()] || n;
+};
+
 const SEVERITY_CONFIG = {
     High:   { bg: 'bg-red-50',    border: 'border-red-400',    badge: 'bg-red-100 text-red-700',    dot: 'bg-red-500'    },
     Medium: { bg: 'bg-yellow-50', border: 'border-yellow-400', badge: 'bg-yellow-100 text-yellow-700', dot: 'bg-yellow-500' }
@@ -256,7 +276,7 @@ const RecommendationsSection = () => {
                             <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
                                 <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
                                     <div className="flex items-center gap-3">
-                                        <h3 className="font-bold text-kpmg-navy text-sm">{param.softControl}</h3>
+                                        <h3 className="font-bold text-kpmg-navy text-sm">{normSC(param.softControl)}</h3>
                                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${riskConfig.bg} ${riskConfig.text}`}>
                                             {param.riskLevel} Risk
                                         </span>

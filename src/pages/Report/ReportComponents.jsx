@@ -11,25 +11,27 @@ export function IntroductionPage() {
     ];
 
     const softControls = [
-        "Incentives and Enforcement – Measures how employees are held accountable for misconduct and rewarded for risk-conscious behaviour.",
-        "Comfort to Report – How safe employees feel when addressing misconduct or risky behaviour.",
-        "Openness to Discuss Dilemmas – Frequency of discussions around ethical dilemmas.",
-        "Transparency – How clearly misconduct and consequences are communicated.",
-        "Clarity and Communication – How expectations for behaviour are communicated.",
-        "Tone at the Top and Role Modelling – Whether leadership sets a strong example.",
-        "Support of Employees – Whether employees are encouraged to use resources appropriately.",
-        "Enabling Environment – Resources and support available to meet expectations."
+        "Clarity – How clearly roles, responsibilities and behavioural expectations are communicated to employees.",
+        "Role Modelling – Whether leadership consistently demonstrates the desired risk-conscious behaviour.",
+        "Commitment – The degree to which employees take ownership and responsibility for risk management.",
+        "Transparency – How openly information, misconduct and consequences are shared across the organisation.",
+        "Discussability – How comfortably employees raise, discuss and escalate risks, concerns and dilemmas.",
+        "Call Someone to Account – Whether employees hold each other accountable for actions and outcomes.",
+        "Enforcement – How consistently policies, procedures and consequences are applied across the organisation.",
+        "Achievability – Whether targets and expectations are realistic and attainable for employees.",
     ];
 
     return (
         <div style={{
-            width: '210mm',
-            minHeight: '297mm',
+            width: '794px',
+            height: '1123px',
+            overflow: 'hidden',
             padding: '28px',
             fontFamily: 'Arial',
             background: '#fff',
             boxSizing: 'border-box',
-            pageBreakAfter: 'avoid',
+            pageBreakAfter: 'always',
+            pageBreakInside: 'avoid',
             border: '1px solid #d9d9d9',
             borderTop: '6px solid #00338D',
         }}>
@@ -338,8 +340,9 @@ export function RecommendationsPage({ recommendations }) {
     return (
         <div style={{
             padding: '50px', boxSizing: 'border-box', border: '1px solid #d9d9d9',
-            borderTop: '6px solid #00338D', width: '210mm', minHeight: '297mm',
-            pageBreakAfter: 'auto', fontFamily: 'Arial, sans-serif', background: '#fff',
+            borderTop: '6px solid #00338D', width: '794px', height: '1123px',
+            overflow: 'hidden', pageBreakAfter: 'always', pageBreakInside: 'avoid',
+            fontFamily: 'Arial, sans-serif', background: '#fff',
             position: 'relative',
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #00338D', paddingBottom: 10, marginBottom: 28 }}>

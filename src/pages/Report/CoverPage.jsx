@@ -8,12 +8,14 @@ export default function CoverPage({ date, respondents }) {
             overflow: 'hidden',
             position: 'relative',
             width: '210mm',
-            height: '296mm',
+            height: '297mm',
             boxSizing: 'border-box',
             padding: '60px 60px 40px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
+            pageBreakAfter: 'always',
+            pageBreakInside: 'avoid',
         }}>
             {/* Background shapes */}
             <div style={{ position: 'absolute', top: -120, right: -120, width: 420, height: 420, background: 'rgba(255,255,255,0.06)', borderRadius: '50%' }} />
