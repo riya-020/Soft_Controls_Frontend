@@ -4,13 +4,24 @@ import {
     Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
     ResponsiveContainer, Tooltip as RechartsTooltip, Legend
 } from 'recharts';
+import { ChevronDown, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const METRICS = [
     'Achievability', 'Call someone to account', 'Clarity', 'Commitment',
     'Discussability', 'Enforcement', 'Role Modelling', 'Transparency'
 ];
 
-// Fallback data computed from AllResponses + Functions sheets
+const METRIC_COLORS = {
+    'Achievability':           '#3b82f6',
+    'Call someone to account': '#f43f5e',
+    'Clarity':                 '#8b5cf6',
+    'Commitment':              '#f97316',
+    'Discussability':          '#06b6d4',
+    'Enforcement':             '#10b981',
+    'Role Modelling':          '#6366f1',
+    'Transparency':            '#eab308',
+};
+
 const FALLBACK_FUNC_DATA = {
     Audit:      { Achievability: 71, 'Call someone to account': 71, Clarity: 66, Commitment: 81, Discussability: 88, Enforcement: 75, 'Role Modelling': 76, Transparency: 76 },
     Finance:    { Achievability: 74, 'Call someone to account': 65, Clarity: 81, Commitment: 84, Discussability: 80, Enforcement: 80, 'Role Modelling': 80, Transparency: 82 },
@@ -25,41 +36,107 @@ const FALLBACK_ORG = {
     Commitment: 77, Discussability: 78, Enforcement: 76, 'Role Modelling': 76, Transparency: 75
 };
 
+// ─── Custom Tooltip ───────────────────────────────────────────────────────────
 const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-        const data = payload[0].payload;
-        const diff = data.score - data.orgAvg;
-        return (
-            <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 6, padding: '10px 14px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', minWidth: 200 }}>
-                <p style={{ fontWeight: 700, color: '#001B41', marginBottom: 8, borderBottom: '1px solid #f0f0f0', paddingBottom: 6 }}>{data.metric}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 24 }}>
-                        <span style={{ fontSize: 12, color: '#00338D', fontWeight: 600 }}>Selected Function</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: '#00338D' }}>{data.score}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 24 }}>
-                        <span style={{ fontSize: 12, color: '#f59e0b', fontWeight: 600 }}>Org Average</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: '#f59e0b' }}>{data.orgAvg}</span>
-                    </div>
-                    <div style={{ marginTop: 4, paddingTop: 6, borderTop: '1px solid #f0f0f0' }}>
-                        <span style={{ fontSize: 11, color: diff >= 0 ? '#22c55e' : '#ef4444', fontWeight: 600 }}>
-                            {diff >= 0 ? `▲ ${diff} above org avg` : `▼ ${Math.abs(diff)} below org avg`}
-                        </span>
-                    </div>
+    if (!active || !payload?.length) return null;
+    const d = payload[0].payload;
+    const diff = d.score - d.orgAvg;
+    const col = diff > 0 ? '#22c55e' : diff < 0 ? '#f43f5e' : '#94a3b8';
+    return (
+        <div style={{
+            background: 'rgba(255,255,255,0.97)', border: '1px solid #e2e8f0',
+            borderRadius: 12, padding: '14px 18px',
+            boxShadow: '0 8px 32px rgba(15,23,42,0.14)', minWidth: 210,
+        }}>
+            <p style={{ fontWeight: 700, color: '#0f172a', marginBottom: 10, fontSize: 13, borderBottom: '1px solid #f1f5f9', paddingBottom: 8 }}>{d.metric}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 12, color: '#1565c0', fontWeight: 600 }}>Function Score</span>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: '#1565c0' }}>{d.score}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 12, color: '#f59e0b', fontWeight: 600 }}>Org Average</span>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: '#f59e0b' }}>{d.orgAvg}</span>
+                </div>
+                <div style={{ marginTop: 4, paddingTop: 8, borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: col }}>
+                        {diff > 0 ? `▲ +${diff}` : diff < 0 ? `▼ ${diff}` : '— On par'} vs org avg
+                    </span>
                 </div>
             </div>
-        );
-    }
-    return null;
+        </div>
+    );
 };
 
+// ─── Score Breakdown Row ──────────────────────────────────────────────────────
+const ScoreRow = ({ metric, score, orgAvg, index }) => {
+    const [visible, setVisible] = useState(false);
+    useEffect(() => { const t = setTimeout(() => setVisible(true), index * 60); return () => clearTimeout(t); }, [index]);
+
+    const diff = score - orgAvg;
+    const color = METRIC_COLORS[metric] || '#3b82f6';
+    const diffCol = diff > 0 ? '#22c55e' : diff < 0 ? '#f43f5e' : '#94a3b8';
+    const DiffIcon = diff > 0 ? TrendingUp : diff < 0 ? TrendingDown : Minus;
+
+    return (
+        <div style={{
+            display: 'grid', gridTemplateColumns: '1fr 36px 36px 58px',
+            alignItems: 'center', gap: 8,
+            padding: '7px 10px', borderRadius: 8,
+            background: index % 2 === 0 ? 'rgba(240,249,255,0.8)' : 'rgba(255,255,255,0.7)',
+            border: '1px solid rgba(186,230,253,0.3)',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateX(0)' : 'translateX(-8px)',
+            transition: 'opacity .3s ease, transform .3s ease',
+        }}>
+            {/* Metric name + bar */}
+            <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                    <div style={{ width: 7, height: 7, borderRadius: '50%', background: color, flexShrink: 0 }} />
+                    <span style={{ fontSize: 11, fontWeight: 600, color: '#1e293b' }}>{metric}</span>
+                </div>
+                <div style={{ height: 4, background: '#e0f2fe', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{
+                        height: '100%', borderRadius: 3,
+                        width: `${score}%`,
+                        background: `linear-gradient(90deg, ${color}99, ${color})`,
+                        transition: 'width 0.9s cubic-bezier(.4,0,.2,1)',
+                    }} />
+                </div>
+            </div>
+
+            {/* Function score */}
+            <div style={{ textAlign: 'center' }}>
+                <span style={{ fontSize: 14, fontWeight: 800, color, letterSpacing: '-0.02em' }}>{score}</span>
+            </div>
+
+            {/* Org avg */}
+            <div style={{ textAlign: 'center' }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8' }}>{orgAvg}</span>
+            </div>
+
+            {/* Diff badge */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 3 }}>
+                <DiffIcon size={10} style={{ color: diffCol, flexShrink: 0 }} />
+                <span style={{
+                    fontSize: 10, fontWeight: 700, color: diffCol,
+                    background: diff > 0 ? '#dcfce7' : diff < 0 ? '#ffe4e6' : '#f1f5f9',
+                    borderRadius: 20, padding: '1px 7px',
+                }}>
+                    {diff > 0 ? `+${diff}` : diff}
+                </span>
+            </div>
+        </div>
+    );
+};
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 const FunctionRadarProfile = () => {
     const [functions,        setFunctions]        = useState(Object.keys(FALLBACK_FUNC_DATA));
     const [selectedFunction, setSelectedFunction] = useState('Audit');
     const [funcScores,       setFuncScores]       = useState(FALLBACK_FUNC_DATA);
     const [orgAverages,      setOrgAverages]      = useState(FALLBACK_ORG);
     const [isLoading,        setIsLoading]        = useState(true);
-    const [error,            setError]            = useState(null);
 
     useEffect(() => {
         const load = async () => {
@@ -69,21 +146,15 @@ const FunctionRadarProfile = () => {
                 const buf = await res.arrayBuffer();
                 const wb  = XLSX.read(buf, { type: 'array' });
 
-                // ── 1. Read org averages directly from SOFT CONTROL SCORECARD ──
                 const computedOrg = {};
                 if (wb.SheetNames.includes('SOFT CONTROL SCORECARD')) {
-                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['SOFT CONTROL SCORECARD']);
-                    rows.forEach(row => {
-                        const sc    = String(row['SoftControl'] || '').trim();
+                    XLSX.utils.sheet_to_json(wb.Sheets['SOFT CONTROL SCORECARD']).forEach(row => {
+                        const sc = String(row['SoftControl'] || '').trim();
                         const score = parseFloat(row['AvgScore100']);
-                        if (sc && sc !== 'SoftControl' && !isNaN(score) && score > 0) {
-                            computedOrg[sc] = Math.round(score);
-                        }
+                        if (sc && sc !== 'SoftControl' && !isNaN(score) && score > 0) computedOrg[sc] = Math.round(score);
                     });
                 }
-                console.log('[RadarProfile] Org averages from SOFT CONTROL SCORECARD:', computedOrg);
 
-                // ── 2. Build respondent → function map from Functions sheet ──
                 const funcMap = {};
                 if (wb.SheetNames.includes('Functions')) {
                     XLSX.utils.sheet_to_json(wb.Sheets['Functions']).forEach(row => {
@@ -93,7 +164,6 @@ const FunctionRadarProfile = () => {
                     });
                 }
 
-                // ── 3. Compute function x SC averages from AllResponses ──
                 const funcSCTotals = {};
                 if (wb.SheetNames.includes('AllResponses')) {
                     XLSX.utils.sheet_to_json(wb.Sheets['AllResponses']).forEach(row => {
@@ -119,19 +189,14 @@ const FunctionRadarProfile = () => {
                 });
 
                 const uniqueFunctions = Object.keys(computedFuncScores).sort();
-
-                console.log('[RadarProfile] Computed from Excel — functions:', uniqueFunctions, '| org avgs:', computedOrg);
                 if (uniqueFunctions.length > 0) {
                     setFunctions(uniqueFunctions);
                     setSelectedFunction(uniqueFunctions[0]);
                     setFuncScores(computedFuncScores);
                     setOrgAverages(Object.keys(computedOrg).length > 0 ? computedOrg : FALLBACK_ORG);
                 }
-
             } catch (err) {
                 console.error(err);
-                setError(err.message);
-                // fallbacks already set as initial state
             } finally {
                 setIsLoading(false);
             }
@@ -139,16 +204,14 @@ const FunctionRadarProfile = () => {
         load();
     }, []);
 
-    // Build chartData from selected function
     const chartData = METRICS.map(metric => {
         const fnScores = funcScores[selectedFunction] || {};
-        // case-insensitive lookup
         const scoreKey = Object.keys(fnScores).find(k => k.toLowerCase() === metric.toLowerCase());
         const orgKey   = Object.keys(orgAverages).find(k => k.toLowerCase() === metric.toLowerCase());
         return {
             metric,
-            score:  scoreKey ? fnScores[scoreKey]   : 0,
-            orgAvg: orgKey   ? orgAverages[orgKey]  : 75,
+            score:  scoreKey ? fnScores[scoreKey]  : 0,
+            orgAvg: orgKey   ? orgAverages[orgKey] : 75,
         };
     });
 
@@ -156,81 +219,112 @@ const FunctionRadarProfile = () => {
     const belowAvg = chartData.length - aboveAvg;
 
     if (isLoading) return (
-        <div className="bg-white border border-gray-200 p-6 shadow-card rounded-md flex justify-center items-center h-64">
-            <svg className="animate-spin h-6 w-6 text-kpmg-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200, background: 'rgba(255,255,255,0.82)', borderRadius: 18 }}>
+            <p style={{ color: '#94a3b8', fontWeight: 600 }}>Loading…</p>
         </div>
     );
 
     return (
-        <div className="bg-white border border-gray-200 border-t-4 border-t-kpmg-navy p-6 shadow-card rounded-b-md w-full">
-            {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
+        <div style={{
+            background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.7)',
+            borderRadius: 18, padding: '20px 22px',
+            boxShadow: '0 1px 0 rgba(255,255,255,0.08) inset, 0 4px 24px rgba(0,0,0,0.22)',
+            position: 'relative', overflow: 'hidden',
+        }}>
+
+            {/* ── Header ── */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
                 <div>
-                    <h2 className="text-lg font-bold text-kpmg-navy">Soft Control Scores by Function</h2>
-                    <p style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>Function score vs organisation average</p>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: '#1565c0', textTransform: 'uppercase', letterSpacing: '.12em', margin: '0 0 5px' }}>Function Analysis</p>
+                    <h2 style={{ fontSize: 19, fontWeight: 700, color: '#0f172a', margin: '0 0 4px', letterSpacing: '-0.02em' }}>Soft Control Scores by Function</h2>
+                    <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>Function score vs organisation average</p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    {/* stat pills */}
                     <div style={{ display: 'flex', gap: 8 }}>
-                        <div style={{ background: '#dcfce7', borderRadius: 20, padding: '4px 12px' }}>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a' }}>▲ {aboveAvg} above avg</span>
+                        <div style={{ background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: 20, padding: '5px 13px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                            <TrendingUp size={12} style={{ color: '#16a34a' }} />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a' }}>{aboveAvg} above avg</span>
                         </div>
-                        <div style={{ background: '#fee2e2', borderRadius: 20, padding: '4px 12px' }}>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: '#dc2626' }}>▼ {belowAvg} below avg</span>
+                        <div style={{ background: '#ffe4e6', border: '1px solid #fecdd3', borderRadius: 20, padding: '5px 13px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                            <TrendingDown size={12} style={{ color: '#dc2626' }} />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: '#dc2626' }}>{belowAvg} below avg</span>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <label style={{ fontSize: 13, fontWeight: 600, color: '#6B7280', whiteSpace: 'nowrap' }}>Select Function:</label>
-                        <div style={{ position: 'relative' }}>
-                            <select value={selectedFunction} onChange={e => setSelectedFunction(e.target.value)}
-                                style={{ appearance: 'none', background: '#fff', border: '1px solid #D1D5DB', borderRadius: 6, color: '#001B41', fontSize: 14, fontWeight: 600, padding: '8px 36px 8px 12px', cursor: 'pointer', minWidth: 160 }}>
-                                {functions.map((f, i) => <option key={i} value={f}>{f}</option>)}
-                            </select>
-                            <div style={{ pointerEvents: 'none', position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)' }}>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="#00338D"><path d="M6 8L1 3h10z" /></svg>
-                            </div>
-                        </div>
+
+                    {/* dropdown */}
+                    <div style={{ position: 'relative' }}>
+                        <select
+                            value={selectedFunction}
+                            onChange={e => setSelectedFunction(e.target.value)}
+                            style={{
+                                appearance: 'none', cursor: 'pointer',
+                                background: '#fff', border: '1.5px solid #cbd5e1',
+                                borderRadius: 10, color: '#0f172a',
+                                fontSize: 13, fontWeight: 700,
+                                padding: '9px 40px 9px 14px',
+                                minWidth: 170,
+                                boxShadow: '0 1px 4px rgba(15,23,42,.08)',
+                                transition: 'border-color .15s, box-shadow .15s',
+                            }}
+                            onFocus={e => { e.target.style.borderColor = '#1565c0'; e.target.style.boxShadow = '0 0 0 3px rgba(21,101,192,.12)'; }}
+                            onBlur={e => { e.target.style.borderColor = '#cbd5e1'; e.target.style.boxShadow = '0 1px 4px rgba(15,23,42,.08)'; }}
+                        >
+                            {functions.map((f, i) => <option key={i} value={f}>{f}</option>)}
+                        </select>
+                        <ChevronDown size={14} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', color: '#64748b', pointerEvents: 'none' }} />
                     </div>
                 </div>
             </div>
 
-            {error && <div className="bg-yellow-50 text-yellow-700 p-3 border-l-4 border-yellow-400 mb-4 text-sm">Using fallback data: {error}</div>}
+            {/* ── Body: Radar + Score Breakdown ── */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 18, alignItems: 'start' }}>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-                {/* Radar */}
-                <div style={{ flex: '1 1 400px', height: 400 }}>
+                {/* Radar chart — taller so axis labels have room */}
+                <div style={{ height: 420 }}>
                     <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="68%" data={chartData}>
-                            <PolarGrid stroke="#E5E7EB" gridType="polygon" />
-                            <PolarAngleAxis dataKey="metric" tick={{ fill: '#4B5563', fontSize: 11, fontWeight: 500 }} />
-                            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#6B7280', fontSize: 10 }} axisLine={false} tickCount={6} />
-                            <Radar name="Org Average" dataKey="orgAvg" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 4" fill="#f59e0b" fillOpacity={0.08} />
-                            <Radar name={selectedFunction || 'Function'} dataKey="score" stroke="#00338D" strokeWidth={2.5} fill="#0091DA" fillOpacity={0.35} />
+                        <RadarChart cx="50%" cy="50%" outerRadius="65%" data={chartData}>
+                            <PolarGrid stroke="#e2e8f0" gridType="polygon" />
+                            <PolarAngleAxis dataKey="metric"
+                                tick={{ fill: '#334155', fontSize: 11, fontWeight: 600 }} />
+                            <PolarRadiusAxis angle={90} domain={[0, 100]}
+                                tick={{ fill: '#94a3b8', fontSize: 9 }}
+                                axisLine={false} tickCount={5} />
+                            <Radar name="Org Average" dataKey="orgAvg"
+                                stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 4"
+                                fill="#f59e0b" fillOpacity={0.07} />
+                            <Radar name={selectedFunction || 'Function'} dataKey="score"
+                                stroke="#1565c0" strokeWidth={2.5}
+                                fill="#1565c0" fillOpacity={0.18} />
                             <RechartsTooltip content={<CustomTooltip />} />
-                            <Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ paddingTop: 12 }}
+                            <Legend layout="horizontal" align="center" verticalAlign="bottom"
+                                wrapperStyle={{ paddingTop: 14 }}
                                 formatter={v => <span style={{ fontSize: 12, color: '#374151', fontWeight: 600 }}>{v}</span>} />
                         </RadarChart>
                     </ResponsiveContainer>
                 </div>
 
-                {/* Score table */}
-                <div style={{ flex: '0 0 220px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Score Breakdown</p>
-                    {chartData.map((d, i) => {
-                        const diff = d.score - d.orgAvg;
-                        const color = diff >= 0 ? '#22c55e' : '#ef4444';
-                        return (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '5px 8px', background: i % 2 === 0 ? '#F9FAFB' : '#fff', borderRadius: 4 }}>
-                                <span style={{ fontSize: 11, color: '#374151', fontWeight: 500, flex: 1 }}>{d.metric}</span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <span style={{ fontSize: 12, fontWeight: 700, color: '#00338D', minWidth: 24, textAlign: 'right' }}>{d.score}</span>
-                                    <span style={{ fontSize: 10, fontWeight: 700, color, minWidth: 28, textAlign: 'right' }}>{diff >= 0 ? `+${diff}` : diff}</span>
-                                </div>
-                            </div>
-                        );
-                    })}
+                {/* Score Breakdown panel — scrollable so nothing is cut off */}
+                <div style={{
+                    background: '#f8fafc', border: '1px solid #e2e8f0',
+                    borderRadius: 12, padding: '14px 13px',
+                    maxHeight: 420, overflowY: 'auto',
+                }}>
+                    {/* Panel header */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 36px 36px 58px', gap: 8, marginBottom: 10, paddingBottom: 9, borderBottom: '1px solid #e2e8f0' }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em' }}>Control</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#1565c0', textTransform: 'uppercase', letterSpacing: '.06em', textAlign: 'center' }}>Fn</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '.06em', textAlign: 'center' }}>Org</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '.06em', textAlign: 'right' }}>Diff</span>
+                    </div>
+
+                    {/* Rows */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                        {chartData.map((d, i) => (
+                            <ScoreRow key={d.metric} metric={d.metric} score={d.score} orgAvg={d.orgAvg} index={i} />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
@@ -238,3 +332,5 @@ const FunctionRadarProfile = () => {
 };
 
 export default FunctionRadarProfile;
+
+

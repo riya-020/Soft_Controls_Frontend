@@ -1,9 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --rc-bg: #eef2fb;
+    --rc-ink: #08162f;
+    --rc-muted: #6a7896;
+    --rc-panel: rgba(255, 255, 255, 0.78);
+    --rc-panel-strong: rgba(255, 255, 255, 0.92);
+    --rc-border: rgba(143, 160, 198, 0.24);
+    --rc-blue: #00338d;
+    --rc-cobalt: #2563eb;
+    --rc-purple: #6f42ff;
+    --rc-pink: #d946ef;
+    --rc-magenta: #ec4899;
+    --rc-shadow: 0 24px 60px rgba(14, 24, 49, 0.12);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-kpmg-gray text-kpmg-darkGray font-sans antialiased;
+    @apply bg-kpmg-gray text-kpmg-darkGray antialiased;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 28%),
+      radial-gradient(circle at top right, rgba(217, 70, 239, 0.12), transparent 26%),
+      linear-gradient(180deg, #eef2fb 0%, #f6f8fd 42%, #edf2fb 100%);
+    color: var(--rc-ink);
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  ::selection {
+    background: rgba(37, 99, 235, 0.18);
+    color: var(--rc-ink);
+  }
+}
+
+@layer components {
+  .consulting-panel {
+    background: linear-gradient(180deg, rgba(237, 242, 255, 0.88), rgba(232, 235, 251, 0.78));
+    border: 1px solid var(--rc-border);
+    box-shadow: var(--rc-shadow);
+    backdrop-filter: blur(18px);
+  }
+
+  .consulting-card {
+    background: linear-gradient(180deg, rgba(232, 238, 255, 0.94), rgba(238, 233, 252, 0.88));
+    border: 1px solid rgba(156, 170, 202, 0.26);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(14px);
+  }
+
+  .consulting-kicker {
+    color: #6a7896;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .consulting-pill {
+    border: 1px solid rgba(135, 149, 181, 0.24);
+    background: rgba(234, 239, 253, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
   }
 }

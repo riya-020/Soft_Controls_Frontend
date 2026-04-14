@@ -6,20 +6,20 @@ import {
 } from 'recharts';
 
 const PILLAR_COLORS = {
-    'Role Modelling':          '#B5C833',
-    'Discussability':          '#8CC05A',
-    'Achievability':           '#63B06E',
-    'Enforcement':             '#45A07A',
-    'Clarity':                 '#338F86',
-    'Transparency':            '#437F8A',
-    'Commitment':              '#54708C',
-    'Call Someone to Account': '#545083',
+    'Role Modelling':          '#1447E6',
+    'Discussability':          '#2563EB',
+    'Achievability':           '#4F46E5',
+    'Enforcement':             '#6D28D9',
+    'Clarity':                 '#9333EA',
+    'Transparency':            '#C026D3',
+    'Commitment':              '#DB2777',
+    'Call Someone to Account': '#EC4899',
 };
 
 const bandColor = s => s >= 80 ? '#22c55e' : s >= 70 ? '#f59e0b' : '#ef4444';
 const bandBg    = s => s >= 80 ? '#dcfce7' : s >= 70 ? '#fef3c7' : '#fee2e2';
 const bandLabel = s => s >= 80 ? 'Low Risk'  : s >= 70 ? 'Medium Risk' : 'High Risk';
-const bandIcon  = s => s >= 80 ? '✅'        : s >= 70 ? '⚠️'          : '🔴';
+const bandIcon  = s => s >= 80 ? 'Low Risk' : s >= 70 ? 'Medium Risk' : 'High Risk';
 
 // ─── Radar Tooltip ─────────────────────────────────────────────────────────
 const CustomRadarTooltip = ({ active, payload }) => {

@@ -250,54 +250,107 @@ export default function ReportPage() {
     };
 
     if (loading) return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
-            height: '100vh', background: '#F4F5F7', fontFamily: 'Arial, sans-serif' }}>
-            <div style={{ textAlign: 'center', background: '#fff', padding: '40px 60px',
-                borderRadius: 8, borderTop: '4px solid #00338D', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
-                <div style={{ fontSize: 36, marginBottom: 16 }}>📄</div>
-                <div style={{ fontSize: 18, color: '#00338D', fontWeight: 700, marginBottom: 8 }}>Preparing Report...</div>
-                <div style={{ marginTop: 20, height: 4, background: '#E5E7EB', borderRadius: 2, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: '60%', background: '#00338D', borderRadius: 2,
-                        animation: 'slide 1.2s ease-in-out infinite' }} />
+        <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            height: '100vh',
+            background: 'linear-gradient(135deg, #0f2044 0%, #1a3a6e 45%, #1e4d8c 75%, #1565c0 100%)',
+            fontFamily: "'Inter','Segoe UI',system-ui,sans-serif",
+        }}>
+            <style>{`
+                @keyframes spin   { to { transform: rotate(360deg); } }
+                @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:.4} }
+                @keyframes barAnim { 0%{transform:translateX(-100%)} 100%{transform:translateX(280%)} }
+                @keyframes fadeUp2 { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+            `}</style>
+
+            <div style={{
+                textAlign: 'center',
+                animation: 'fadeUp2 .45s ease both',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
+                
+            }}>
+                <div style={{ position: 'relative', width: 56, height: 56, marginBottom: 24 }}>
+                    <div style={{ width: 56, height: 56, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.12)', borderTop: '3px solid #60a5fa', animation: 'spin 0.9s linear infinite', position: 'absolute', inset: 0 }} />
+                    <div style={{ width: 38, height: 38, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.08)', borderTop: '2px solid #93c5fd', animation: 'spin 1.5s linear infinite reverse', position: 'absolute', top: 9, left: 9 }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#60a5fa', boxShadow: '0 0 10px #60a5fa', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', animation: 'pulse2 1.8s ease infinite' }} />
                 </div>
-                <style>{`@keyframes slide { 0%{transform:translateX(-100%)} 100%{transform:translateX(260%)} }`}</style>
+                <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(147,197,253,0.85)', textTransform: 'uppercase', letterSpacing: '.16em', margin: '0 0 10px' }}>KPMG Risk Culture</p>
+                <h2 style={{ fontSize: 24, fontWeight: 700, color: '#fff', margin: '0 0 8px', letterSpacing: '-0.02em' }}>Preparing Report</h2>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', fontWeight: 400 }}>Compiling soft control data and insights…</p>
+                <div style={{ width: 260, height: 3, background: 'rgba(255,255,255,0.1)', borderRadius: 4, overflow: 'hidden', marginBottom: 20 }}>
+                    <div style={{ height: '100%', width: '45%', background: 'linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd)', borderRadius: 4, animation: 'barAnim 1.4s ease-in-out infinite', boxShadow: '0 0 8px rgba(96,165,250,0.5)' }} />
+                </div>
+                {['Loading survey data', 'Computing scores', 'Generating insights'].map((step, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, animation: `pulse2 ${1.4 + i * 0.3}s ease infinite` }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#60a5fa' }} />
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>{step}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );
 
     return (
-        <div style={{ background: '#f4f4f4', fontFamily: 'Arial, sans-serif', minHeight: '100vh' }}>
+        <div style={{ background: '#f8f9fa', fontFamily: "'Inter','Segoe UI',system-ui,sans-serif", minHeight: '100vh' }}>
 
             {/* Sticky nav bar */}
             <div className="no-print" style={{
-                position: 'sticky', top: 0, zIndex: 100, background: '#00338D',
-                padding: '12px 32px', display: 'flex', alignItems: 'center',
-                justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                position: 'sticky', top: 0, zIndex: 100,
+                background: '#ffffff',
+                borderBottom: '1px solid #ebebeb',
+                padding: '0 32px', height: 56,
+                display: 'flex', alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 1px 0 #ebebeb',
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <span style={{ color: 'white', fontWeight: 700, fontSize: 15 }}>📄 Soft Controls Deep Dive Report</span>
+                {/* Left: title + badge */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 28, height: 28, borderRadius: 8, background: '#18181b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#71717a', textTransform: 'uppercase', letterSpacing: '.12em', margin: 0 }}>KPMG Risk Culture</p>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: '#18181b', margin: 0, letterSpacing: '-0.01em' }}>Soft Controls Deep Dive Report</p>
+                        </div>
+                    </div>
                     <span style={{
-                        fontSize: 11, padding: '3px 10px', borderRadius: 12, fontWeight: 600,
-                        background: leaderOnline ? '#22c55e22' : '#f59e0b22',
-                        color:      leaderOnline ? '#86efac'   : '#fcd34d',
+                        fontSize: 10, padding: '3px 10px', borderRadius: 20, fontWeight: 700,
+                        background: leaderOnline ? '#dcfce7' : '#fef3c7',
+                        color:      leaderOnline ? '#16a34a' : '#b45309',
+                        border:     leaderOnline ? '1px solid #bbf7d0' : '1px solid #fde68a',
                     }}>
-                        {leaderOnline ? '✓ Live data' : '⚠ Fallback mode'}
+                        {leaderOnline ? '● Live data' : '● Fallback mode'}
                     </span>
                 </div>
+
+                {/* Right: download button */}
                 <button
                     onClick={handleDownload}
                     style={{
-                        background: 'white', color: '#00338D',
-                        border: 'none', padding: '10px 24px', borderRadius: 4,
-                        fontWeight: 700, fontSize: 14,
-                        cursor: 'pointer', transition: 'all 0.2s',
-                    }}>
-                    ⬇ Download PDF
+                        display: 'flex', alignItems: 'center', gap: 7,
+                        background: '#2563eb',
+                        border: 'none',
+                        color: '#fff', padding: '8px 20px', borderRadius: 8,
+                        fontWeight: 600, fontSize: 13, cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(37,99,235,0.3)',
+                        transition: 'background .15s, transform .15s',
+                        position: 'relative', overflow: 'hidden',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download PDF
                 </button>
             </div>
 
             {/* Report container */}
-            <div id="report-wrapper" ref={reportRef} style={{ width: '210mm', margin: '24px auto', background: 'white' }}>
+            <div id="report-wrapper" ref={reportRef} style={{ width: '210mm', margin: '28px auto 40px', background: 'white', borderRadius: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)' }}>
                 <CoverPage
                     respondents={`${respondents} respondents`}
                     date={new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -324,3 +377,9 @@ export default function ReportPage() {
         </div>
     );
 }
+
+
+
+
+
+
