@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import { Activity, Users, AlertTriangle, ChevronDown, X, TrendingUp, ShieldCheck, AlertCircle, Target, BarChart2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import dashImg from '../../assets/Leader 13.jpg';
+import dashImg from '../../assets/Leader 7.JPG';
 import FunctionRadarProfile from '../../components/FunctionRadarProfile';
 import SpiderChartWithDimensions from '../../components/SpiderChartWithDimensions';
 import RecommendationsSection from '../../components/RecommendationSection';
@@ -514,7 +514,21 @@ const LeaderDashboard = () => {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" }}>
+        <div style={{
+            display: 'flex', flexDirection: 'column', gap: 20,
+            fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif",
+            position: 'relative',
+        }}>
+            {/* ── Full-page background image ── */}
+            <div style={{
+                position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
+                backgroundImage: `url(${dashImg})`,
+                backgroundSize: 'cover', backgroundPosition: 'center top',
+                backgroundAttachment: 'fixed',
+                
+            }} />
+            {/* All content sits above the background */}
+            <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 20 }}>
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
                 @keyframes fadeUp  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
@@ -783,6 +797,7 @@ const LeaderDashboard = () => {
             <div id="recommendations-anchor">
                 <RecommendationsSection />
             </div>
+            </div>{/* end content wrapper */}
         </div>
     );
 };

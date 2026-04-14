@@ -48,65 +48,80 @@ const H3 = ({ children }) => (
     </h3>
 );
 
-// PDF-safe score bar using a table so html2pdf canvas renders it correctly
-const ScoreBar = ({ label, value, barColor }) => {
-    const pct = Math.min(Math.max(Number(value) || 0, 0), 100);
-    const emptyPct = 100 - pct;
-    return (
-        <div style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: 12, color: '#374151', marginBottom: 3 }}>{label}</div>
-            <table style={{ width: '100%', borderCollapse: 'collapse', height: 26, borderRadius: 4, overflow: 'hidden' }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: `${pct}%`, background: barColor, padding: '0 0 0 10px',
-                            fontSize: 12, fontWeight: 700, color: 'white', verticalAlign: 'middle',
-                            borderRadius: pct === 100 ? 4 : '4px 0 0 4px' }}>
-                            {value}
-                        </td>
-                        {emptyPct > 0 && (
-                            <td style={{ width: `${emptyPct}%`, background: '#E5E7EB',
-                                borderRadius: pct === 0 ? 4 : '0 4px 4px 0' }} />
-                        )}
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    );
-};
-
-// ─── PAGE A  —  Score / Definition / Leader-Employee / Dimension table ────────
-const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, pageNum }) => (
+// ─── PAGE A  —  Score / Definition / Executive Summary / Gap Analysis / Dimension table ────────
+const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, insights, pageNum }) => (
     <div style={A4}>
         <PageHeader title={title} />
 
-        <h2 style={{ color: '#00338D', fontSize: 20, margin: '0 0 12px' }}>{title}</h2>
+        {/* Row 1: Title + Score (left) | Definition (right) */}
+        <div style={{ display: 'flex', gap: 20, marginBottom: 16, alignItems: 'flex-start' }}>
+            {/* Left: title + score */}
+            <div style={{ flex: '0 0 auto' }}>
+                <h2 style={{ color: '#00338D', fontSize: 20, margin: '0 0 10px' }}>{title}</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <span style={{ fontSize: 52, fontWeight: 700, color: '#00338D', lineHeight: 1 }}>{score}</span>
+                    <div>
+                        <span style={{ display: 'inline-block', background: riskColor(risk), color: 'white',
+                            padding: '5px 16px', borderRadius: 20, fontWeight: 700, fontSize: 12, marginBottom: 4 }}>
+                            {risk}
+                        </span>
+                        <div style={{ fontSize: 10, color: '#6B7280' }}>Employee Perception Score (out of 100)</div>
+                    </div>
+                </div>
+            </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 18 }}>
-            <span style={{ fontSize: 58, fontWeight: 700, color: '#00338D', lineHeight: 1 }}>{score}</span>
-            <div>
-                <span style={{ display: 'inline-block', background: riskColor(risk), color: 'white',
-                    padding: '5px 16px', borderRadius: 20, fontWeight: 700, fontSize: 12, marginBottom: 4 }}>
-                    {risk}
-                </span>
-                <div style={{ fontSize: 10, color: '#6B7280' }}>Employee Perception Score (out of 100)</div>
+            {/* Right: Definition box */}
+            <div style={{ flex: 1, background: '#F8FAFC', borderLeft: '3px solid #00338D',
+                borderRadius: '0 4px 4px 0', padding: '10px 14px', alignSelf: 'stretch' }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#00338D', textTransform: 'uppercase',
+                    letterSpacing: 0.5, marginBottom: 5 }}>Definition</div>
+                <p style={{ fontSize: 11, color: '#374151', lineHeight: 1.65, margin: 0 }}>
+                    This soft control reflects the behavioural drivers that influence how openly employees discuss
+                    risks, concerns and mistakes. Strong performance in <strong>{title}</strong> improves
+                    organisational learning and strengthens the overall governance environment.
+                </p>
             </div>
         </div>
 
-        <H3>Definition</H3>
-        <p style={{ fontSize: 12, color: '#374151', lineHeight: 1.7, margin: '0 0 16px',
-            background: '#F8FAFF', padding: '10px 14px',
-            borderLeft: '3px solid #00338D', borderRadius: '0 4px 4px 0' }}>
-            This soft control reflects the behavioural drivers that influence how openly employees discuss
-            risks, concerns and mistakes. Strong performance in <strong>{title}</strong> improves
-            organisational learning and strengthens the overall governance environment.
-        </p>
+        {/* Section 2: Executive Insight Summary */}
+        <H3>Executive Insight Summary</H3>
+        {insights?.executiveSummary?.length > 0 ? (
+            <div style={{ background: '#F0F4FF', borderRadius: 6, padding: '8px 12px',
+                borderLeft: '3px solid #4F46E5', marginBottom: 14 }}>
+                {insights.executiveSummary.map((line, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 7,
+                        marginBottom: i < insights.executiveSummary.length - 1 ? 5 : 0 }}>
+                        <span style={{ color: '#4F46E5', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>•</span>
+                        <span style={{ fontSize: 11, color: '#1E293B', lineHeight: 1.55 }}>{line}</span>
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <p style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 14 }}>No executive summary available.</p>
+        )}
 
-        <H3>Leader vs Employee Perception</H3>
-        <div style={{ marginBottom: 18 }}>
-            <ScoreBar label="Leader Score"   value={leaderScore}   barColor="#00338D" />
-            <ScoreBar label="Employee Score" value={employeeScore} barColor="#F59E0B" />
-        </div>
+        {/* Section 3: Leader vs Employee Gap Analysis */}
+        <H3>Leader vs Employee Gap Analysis</H3>
+        {insights?.gapAnalysis ? (
+            <div style={{ background: '#FFFBEB', borderRadius: 6, padding: '8px 12px',
+                borderLeft: '3px solid #F59E0B', marginBottom: 14 }}>
+                {insights.gapAnalysis.summary && (
+                    <p style={{ margin: '0 0 7px', fontSize: 11, color: '#374151', lineHeight: 1.6 }}>
+                        {insights.gapAnalysis.summary}
+                    </p>
+                )}
+                {insights.gapAnalysis.points?.filter(p => p).map((point, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
+                        <span style={{ color: '#F59E0B', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>–</span>
+                        <span style={{ fontSize: 10.5, color: '#6B7280', lineHeight: 1.5 }}>{point}</span>
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <p style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 14 }}>No gap analysis available.</p>
+        )}
 
+        {/* Section 4: Dimension Performance Table */}
         <H3>Dimension Performance</H3>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
             <thead>
@@ -148,6 +163,23 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, pag
                 )}
             </tbody>
         </table>
+
+        {/* Section 5: Key Dimension Insights */}
+        {insights?.dimensionInsights?.length > 0 && (
+            <>
+                <H3>Key Dimension Insights</H3>
+                <div style={{ background: '#F8FAFF', borderRadius: 6, padding: '8px 12px',
+                    borderLeft: '3px solid #00338D' }}>
+                    {insights.dimensionInsights.map((line, i) => (
+                        <div key={i} style={{ display: 'flex', gap: 7,
+                            marginBottom: i < insights.dimensionInsights.length - 1 ? 4 : 0 }}>
+                            <span style={{ color: '#00338D', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>{'>'}</span>
+                            <span style={{ fontSize: 10.5, color: '#374151', lineHeight: 1.5 }}>{line}</span>
+                        </div>
+                    ))}
+                </div>
+            </>
+        )}
 
         <PageFooter pageNum={pageNum} />
     </div>
@@ -202,7 +234,6 @@ const PageB = ({ title, dimensions, recommendations, pageNum }) => {
                 </tbody>
             </table>
 
-            {/* Recommendations */}
             <H3>
                 Recommendations for {title}
                 {recommendations.length === 0 && (
@@ -264,12 +295,12 @@ const PageB = ({ title, dimensions, recommendations, pageNum }) => {
     );
 };
 
-export default function SoftControlPage({ title, score, risk, leaderScore, employeeScore, dimensions, recommendations, pageNum }) {
+export default function SoftControlPage({ title, score, risk, leaderScore, employeeScore, dimensions, recommendations, insights, pageNum }) {
     return (
         <>
             <PageA title={title} score={score} risk={risk}
                 leaderScore={leaderScore} employeeScore={employeeScore}
-                dimensions={dimensions} pageNum={pageNum} />
+                dimensions={dimensions} insights={insights} pageNum={pageNum} />
             <PageB title={title} dimensions={dimensions}
                 recommendations={recommendations || []} pageNum={pageNum + 1} />
         </>

@@ -52,9 +52,9 @@ const Navbar = () => {
                 * { font-family: 'Inter','Segoe UI',system-ui,sans-serif !important; }
 
                 .nb-root {
-                    background: #ffffff;
-                    border-bottom: 1px solid #ebebeb;
-                    box-shadow: 0 1px 0 #ebebeb;
+                    background: #1e3a8a;
+                    border-bottom: 1px solid #1e40af;
+                    box-shadow: 0 1px 0 #1e40af;
                     position: sticky; top: 0; z-index: 100;
                     animation: nbFadeIn .35s ease both;
                 }
@@ -66,15 +66,15 @@ const Navbar = () => {
                 }
 
                 .nb-logo { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-                .nb-logo-divider { width:1px; height:18px; background:#e5e7eb; }
-                .nb-logo-text { font-size:13px; font-weight:600; color:#111827; letter-spacing:-.01em; }
-                .nb-live { width:6px; height:6px; border-radius:50%; background:#22c55e; animation:pulse 2.2s ease infinite; display:inline-block; margin-left:4px; }
+                .nb-logo-divider { width:1px; height:18px; background:rgba(255,255,255,0.25); }
+                .nb-logo-text { font-size:13px; font-weight:600; color:#ffffff; letter-spacing:-.01em; }
+                .nb-live { width:6px; height:6px; border-radius:50%; background:#4ade80; animation:pulse 2.2s ease infinite; display:inline-block; margin-left:4px; }
 
-                .nb-nav { display:flex; align-items:center; position:relative; padding:3px; background:#f4f4f5; border-radius:10px; gap:1px; }
+                .nb-nav { display:flex; align-items:center; position:relative; padding:3px; background:rgba(255,255,255,0.12); border-radius:10px; gap:1px; }
                 .nb-pill {
                     position:absolute; top:3px; height:calc(100% - 6px);
-                    background:#fff; border-radius:7px;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    background:rgba(255,255,255,0.2); border-radius:7px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
                     transition: left .25s cubic-bezier(.4,0,.2,1), width .25s cubic-bezier(.4,0,.2,1);
                     pointer-events:none; z-index:0;
                 }
@@ -82,48 +82,48 @@ const Navbar = () => {
                     position:relative; z-index:1;
                     background:none; border:none; cursor:pointer;
                     padding:5px 12px; border-radius:7px;
-                    font-size:13px; font-weight:500; color:#71717a;
+                    font-size:13px; font-weight:500; color:rgba(255,255,255,0.7);
                     display:flex; align-items:center; gap:5px;
                     transition:color .15s; white-space:nowrap;
                 }
-                .nb-btn:hover { color:#18181b; }
-                .nb-btn.active { color:#18181b; font-weight:600; }
-                .nb-btn.active svg { color:#2563eb !important; }
+                .nb-btn:hover { color:#ffffff; }
+                .nb-btn.active { color:#ffffff; font-weight:600; }
+                .nb-btn.active svg { color:#93c5fd !important; }
 
                 .nb-report {
                     display:flex; align-items:center; gap:6px;
-                    background: #2563eb;
-                    border: none; color:#fff; border-radius:8px;
+                    background: rgba(255,255,255,0.15);
+                    border: 1px solid rgba(255,255,255,0.3); color:#fff; border-radius:8px;
                     padding:7px 14px; font-size:13px; font-weight:600;
                     cursor:pointer; position:relative; overflow:hidden;
-                    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
                     transition: background .15s, transform .15s, box-shadow .15s;
                 }
-                .nb-report:hover { background:#1d4ed8; transform:translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,235,0.4); }
+                .nb-report:hover { background:rgba(255,255,255,0.25); transform:translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
                 .nb-report::after {
                     content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
-                    background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+                    background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
                     animation:shimmer 2.8s ease infinite;
                 }
 
                 .nb-icon {
                     display:flex; align-items:center; justify-content:center;
                     width:34px; height:34px; border-radius:8px;
-                    border:1px solid #e5e7eb; background:#fff; color:#71717a;
+                    border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.8);
                     cursor:pointer; transition:all .15s;
                 }
-                .nb-icon:hover { background:#f4f4f5; color:#18181b; }
-                .nb-icon.logout:hover { color:#ef4444; border-color:#fca5a5; }
+                .nb-icon:hover { background:rgba(255,255,255,0.2); color:#ffffff; }
+                .nb-icon.logout:hover { color:#fca5a5; border-color:rgba(252,165,165,0.5); }
 
                 .nb-user {
                     display:flex; align-items:center; gap:8px;
                     padding:4px 10px 4px 4px; border-radius:999px;
-                    border:1px solid #e5e7eb; background:#fff;
+                    border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.1);
                     animation:slideIn .35s ease both;
                 }
                 .nb-avatar {
                     width:28px; height:28px; border-radius:50%;
-                    background: #2563eb;
+                    background: rgba(255,255,255,0.25);
                     display:flex; align-items:center; justify-content:center;
                     color:#fff; font-size:11px; font-weight:700; flex-shrink:0;
                 }
@@ -168,10 +168,10 @@ const Navbar = () => {
                         <div className="nb-user">
                             <div className="nb-avatar">{(user?.email?.[0] || 'U').toUpperCase()}</div>
                             <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-                                <span style={{ fontSize: 12, fontWeight: 600, color: '#18181b', maxWidth: 130, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</span>
-                                <span style={{ fontSize: 10, color: '#a1a1aa', textTransform: 'capitalize' }}>{user?.role}</span>
+                                <span style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', maxWidth: 130, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</span>
+                                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', textTransform: 'capitalize' }}>{user?.role}</span>
                             </div>
-                            <ChevronDown size={11} style={{ color: '#a1a1aa' }} />
+                            <ChevronDown size={11} style={{ color: 'rgba(255,255,255,0.5)' }} />
                         </div>
                         <button className="nb-icon logout" onClick={handleLogout} title="Logout"><LogOut size={14} /></button>
                     </div>

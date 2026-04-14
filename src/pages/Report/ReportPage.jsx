@@ -60,6 +60,7 @@ export default function ReportPage() {
     const [leaderOnline,     setLeaderOnline]     = useState(false);
     const [respondents,      setRespondents]      = useState(25);
     const [executiveSummary, setExecutiveSummary] = useState('');
+    const [insightsMap,      setInsightsMap]      = useState({});
 
     useEffect(() => {
         const loadData = async () => {
@@ -147,7 +148,6 @@ export default function ReportPage() {
                 const scRecommendations = {};
                 let execSummary = '';
 
-                // Helper: extract recs from a saved history entry (same shape as RecommendationSection)
                 const extractFromCached = (cached) => {
                     if (!cached?.parameters) return false;
                     execSummary = cached.executiveSummary || '';
@@ -184,7 +184,6 @@ export default function ReportPage() {
                         if (raw) {
                             const history = JSON.parse(raw);
                             if (Array.isArray(history) && history.length > 0) {
-                                // use the latest saved version
                                 extractFromCached(history[history.length - 1]);
                                 console.info('[Report] Loaded recommendations from localStorage cache');
                             }
@@ -195,8 +194,30 @@ export default function ReportPage() {
                 }
                 setExecutiveSummary(execSummary);
 
-                // ── 8. Build per-SC dimension list ─────────────────────────────
-                // Group question rows by SC
+                // ── 8. Insights from FastAPI /insights ────────────────────────
+                const insightsData = {};
+                try {
+                    const insRes = await fetch('http://localhost:8000/insights');
+                    if (insRes.ok) {
+                        const insJson = await insRes.json();
+                        Object.entries(insJson).forEach(([key, val]) => {
+                            const sc = normSC(key);
+                            insightsData[sc] = {
+                                executiveSummary:  val.executiveSummary  || [],
+                                gapAnalysis: {
+                                    summary: val.gapAnalysis?.summary || '',
+                                    points:  val.gapAnalysis?.points  || [],
+                                },
+                                dimensionInsights: val.dimensionInsights || [],
+                            };
+                        });
+                    }
+                } catch {
+                    console.warn('[Report] FastAPI /insights offline — insights will be empty');
+                }
+                setInsightsMap(insightsData);
+
+                // ── 9. Build per-SC dimension list ─────────────────────────────
                 const scDimensions = {};
                 Object.values(questionsMap).forEach(({ softControl, dimensionName, questionText }) => {
                     if (!scDimensions[softControl]) scDimensions[softControl] = [];
@@ -214,7 +235,7 @@ export default function ReportPage() {
                     });
                 });
 
-                // ── 9. Final controls array ────────────────────────────────────
+                // ── 10. Final controls array ───────────────────────────────────
                 const controls = SC_ORDER.map(sc => {
                     const empScore = empScores[sc] ?? 75;
                     const ldrScore = finalLdrScores[sc] ?? 0;
@@ -267,7 +288,6 @@ export default function ReportPage() {
                 textAlign: 'center',
                 animation: 'fadeUp2 .45s ease both',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
-                
             }}>
                 <div style={{ position: 'relative', width: 56, height: 56, marginBottom: 24 }}>
                     <div style={{ width: 56, height: 56, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.12)', borderTop: '3px solid #60a5fa', animation: 'spin 0.9s linear infinite', position: 'absolute', inset: 0 }} />
@@ -296,51 +316,49 @@ export default function ReportPage() {
             {/* Sticky nav bar */}
             <div className="no-print" style={{
                 position: 'sticky', top: 0, zIndex: 100,
-                background: '#ffffff',
-                borderBottom: '1px solid #ebebeb',
+                background: '#1e3a8a',
+                borderBottom: '1px solid #1e40af',
                 padding: '0 32px', height: 56,
                 display: 'flex', alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: '0 1px 0 #ebebeb',
+                boxShadow: '0 1px 0 #1e40af',
             }}>
-                {/* Left: title + badge */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 28, height: 28, borderRadius: 8, background: '#18181b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
                             </svg>
                         </div>
                         <div>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: '#71717a', textTransform: 'uppercase', letterSpacing: '.12em', margin: 0 }}>KPMG Risk Culture</p>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: '#18181b', margin: 0, letterSpacing: '-0.01em' }}>Soft Controls Deep Dive Report</p>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '.12em', margin: 0 }}>KPMG Risk Culture</p>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: '#ffffff', margin: 0, letterSpacing: '-0.01em' }}>Soft Controls Deep Dive Report</p>
                         </div>
                     </div>
                     <span style={{
                         fontSize: 10, padding: '3px 10px', borderRadius: 20, fontWeight: 700,
-                        background: leaderOnline ? '#dcfce7' : '#fef3c7',
-                        color:      leaderOnline ? '#16a34a' : '#b45309',
-                        border:     leaderOnline ? '1px solid #bbf7d0' : '1px solid #fde68a',
+                        background: leaderOnline ? 'rgba(74,222,128,0.2)' : 'rgba(251,191,36,0.2)',
+                        color:      leaderOnline ? '#4ade80' : '#fbbf24',
+                        border:     leaderOnline ? '1px solid rgba(74,222,128,0.4)' : '1px solid rgba(251,191,36,0.4)',
                     }}>
                         {leaderOnline ? '● Live data' : '● Fallback mode'}
                     </span>
                 </div>
 
-                {/* Right: download button */}
                 <button
                     onClick={handleDownload}
                     style={{
                         display: 'flex', alignItems: 'center', gap: 7,
-                        background: '#2563eb',
-                        border: 'none',
+                        background: 'rgba(255,255,255,0.15)',
+                        border: '1px solid rgba(255,255,255,0.3)',
                         color: '#fff', padding: '8px 20px', borderRadius: 8,
                         fontWeight: 600, fontSize: 13, cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(37,99,235,0.3)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                         transition: 'background .15s, transform .15s',
                         position: 'relative', overflow: 'hidden',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.background = '#1d4ed8'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
@@ -360,6 +378,7 @@ export default function ReportPage() {
                     <SoftControlPage
                         key={i}
                         {...ctrl}
+                        insights={insightsMap[ctrl.title] || null}
                         pageNum={(i * 2) + 3}
                     />
                 ))}
@@ -377,9 +396,3 @@ export default function ReportPage() {
         </div>
     );
 }
-
-
-
-
-
-

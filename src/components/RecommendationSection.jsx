@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AlertTriangle, TrendingUp, User, Clock, Zap, RefreshCw, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, History } from 'lucide-react';
-
-// ─── localStorage key ─────────────────────────────────────────────────────────
-const STORAGE_KEY = 'kpmg_rec_history';  // stores array of sets
-const MAX_VERSIONS = 10;                  // keep last 10 versions
+import { AlertTriangle, TrendingUp, User, Clock, Zap, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 
 // ─── normalize soft control names from API ────────────────────────────────────
 const normSC = n => {
@@ -34,31 +30,7 @@ const RISK_CONFIG = {
     Medium: { bg: 'bg-yellow-100', text: 'text-yellow-700' }
 };
 
-// ─── helpers ──────────────────────────────────────────────────────────────────
-const loadHistory = () => {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return [];
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-    } catch { return []; }
-};
 
-const saveHistory = (history) => {
-    try {
-        // keep only last MAX_VERSIONS
-        const trimmed = history.slice(-MAX_VERSIONS);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
-    } catch (e) { console.warn('localStorage full:', e); }
-};
-
-const formatDate = (iso) => {
-    if (!iso) return '';
-    return new Date(iso).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'short', year: 'numeric',
-        hour: '2-digit', minute: '2-digit'
-    });
-};
 
 // ─── RecommendationCard ───────────────────────────────────────────────────────
 const RecommendationCard = ({ rec, index }) => {
@@ -116,52 +88,27 @@ const RecommendationCard = ({ rec, index }) => {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 const RecommendationsSection = () => {
-    const [history,      setHistory]      = useState([]);   // all saved sets
-    const [activeIndex,  setActiveIndex]  = useState(0);    // index of currently viewed set
-    const [loading,      setLoading]      = useState(true);
-    const [regenerating, setRegenerating] = useState(false);
-    const [error,        setError]        = useState(null);
-    const [showHistory,  setShowHistory]  = useState(false);
+    const [data,    setData]    = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error,   setError]   = useState(null);
 
-    // ── On mount: load from localStorage, or fetch fresh if empty ────────────
     useEffect(() => {
-        const saved = loadHistory();
-        if (saved.length > 0) {
-            setHistory(saved);
-            setActiveIndex(saved.length - 1); // show latest
-            setLoading(false);
-        } else {
-            // First ever load — fetch from API once
-            fetchFromAPI(false);
-        }
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch('http://localhost:8000/recommendations');
+                if (!res.ok) throw new Error('Failed to fetch recommendations');
+                const json = await res.json();
+                setData(json);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
-
-    const fetchFromAPI = async (isRegenerate) => {
-        isRegenerate ? setRegenerating(true) : setLoading(true);
-        setError(null);
-        try {
-            const res = await fetch('http://localhost:8000/recommendations');
-            if (!res.ok) throw new Error('Failed to fetch recommendations');
-            const json = await res.json();
-
-            const newEntry = { ...json, savedAt: new Date().toISOString() };
-            const updated  = isRegenerate
-                ? [...loadHistory(), newEntry]   // append new set to history
-                : [newEntry];                     // first load — start fresh
-
-            saveHistory(updated);
-            setHistory(updated);
-            setActiveIndex(updated.length - 1); // always jump to newest
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            isRegenerate ? setRegenerating(false) : setLoading(false);
-        }
-    };
-
-    const handleRegenerate = () => fetchFromAPI(true);
-
-    const activeSet = history[activeIndex];
 
     // ── Loading state ─────────────────────────────────────────────────────────
     if (loading) return (
@@ -174,15 +121,9 @@ const RecommendationsSection = () => {
         </div>
     );
 
-    // ── Error state ───────────────────────────────────────────────────────────
-    if (error && history.length === 0) return (
+    if (error) return (
         <div className="relative overflow-hidden rounded-[28px] border border-white/70 border-t-4 border-t-red-500 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(252,247,247,0.96))] p-8 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-kpmg-navy">AI-Powered CEO Recommendations</h2>
-                <button onClick={() => fetchFromAPI(false)} className="flex items-center gap-2 text-sm text-kpmg-blue font-medium hover:underline">
-                    <RefreshCw size={14} /> Retry
-                </button>
-            </div>
+            <h2 className="text-lg font-bold text-kpmg-navy mb-4">AI-Powered CEO Recommendations</h2>
             <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
                 <p className="text-sm text-red-700 font-medium">Error: {error}</p>
                 <p className="text-xs text-red-500 mt-1">Make sure the backend server is running.</p>
@@ -190,7 +131,7 @@ const RecommendationsSection = () => {
         </div>
     );
 
-    if (!activeSet || !activeSet.parameters) return null;
+    if (!data || !data.parameters) return null;
 
     return (
         <div id="recommendations-section" className="relative overflow-hidden rounded-[28px] border border-white/70 border-t-4 border-t-kpmg-navy bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,249,253,0.96))] p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
@@ -199,76 +140,20 @@ const RecommendationsSection = () => {
             <div className="flex items-start justify-between mb-2 flex-wrap gap-3">
                 <div>
                     <h2 className="text-lg font-bold text-kpmg-navy">AI-Powered CEO Recommendations</h2>
-                    {/* <p className="text-sm text-gray-500 mt-0.5"> {history.length} version{history.length !== 1 ? 's' : ''} saved</p> */}
                 </div>
-
-                {/* Version navigator — only shown if more than 1 version */}
-                {history.length > 1 && (
-                    <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-                        <button onClick={() => setActiveIndex(i => Math.max(0, i - 1))} disabled={activeIndex === 0}
-                            className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition">
-                            <ChevronLeft size={14} />
-                        </button>
-                        <div className="text-center min-w-[130px]">
-                            <p className="text-xs font-bold text-kpmg-navy">
-                                Version {activeIndex + 1} of {history.length}
-                                {activeIndex === history.length - 1 && <span className="ml-1 text-green-600">· Latest</span>}
-                            </p>
-                            <p className="text-xs text-gray-400">{formatDate(activeSet.savedAt)}</p>
-                        </div>
-                        <button onClick={() => setActiveIndex(i => Math.min(history.length - 1, i + 1))} disabled={activeIndex === history.length - 1}
-                            className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition">
-                            <ChevronRight size={14} />
-                        </button>
-                    </div>
-                )}
             </div>
 
-            {/* ── Version history dropdown ── */}
-            {history.length > 1 && (
-                <div className="mb-6">
-                    <button onClick={() => setShowHistory(h => !h)}
-                        className="flex items-center gap-2 text-xs text-gray-500 hover:text-kpmg-navy transition font-medium">
-                        <History size={12} />
-                        {showHistory ? 'Hide' : 'Show'} version history ({history.length} saved)
-                    </button>
-                    {showHistory && (
-                        <div className="mt-2 border border-gray-200 rounded-lg overflow-hidden">
-                            {[...history].reverse().map((set, revIdx) => {
-                                const origIdx = history.length - 1 - revIdx;
-                                const isActive = origIdx === activeIndex;
-                                return (
-                                    <button key={origIdx} onClick={() => { setActiveIndex(origIdx); setShowHistory(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-2.5 text-sm border-b border-gray-100 last:border-b-0 transition ${isActive ? 'bg-blue-50 text-kpmg-navy font-semibold' : 'hover:bg-gray-50 text-gray-600'}`}>
-                                        <span>Version {origIdx + 1}{origIdx === history.length - 1 ? ' (Latest)' : ''}</span>
-                                        <span className="text-xs text-gray-400">{formatDate(set.savedAt)}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* ── Regenerating overlay ── */}
-            {regenerating && (
-                <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-6 flex items-center gap-3">
-                    <div className="w-5 h-5 border-2 border-kpmg-blue border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                    <p className="text-sm text-kpmg-navy font-medium">Gemini is analyzing risk culture patterns and generating new recommendations...</p>
-                </div>
-            )}
-
             {/* ── Executive Summary ── */}
-            {activeSet.executiveSummary && (
+            {data.executiveSummary && (
                 <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-6">
                     <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-1">Executive Summary</p>
-                    <p className="text-sm text-kpmg-navy font-medium leading-relaxed">{activeSet.executiveSummary}</p>
+                    <p className="text-sm text-kpmg-navy font-medium leading-relaxed">{data.executiveSummary}</p>
                 </div>
             )}
 
             {/* ── Parameters ── */}
             <div className="space-y-6">
-                {activeSet.parameters
+                {data.parameters
                     .sort((a, b) => a.score - b.score)
                     .map((param, i) => {
                         const riskConfig = RISK_CONFIG[param.riskLevel] || RISK_CONFIG.Medium;
@@ -298,28 +183,6 @@ const RecommendationsSection = () => {
                         );
                     })}
             </div>
-
-            {/* ── Regenerate button at bottom ── */}
-            <div className="mt-8 pt-6 border-t border-gray-200 flex items-center justify-between flex-wrap gap-4">
-                <div>
-                    <p className="text-sm font-semibold text-gray-700">Generate a new set of recommendations</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                        Previous versions are saved locally · {history.length}/{MAX_VERSIONS} versions stored
-                    </p>
-                </div>
-                <button onClick={handleRegenerate} disabled={regenerating}
-                    className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-kpmg-blue hover:bg-kpmg-navy transition-colors rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
-                    <RefreshCw size={14} className={regenerating ? 'animate-spin' : ''} />
-                    {regenerating ? 'Generating...' : 'Regenerate Recommendations'}
-                </button>
-            </div>
-
-            {/* Error toast if regenerate fails but old data still shows */}
-            {error && history.length > 0 && (
-                <div className="mt-3 bg-red-50 border border-red-200 p-3 rounded-lg">
-                    <p className="text-xs text-red-700">Regeneration failed: {error}. Showing last saved version.</p>
-                </div>
-            )}
         </div>
     );
 };
