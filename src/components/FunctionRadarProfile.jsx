@@ -226,11 +226,17 @@ const FunctionRadarProfile = () => {
 
     return (
         <div style={{
-            background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.7)',
-            borderRadius: 18, padding: '20px 22px',
-            boxShadow: '0 1px 0 rgba(255,255,255,0.08) inset, 0 4px 24px rgba(0,0,0,0.22)',
+            background: '#ffffff',
+            border: '1px solid #ebebeb',
+            borderRadius: 14,
+            padding: '22px',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+            transition: 'box-shadow .2s ease, transform .2s ease',
             position: 'relative', overflow: 'hidden',
-        }}>
+        }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.08)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+        >
 
             {/* ── Header ── */}
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
@@ -309,7 +315,7 @@ const FunctionRadarProfile = () => {
                 <div style={{
                     background: '#f8fafc', border: '1px solid #e2e8f0',
                     borderRadius: 12, padding: '14px 13px',
-                    maxHeight: 420, overflowY: 'auto',
+                    height: 'auto', overflowY: 'visible',
                 }}>
                     {/* Panel header */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 36px 36px 58px', gap: 8, marginBottom: 10, paddingBottom: 9, borderBottom: '1px solid #e2e8f0' }}>
