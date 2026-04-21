@@ -390,3 +390,166 @@ export function RecommendationsPage({ recommendations }) {
         </div>
     );
 }
+
+// ─── Functional Risk Culture Insights Pages ───────────────────────────────────
+// 1 function per page → 6 functions = 6 pages.
+// 4 sections stacked VERTICALLY, full width. Professional report style.
+
+const FI = {
+    brand:       '#00338D',
+    brandLight:  '#DBEAFE',
+    borderLight: '#E5E7EB',
+    text1:       '#1F2937',
+    text2:       '#374151',
+    text3:       '#6B7280',
+    white:       '#FFFFFF',
+};
+
+const SECTION_META = [
+    { key: 'ObservedRiskPattern',       label: 'Observed Risk Pattern',        bg: '#EEF2FF', borderClr: '#4F46E5', labelClr: '#3730A3' },
+    { key: 'WhyRiskIsConcentratedHere', label: 'Why Risk Is Concentrated Here', bg: '#FFFBEB', borderClr: '#D97706', labelClr: '#92400E' },
+    { key: 'FunctionalGap',             label: 'Functional Gap',                bg: '#F0FDF4', borderClr: '#16A34A', labelClr: '#14532D' },
+    { key: 'BusinessImpact',            label: 'Business Impact',               bg: '#FFF1F2', borderClr: '#E11D48', labelClr: '#9F1239' },
+];
+
+function FIPageHeader() {
+    return (
+        <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            borderBottom: `2px solid ${FI.brand}`,
+            paddingBottom: 8, marginBottom: 22,
+        }}>
+            <span style={{ fontSize: 12, color: FI.brand, fontWeight: 700 }}>
+                Soft Risk Culture Report
+            </span>
+            <span style={{ fontSize: 11, color: FI.text3, fontWeight: 600 }}>
+                Functional Risk Culture Insights
+            </span>
+        </div>
+    );
+}
+
+function FIPageFooter({ pageNum }) {
+    return (
+        <div style={{
+            position: 'absolute', bottom: 20, left: 48, right: 48,
+            display: 'flex', justifyContent: 'space-between',
+            fontSize: 10, color: FI.text3,
+            borderTop: `1px solid ${FI.borderLight}`, paddingTop: 6,
+        }}>
+            <span>Confidential</span>
+            <span>Soft Control Assessment</span>
+            <span>Page {pageNum}</span>
+        </div>
+    );
+}
+
+function FunctionPage({ item, pageNum, isFirst }) {
+    return (
+        <div style={{
+            position: 'relative',
+            padding: '36px 48px 64px',
+            boxSizing: 'border-box',
+            width: '210mm',
+            height: '297mm',
+            overflow: 'hidden',
+            fontFamily: 'Arial, sans-serif',
+            background: FI.white,
+            pageBreakBefore: 'always',
+            pageBreakAfter: 'always',
+            pageBreakInside: 'avoid',
+            borderTop: `6px solid ${FI.brand}`,
+        }}>
+            <FIPageHeader />
+
+            {/* Section intro — first page only */}
+            {isFirst && (
+                <div style={{ marginBottom: 18 }}>
+                    <h2 style={{
+                        color: FI.brand, fontSize: 18, fontWeight: 700,
+                        margin: '0 0 5px', letterSpacing: '-0.01em',
+                    }}>
+                        Functional Risk Culture Insights
+                    </h2>
+                    <p style={{ fontSize: 11, color: FI.text3, margin: '0 0 14px', lineHeight: 1.55 }}>
+                        The following insights are inferred from organisation-wide behavioural patterns.
+                        They do not represent direct measurement of individual functions or employees.
+                    </p>
+                    <div style={{ height: 1, background: FI.borderLight }} />
+                </div>
+            )}
+
+            {/* Function name heading */}
+            <div style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                marginBottom: 18,
+            }}>
+                <div style={{
+                    background: FI.brand, color: FI.white,
+                    padding: '6px 22px', borderRadius: 3,
+                    fontSize: 15, fontWeight: 700, letterSpacing: 0.4,
+                    flexShrink: 0,
+                }}>
+                    {item.Function}
+                </div>
+                <div style={{ flex: 1, height: 2, background: FI.brandLight }} />
+            </div>
+
+            {/* 4 sections — stacked vertically, full width */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+                {SECTION_META.map(({ key, label, bg, borderClr, labelClr }) => (
+                    <div key={key} style={{
+                        background:   bg,
+                        borderLeft:   `4px solid ${borderClr}`,
+                        borderRadius: '0 5px 5px 0',
+                        padding:      '10px 16px',
+                    }}>
+                        {/* Label row */}
+                        <div style={{
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            marginBottom: 6,
+                        }}>
+                            <div style={{
+                                width: 6, height: 6, borderRadius: '50%',
+                                background: borderClr, flexShrink: 0,
+                            }} />
+                            <span style={{
+                                fontSize: 10, fontWeight: 700, color: labelClr,
+                                textTransform: 'uppercase', letterSpacing: 0.8,
+                            }}>
+                                {label}
+                            </span>
+                        </div>
+                        {/* Body */}
+                        <p style={{
+                            fontSize: 11, color: FI.text1,
+                            lineHeight: 1.65, margin: 0,
+                            fontFamily: 'Arial, sans-serif',
+                        }}>
+                            {item[key] || '—'}
+                        </p>
+                    </div>
+                ))}
+            </div>
+
+            <FIPageFooter pageNum={pageNum} />
+        </div>
+    );
+}
+
+export function FunctionalInsightsPages({ data }) {
+    if (!data || data.length === 0) return null;
+
+    return (
+        <>
+            {data.map((item, idx) => (
+                <FunctionPage
+                    key={item.Function || idx}
+                    item={item}
+                    pageNum={`FI-${idx + 1}`}
+                    isFirst={idx === 0}
+                />
+            ))}
+        </>
+    );
+}

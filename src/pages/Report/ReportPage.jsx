@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
 import CoverPage from './CoverPage';
 import SoftControlPage from './SoftControlPage';
-import { IntroductionPage } from './ReportComponents';
+import { IntroductionPage, FunctionalInsightsPages } from './ReportComponents';
 
 // ─── Maps FastAPI parameter keys → display names ──────────────────────────────
 const PARAM_MAP = {
@@ -61,6 +61,7 @@ export default function ReportPage() {
     const [respondents,      setRespondents]      = useState(25);
     const [executiveSummary, setExecutiveSummary] = useState('');
     const [insightsMap,      setInsightsMap]      = useState({});
+    const [functionalInsights,    setFunctionalInsights]    = useState([]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -217,6 +218,17 @@ export default function ReportPage() {
                 }
                 setInsightsMap(insightsData);
 
+                // ── 9. Functional Insights from FastAPI /functional-insights ──
+                try {
+                    const fiRes = await fetch('http://localhost:8000/functional-insights');
+                    if (fiRes.ok) {
+                        const fiJson = await fiRes.json();
+                        if (Array.isArray(fiJson)) setFunctionalInsights(fiJson);
+                    }
+                } catch {
+                    console.warn('[Report] FastAPI /functional-insights offline — section will be hidden');
+                }
+
                 // ── 9. Build per-SC dimension list ─────────────────────────────
                 const scDimensions = {};
                 Object.values(questionsMap).forEach(({ softControl, dimensionName, questionText }) => {
@@ -335,36 +347,29 @@ export default function ReportPage() {
                             <p style={{ fontSize: 14, fontWeight: 700, color: '#ffffff', margin: 0, letterSpacing: '-0.01em' }}>Soft Controls Deep Dive Report</p>
                         </div>
                     </div>
-                    <span style={{
-                        fontSize: 10, padding: '3px 10px', borderRadius: 20, fontWeight: 700,
-                        background: leaderOnline ? 'rgba(74,222,128,0.2)' : 'rgba(251,191,36,0.2)',
-                        color:      leaderOnline ? '#4ade80' : '#fbbf24',
-                        border:     leaderOnline ? '1px solid rgba(74,222,128,0.4)' : '1px solid rgba(251,191,36,0.4)',
-                    }}>
-                        {leaderOnline ? '● Live data' : '● Fallback mode'}
-                    </span>
                 </div>
 
-                <button
-                    onClick={handleDownload}
-                    style={{
-                        display: 'flex', alignItems: 'center', gap: 7,
-                        background: 'rgba(255,255,255,0.15)',
-                        border: '1px solid rgba(255,255,255,0.3)',
-                        color: '#fff', padding: '8px 20px', borderRadius: 8,
-                        fontWeight: 600, fontSize: 13, cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                        transition: 'background .15s, transform .15s',
-                        position: 'relative', overflow: 'hidden',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-                    </svg>
-                    Download PDF
-                </button>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    <button
+                        onClick={handleDownload}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 7,
+                            background: 'rgba(255,255,255,0.15)',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            color: '#fff', padding: '8px 20px', borderRadius: 8,
+                            fontWeight: 600, fontSize: 13, cursor: 'pointer',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                            transition: 'background .15s, transform .15s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download PDF
+                    </button>
+                </div>
             </div>
 
             {/* Report container */}
@@ -382,6 +387,9 @@ export default function ReportPage() {
                         pageNum={(i * 2) + 3}
                     />
                 ))}
+                {functionalInsights.length > 0 && (
+                    <FunctionalInsightsPages data={functionalInsights} />
+                )}
             </div>
 
             <style>{`
