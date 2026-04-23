@@ -571,7 +571,7 @@ const LeaderDashboard = () => {
 
                 <div style={{ position: 'relative', zIndex: 1, padding: '32px 44px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
                     <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(167,139,250,.95)', textTransform: 'uppercase', letterSpacing: '.18em', margin: 0, animation: 'slideR .5s ease .05s both', opacity: 0 }}>
-                        Executive Leadership View &nbsp;·&nbsp; Q1 2026
+                        Executive Leadership View &nbsp;·&nbsp;
                     </p>
                     <h1 style={{ fontSize: 34, fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.1, letterSpacing: '-.02em', animation: 'slideR .5s ease .15s both', opacity: 0 }}>
                         Risk Culture Dashboard

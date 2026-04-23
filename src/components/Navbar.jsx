@@ -8,7 +8,7 @@ const leaderNavItems = [
     { id: 'overview',          label: 'Overview',          icon: LayoutDashboard },
     { id: 'soft-controls',     label: 'Soft Controls',     icon: PieChart        },
     { id: 'analytics',         label: 'Analytics',         icon: BarChart3       },
-    { id: 'question-insights', label: 'Question Insights', icon: MessageSquare   },
+    // { id: 'question-insights', label: 'Question Insights', icon: MessageSquare   },
     { id: 'recommendations',   label: 'Recommendations',   icon: Sparkles        },
 ];
 
