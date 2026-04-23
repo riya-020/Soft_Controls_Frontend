@@ -5,6 +5,7 @@ import PersonaSelection from './pages/PersonaSelection';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import ReportPage from './pages/Report/ReportPage';
+import PolicyGapPage from './pages/PolicyGapPage';
 
 // Dashboards
 import DashboardLayout from './layouts/DashboardLayout';
@@ -70,6 +71,18 @@ function App() {
           element={
             <ProtectedRoute allowedRole="leader">
               <ReportPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Policy Gap — full page, uses DashboardLayout for navbar */}
+        <Route
+          path="/policy"
+          element={
+            <ProtectedRoute allowedRole="leader">
+              <DashboardLayout>
+                <PolicyGapPage />
+              </DashboardLayout>
             </ProtectedRoute>
           }
         />

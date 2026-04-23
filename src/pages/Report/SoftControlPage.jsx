@@ -3,63 +3,50 @@
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const T = {
-  // Brand
   brand:        '#00338D',
   brandLight:   '#DBEAFE',
   brandFaint:   '#F0F4FF',
-
-  // Text hierarchy
-  text1:        '#1F2937',   // headings, strong labels
-  text2:        '#1F2937',   // body copy
-  text3:        '#6B7280',   // muted / secondary labels
-  text4:        '#9CA3AF',   // placeholders, footer, captions
-
-  // Structural
-  border:       '#E5E7EB',   // table borders, dividers
-  borderLight:  '#F3F4F6',   // rec card header bg
-  rowAlt:       '#F9FAFB',   // alternating table row
-  surface:      '#F8FAFC',   // definition box bg
+  text1:        '#1F2937',
+  text2:        '#1F2937',
+  text3:        '#6B7280',
+  text4:        '#9CA3AF',
+  border:       '#E5E7EB',
+  borderLight:  '#F3F4F6',
+  rowAlt:       '#F9FAFB',
+  surface:      '#F8FAFC',
   white:        '#FFFFFF',
-
-  // Risk badge backgrounds + text (white text on all three)
   riskHigh:     '#B71C1C',
   riskMed:      '#E65100',
   riskLow:      '#1B5E20',
-
-  // Performance pill backgrounds / text pairs
   perfGreenBg:  '#E8F5E9',
   perfGreenTxt: '#1B5E20',
   perfAmberBg:  '#FFF3E0',
   perfAmberTxt: '#E65100',
   perfRedBg:    '#FFEBEE',
   perfRedTxt:   '#B71C1C',
-
-  // Severity badge (recommendations)
   sevHigh:      '#B71C1C',
   sevMed:       '#E65100',
   sevLow:       '#1B5E20',
-
-  // Callout box accents
-  accentInsight: '#4F46E5',
-  accentGap:     '#F59E0B',
-  accentGapBg:   '#FFFBEB',
+  accentInsight:   '#4F46E5',
+  accentGap:       '#F59E0B',
+  accentGapBg:     '#FFFBEB',
   accentInsightBg: '#F0F4FF',
-
-  // Impact strip
   impactBg:     '#EFF6FF',
   impactBorder: '#DBEAFE',
   impactTxt:    '#1D4ED8',
   impactVal:    '#1E40AF',
-};
 
-// ─── TYPOGRAPHY SCALE ─────────────────────────────────────────────────────────
-// fontSize   usage
-// 20px/700   Control title (h2)
-// 13px/700   Section heading (H3)
-// 12px/700   Rec card title, page header label
-// 11px/400   Body, table cells, callout text
-// 10px/700   Uppercase label (letter-spaced)
-// 10px/400   Footer, caption, badge inside perf pill
+  // Rec card section colours
+  whatWhyBg:     '#FFF7ED',
+  whatWhyBorder: '#FB923C',
+  whatWhyLbl:    '#C2410C',
+  howBg:         '#EFF6FF',
+  howBorder:     '#3B82F6',
+  howLbl:        '#1D4ED8',
+  impactBg2:     '#F0FDF4',
+  impactBorder2: '#16A34A',
+  impactLbl2:    '#14532D',
+};
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const riskColor = r =>
@@ -143,7 +130,6 @@ const H3 = ({ children }) => (
     </h3>
 );
 
-// Uppercase meta label (10px, letter-spaced, bold)
 const MetaLabel = ({ children, color = T.brand }) => (
     <div style={{
         fontSize:      10,
@@ -157,7 +143,6 @@ const MetaLabel = ({ children, color = T.brand }) => (
     </div>
 );
 
-// Callout box wrapper
 const Callout = ({ bg, borderColor, children, mb = 12 }) => (
     <div style={{
         background:   bg,
@@ -170,7 +155,6 @@ const Callout = ({ bg, borderColor, children, mb = 12 }) => (
     </div>
 );
 
-// Bullet line inside callout
 const BulletLine = ({ bullet, color, children, mb = 5, last = false }) => (
     <div style={{ display: 'flex', gap: 8, marginBottom: last ? 0 : mb }}>
         <span style={{ color, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{bullet}</span>
@@ -183,33 +167,20 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
     <div style={A4}>
         <PageHeader title={title} />
 
-        {/* Row 1 — Title + Score  |  Definition */}
         <div style={{ display: 'flex', gap: 20, marginBottom: 16, alignItems: 'flex-start' }}>
-
-            {/* Left: title + score */}
             <div style={{ flex: '0 0 auto' }}>
                 <h2 style={{ color: T.brand, fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>
                     {title}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <span style={{
-                        fontSize:   48,
-                        fontWeight: 700,
-                        color:      T.brand,
-                        lineHeight: 1,
-                    }}>
+                    <span style={{ fontSize: 48, fontWeight: 700, color: T.brand, lineHeight: 1 }}>
                         {score}
                     </span>
                     <div>
                         <span style={{
-                            display:      'inline-block',
-                            background:   riskColor(risk),
-                            color:        T.white,
-                            padding:      '5px 16px',
-                            borderRadius: 20,
-                            fontWeight:   700,
-                            fontSize:     11,
-                            marginBottom: 4,
+                            display: 'inline-block', background: riskColor(risk),
+                            color: T.white, padding: '5px 16px', borderRadius: 20,
+                            fontWeight: 700, fontSize: 11, marginBottom: 4,
                         }}>
                             {risk}
                         </span>
@@ -220,14 +191,11 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
                 </div>
             </div>
 
-            {/* Right: definition */}
             <div style={{
-                flex:        1,
-                background:  T.surface,
-                borderLeft:  `3px solid ${T.brand}`,
-                borderRadius:'0 4px 4px 0',
-                padding:     '10px 14px',
-                alignSelf:   'stretch',
+                flex: 1, background: T.surface,
+                borderLeft: `3px solid ${T.brand}`,
+                borderRadius: '0 4px 4px 0',
+                padding: '10px 14px', alignSelf: 'stretch',
             }}>
                 <MetaLabel>Definition</MetaLabel>
                 <p style={{ fontSize: 11, color: T.text2, lineHeight: 1.65, margin: 0 }}>
@@ -239,28 +207,19 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
             </div>
         </div>
 
-        {/* Section 2 — Executive Insight Summary */}
         <H3>Executive Insight Summary</H3>
         {insights?.executiveSummary?.length > 0 ? (
             <Callout bg={T.accentInsightBg} borderColor={T.accentInsight}>
                 {insights.executiveSummary.map((line, i) => (
-                    <BulletLine
-                        key={i}
-                        bullet="•"
-                        color={T.accentInsight}
-                        last={i === insights.executiveSummary.length - 1}
-                    >
+                    <BulletLine key={i} bullet="•" color={T.accentInsight} last={i === insights.executiveSummary.length - 1}>
                         {line}
                     </BulletLine>
                 ))}
             </Callout>
         ) : (
-            <p style={{ fontSize: 11, color: T.text4, marginBottom: 14 }}>
-                No executive summary available.
-            </p>
+            <p style={{ fontSize: 11, color: T.text4, marginBottom: 14 }}>No executive summary available.</p>
         )}
 
-        {/* Section 3 — Leader vs Employee Gap Analysis */}
         <H3>Leader vs Employee Gap Analysis</H3>
         {insights?.gapAnalysis ? (
             <Callout bg={T.accentGapBg} borderColor={T.accentGap}>
@@ -270,24 +229,16 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
                     </BulletLine>
                 )}
                 {insights.gapAnalysis.points?.filter(Boolean).map((point, i) => (
-                    <BulletLine
-                        key={i}
-                        bullet="•"
-                        color={T.accentGap}
-                        mb={4}
-                        last={i === insights.gapAnalysis.points.filter(Boolean).length - 1}
-                    >
+                    <BulletLine key={i} bullet="•" color={T.accentGap} mb={4}
+                        last={i === insights.gapAnalysis.points.filter(Boolean).length - 1}>
                         {point}
                     </BulletLine>
                 ))}
             </Callout>
         ) : (
-            <p style={{ fontSize: 11, color: T.text4, marginBottom: 14 }}>
-                No gap analysis available.
-            </p>
+            <p style={{ fontSize: 11, color: T.text4, marginBottom: 14 }}>No gap analysis available.</p>
         )}
 
-        {/* Section 4 — Dimension Performance Table */}
         <H3>Dimension Performance</H3>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
             <thead>
@@ -297,14 +248,7 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
                         { label: 'Score',       w: '15%', align: 'center' },
                         { label: 'Performance', w: '25%', align: 'center' },
                     ].map(({ label, w, align }, i) => (
-                        <th key={i} style={{
-                            color:      T.white,
-                            padding:    '8px 10px',
-                            textAlign:  align,
-                            fontWeight: 700,
-                            fontSize:   11,
-                            width:      w,
-                        }}>
+                        <th key={i} style={{ color: T.white, padding: '8px 10px', textAlign: align, fontWeight: 700, fontSize: 11, width: w }}>
                             {label}
                         </th>
                     ))}
@@ -315,37 +259,14 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
                     const pc = perfColors(d.color);
                     return (
                         <tr key={i} style={{ background: i % 2 === 0 ? T.white : T.rowAlt }}>
-                            <td style={{
-                                padding:     '8px 10px',
-                                borderBottom:`1px solid ${T.border}`,
-                                color:       T.text1,
-                                fontSize:    11,
-                            }}>
+                            <td style={{ padding: '8px 10px', borderBottom: `1px solid ${T.border}`, color: T.text1, fontSize: 11 }}>
                                 {d.name}
                             </td>
-                            <td style={{
-                                padding:     '8px 10px',
-                                borderBottom:`1px solid ${T.border}`,
-                                textAlign:   'center',
-                                fontWeight:  700,
-                                color:       T.brand,
-                                fontSize:    11,
-                            }}>
+                            <td style={{ padding: '8px 10px', borderBottom: `1px solid ${T.border}`, textAlign: 'center', fontWeight: 700, color: T.brand, fontSize: 11 }}>
                                 {d.score}
                             </td>
-                            <td style={{
-                                padding:     '8px 10px',
-                                borderBottom:`1px solid ${T.border}`,
-                                textAlign:   'center',
-                            }}>
-                                <span style={{
-                                    background:   pc.bg,
-                                    color:        pc.text,
-                                    padding:      '2px 8px',
-                                    borderRadius: 3,
-                                    fontWeight:   700,
-                                    fontSize:     10,
-                                }}>
+                            <td style={{ padding: '8px 10px', borderBottom: `1px solid ${T.border}`, textAlign: 'center' }}>
+                                <span style={{ background: pc.bg, color: pc.text, padding: '2px 8px', borderRadius: 3, fontWeight: 700, fontSize: 10 }}>
                                     {d.performance}
                                 </span>
                             </td>
@@ -354,12 +275,7 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
                 })}
                 {dimensions.length === 0 && (
                     <tr>
-                        <td colSpan={3} style={{
-                            padding:   14,
-                            textAlign: 'center',
-                            color:     T.text4,
-                            fontSize:  11,
-                        }}>
+                        <td colSpan={3} style={{ padding: 14, textAlign: 'center', color: T.text4, fontSize: 11 }}>
                             No dimension data available
                         </td>
                     </tr>
@@ -367,19 +283,13 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
             </tbody>
         </table>
 
-        {/* Section 5 — Key Dimension Insights */}
         {insights?.dimensionInsights?.length > 0 && (
             <>
                 <H3>Key Dimension Insights</H3>
                 <Callout bg={T.surface} borderColor={T.brand} mb={0}>
                     {insights.dimensionInsights.map((line, i) => (
-                        <BulletLine
-                            key={i}
-                            bullet="›"
-                            color={T.brand}
-                            mb={4}
-                            last={i === insights.dimensionInsights.length - 1}
-                        >
+                        <BulletLine key={i} bullet="›" color={T.brand} mb={4}
+                            last={i === insights.dimensionInsights.length - 1}>
                             {line}
                         </BulletLine>
                     ))}
@@ -390,6 +300,34 @@ const PageA = ({ title, score, risk, leaderScore, employeeScore, dimensions, ins
         <PageFooter pageNum={pageNum} />
     </div>
 );
+
+// ─── REC SECTION ROW — reusable coloured callout row ─────────────────────────
+const RecSection = ({ bg, borderColor, labelColor, label, value }) => {
+    if (!value) return null;
+    return (
+        <div style={{
+            background:  bg,
+            borderLeft:  `3px solid ${borderColor}`,
+            borderRadius:'0 4px 4px 0',
+            padding:     '7px 11px',
+            marginBottom: 0,
+        }}>
+            <div style={{
+                fontSize:      9,
+                fontWeight:    700,
+                color:         labelColor,
+                textTransform: 'uppercase',
+                letterSpacing: 0.6,
+                marginBottom:  4,
+            }}>
+                {label}
+            </div>
+            <div style={{ fontSize: 11, color: T.text2, lineHeight: 1.6 }}>
+                {value}
+            </div>
+        </div>
+    );
+};
 
 // ─── PAGE B ───────────────────────────────────────────────────────────────────
 const PageB = ({ title, dimensions, recommendations, pageNum }) => (
@@ -406,14 +344,7 @@ const PageB = ({ title, dimensions, recommendations, pageNum }) => (
                         { h: 'Favourable',      w: '15%', a: 'center' },
                         { h: 'Unfavourable',    w: '15%', a: 'center' },
                     ].map(({ h, w, a }, i) => (
-                        <th key={i} style={{
-                            padding:    '7px 10px',
-                            textAlign:  a,
-                            color:      T.text3,
-                            fontWeight: 700,
-                            fontSize:   10,
-                            width:      w,
-                        }}>
+                        <th key={i} style={{ padding: '7px 10px', textAlign: a, color: T.text3, fontWeight: 700, fontSize: 10, width: w }}>
                             {h}
                         </th>
                     ))}
@@ -421,46 +352,17 @@ const PageB = ({ title, dimensions, recommendations, pageNum }) => (
             </thead>
             <tbody>
                 {dimensions.map((d, i) => (
-                    <tr key={i} style={{
-                        borderBottom: `1px solid ${T.border}`,
-                        verticalAlign:'top',
-                        background:   i % 2 === 0 ? T.white : T.rowAlt,
-                    }}>
-                        <td style={{
-                            padding:    '9px 10px',
-                            color:      T.text2,
-                            lineHeight: 1.55,
-                            fontSize:   11,
-                        }}>
+                    <tr key={i} style={{ borderBottom: `1px solid ${T.border}`, verticalAlign: 'top', background: i % 2 === 0 ? T.white : T.rowAlt }}>
+                        <td style={{ padding: '9px 10px', color: T.text2, lineHeight: 1.55, fontSize: 11 }}>
                             {d.question || '—'}
                         </td>
                         <td style={{ padding: '9px 10px', textAlign: 'center', verticalAlign: 'middle' }}>
-                            <span style={{
-                                display:      'inline-block',
-                                background:   T.perfGreenBg,
-                                color:        T.perfGreenTxt,
-                                padding:      '3px 7px',
-                                borderRadius: 4,
-                                fontWeight:   700,
-                                fontSize:     11,
-                                minWidth:     38,
-                                textAlign:    'center',
-                            }}>
+                            <span style={{ display: 'inline-block', background: T.perfGreenBg, color: T.perfGreenTxt, padding: '3px 7px', borderRadius: 4, fontWeight: 700, fontSize: 11, minWidth: 38, textAlign: 'center' }}>
                                 {d.favorable}%
                             </span>
                         </td>
                         <td style={{ padding: '9px 10px', textAlign: 'center', verticalAlign: 'middle' }}>
-                            <span style={{
-                                display:      'inline-block',
-                                background:   T.perfRedBg,
-                                color:        T.perfRedTxt,
-                                padding:      '3px 7px',
-                                borderRadius: 4,
-                                fontWeight:   700,
-                                fontSize:     11,
-                                minWidth:     38,
-                                textAlign:    'center',
-                            }}>
+                            <span style={{ display: 'inline-block', background: T.perfRedBg, color: T.perfRedTxt, padding: '3px 7px', borderRadius: 4, fontWeight: 700, fontSize: 11, minWidth: 38, textAlign: 'center' }}>
                                 {d.unfavorable}%
                             </span>
                         </td>
@@ -468,162 +370,105 @@ const PageB = ({ title, dimensions, recommendations, pageNum }) => (
                 ))}
                 {dimensions.length === 0 && (
                     <tr>
-                        <td colSpan={3} style={{
-                            padding:   14,
-                            textAlign: 'center',
-                            color:     T.text4,
-                            fontSize:  11,
-                        }}>
-                            No data
-                        </td>
+                        <td colSpan={3} style={{ padding: 14, textAlign: 'center', color: T.text4, fontSize: 11 }}>No data</td>
                     </tr>
                 )}
             </tbody>
         </table>
 
-        {/* Recommendations */}
+        {/* ── Recommendations ── */}
         <H3>
             Recommendations for {title}
             {recommendations.length === 0 && (
-                <span style={{
-                    fontSize:    10,
-                    color:       T.text4,
-                    fontWeight:  400,
-                    marginLeft:  8,
-                }}>
+                <span style={{ fontSize: 10, color: T.text4, fontWeight: 400, marginLeft: 8 }}>
                     (API offline — no data)
                 </span>
             )}
         </H3>
 
         {recommendations.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-                {recommendations.map((rec, i) => (
-                    <div key={i} style={{
-                        border:       `1px solid ${T.border}`,
-                        borderRadius: 5,
-                        overflow:     'hidden',
-                    }}>
-                        {/* Rec header */}
-                        <div style={{
-                            display:        'flex',
-                            justifyContent: 'space-between',
-                            alignItems:     'center',
-                            background:     T.borderLight,
-                            padding:        '7px 12px',
-                            borderBottom:   `1px solid ${T.border}`,
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                {recommendations.map((rec, i) => {
+                    const isHigh      = rec.severity === 'High';
+                    const accentColor = isHigh ? T.sevHigh : T.sevMed;
+                    const accentBg    = isHigh ? '#FFF5F5' : '#FFFBF0';
+                    const accentBorder= isHigh ? '#FECACA' : '#FED7AA';
+
+                    return (
+                        <div key={i} style={{
+                            border:       `1px solid ${accentBorder}`,
+                            borderLeft:   `4px solid ${accentColor}`,
+                            borderRadius: 6,
+                            overflow:     'hidden',
+                            background:   accentBg,
                         }}>
-                            <span style={{ fontWeight: 700, color: T.text1, fontSize: 12 }}>
-                                {rec.title}
-                            </span>
-                            <span style={{
-                                background:   sevColor(rec.severity),
-                                color:        T.white,
-                                padding:      '2px 10px',
-                                borderRadius: 10,
-                                fontSize:     10,
-                                fontWeight:   700,
-                            }}>
-                                {rec.severity}
-                            </span>
-                        </div>
-
-                        {/* Rec body grid */}
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <tbody>
-                                <tr>
-                                    {[
-                                        { label: 'Why',        val: rec.why  },
-                                        { label: 'What to do', val: rec.what },
-                                    ].map(({ label, val }, ci) => (
-                                        <td key={ci} style={{
-                                            padding:      '7px 12px',
-                                            width:        '50%',
-                                            verticalAlign:'top',
-                                            borderBottom: `1px solid ${T.border}`,
-                                            borderRight:  ci === 0 ? `1px solid ${T.border}` : 'none',
-                                        }}>
-                                            <div style={{
-                                                fontSize:      10,
-                                                fontWeight:    700,
-                                                color:         T.text3,
-                                                textTransform: 'uppercase',
-                                                letterSpacing: 0.4,
-                                                marginBottom:  3,
-                                            }}>
-                                                {label}
-                                            </div>
-                                            <div style={{ fontSize: 11, color: T.text2, lineHeight: 1.55 }}>
-                                                {val || '—'}
-                                            </div>
-                                        </td>
-                                    ))}
-                                </tr>
-                                <tr>
-                                    {[
-                                        { label: 'Who leads', val: rec.who  },
-                                        { label: 'Timeline',  val: rec.when },
-                                    ].map(({ label, val }, ci) => (
-                                        <td key={ci} style={{
-                                            padding:      '7px 12px',
-                                            width:        '50%',
-                                            verticalAlign:'top',
-                                            borderRight:  ci === 0 ? `1px solid ${T.border}` : 'none',
-                                        }}>
-                                            <div style={{
-                                                fontSize:      10,
-                                                fontWeight:    700,
-                                                color:         T.text3,
-                                                textTransform: 'uppercase',
-                                                letterSpacing: 0.4,
-                                                marginBottom:  3,
-                                            }}>
-                                                {label}
-                                            </div>
-                                            <div style={{ fontSize: 11, color: T.text2, lineHeight: 1.55 }}>
-                                                {val || '—'}
-                                            </div>
-                                        </td>
-                                    ))}
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        {/* Impact strip */}
-                        {rec.impact && (
+                            {/* ── Card header: title + severity badge ── */}
                             <div style={{
-                                padding:    '6px 12px',
-                                background: T.impactBg,
-                                borderTop:  `1px solid ${T.impactBorder}`,
+                                display:        'flex',
+                                justifyContent: 'space-between',
+                                alignItems:     'center',
+                                padding:        '8px 12px',
+                                borderBottom:   `1px solid ${accentBorder}`,
+                                background:     T.borderLight,
                             }}>
-                                <span style={{
-                                    fontSize:      10,
-                                    fontWeight:    700,
-                                    color:         T.impactTxt,
-                                    textTransform: 'uppercase',
-                                    letterSpacing: 0.4,
-                                }}>
-                                    Expected Impact:{' '}
+                                <span style={{ fontWeight: 700, color: T.text1, fontSize: 12, flex: 1, paddingRight: 10, lineHeight: 1.4 }}>
+                                    {rec.title}
                                 </span>
-                                <span style={{ fontSize: 11, color: T.impactVal }}>
-                                    {rec.impact}
+                                <span style={{
+                                    background:   sevColor(rec.severity),
+                                    color:        T.white,
+                                    padding:      '2px 10px',
+                                    borderRadius: 10,
+                                    fontSize:     10,
+                                    fontWeight:   700,
+                                    flexShrink:   0,
+                                }}>
+                                    {rec.severity}
                                 </span>
                             </div>
-                        )}
-                    </div>
-                ))}
+
+                            {/* ── Two stacked sections ── */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+
+                                {/* How to Implement */}
+                                <div style={{
+                                    background:  T.howBg,
+                                    borderBottom:`1px solid ${accentBorder}`,
+                                    padding:     '8px 12px',
+                                }}>
+                                    <div style={{ fontSize: 9, fontWeight: 700, color: T.howLbl, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 4 }}>
+                                        How to Implement
+                                    </div>
+                                    <div style={{ fontSize: 11, color: T.text2, lineHeight: 1.65 }}>
+                                        {rec.how || rec.what || '—'}
+                                    </div>
+                                </div>
+
+                                {/* Business Impact */}
+                                <div style={{
+                                    background: T.impactBg2,
+                                    padding:    '8px 12px',
+                                }}>
+                                    <div style={{ fontSize: 9, fontWeight: 700, color: T.impactLbl2, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 4 }}>
+                                        Business Impact
+                                    </div>
+                                    <div style={{ fontSize: 11, color: T.text2, lineHeight: 1.65 }}>
+                                        {rec.business_impact || rec.impact || '—'}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
         ) : (
             <div style={{
-                border:       `1px dashed ${T.border}`,
-                borderRadius: 5,
-                padding:      '20px',
-                textAlign:    'center',
-                color:        T.text4,
-                fontSize:     11,
-                background:   T.rowAlt,
+                border: `1px dashed ${T.border}`, borderRadius: 5,
+                padding: 20, textAlign: 'center',
+                color: T.text4, fontSize: 11, background: T.rowAlt,
             }}>
-                Recommendations will appear here once the /recommendation API is online.
+                Recommendations will appear here once the /recommendations API is online.
             </div>
         )}
 
@@ -633,26 +478,15 @@ const PageB = ({ title, dimensions, recommendations, pageNum }) => (
 
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
 export default function SoftControlPage({
-    title,
-    score,
-    risk,
-    leaderScore,
-    employeeScore,
-    dimensions,
-    recommendations,
-    insights,
-    pageNum,
+    title, score, risk, leaderScore, employeeScore,
+    dimensions, recommendations, insights, pageNum,
 }) {
     return (
         <>
             <PageA
-                title={title}
-                score={score}
-                risk={risk}
-                leaderScore={leaderScore}
-                employeeScore={employeeScore}
-                dimensions={dimensions}
-                insights={insights}
+                title={title} score={score} risk={risk}
+                leaderScore={leaderScore} employeeScore={employeeScore}
+                dimensions={dimensions} insights={insights}
                 pageNum={pageNum}
             />
             <PageB

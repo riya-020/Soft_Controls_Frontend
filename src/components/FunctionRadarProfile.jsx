@@ -284,54 +284,28 @@ const FunctionRadarProfile = () => {
                 </div>
             </div>
 
-            {/* ── Body: Radar + Score Breakdown ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 18, alignItems: 'start' }}>
-
-                {/* Radar chart — taller so axis labels have room */}
-                <div style={{ height: 420 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="65%" data={chartData}>
-                            <PolarGrid stroke="#e2e8f0" gridType="polygon" />
-                            <PolarAngleAxis dataKey="metric"
-                                tick={{ fill: '#334155', fontSize: 11, fontWeight: 600 }} />
-                            <PolarRadiusAxis angle={90} domain={[0, 100]}
-                                tick={{ fill: '#94a3b8', fontSize: 9 }}
-                                axisLine={false} tickCount={5} />
-                            <Radar name="Org Average" dataKey="orgAvg"
-                                stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 4"
-                                fill="#f59e0b" fillOpacity={0.07} />
-                            <Radar name={selectedFunction || 'Function'} dataKey="score"
-                                stroke="#1565c0" strokeWidth={2.5}
-                                fill="#1565c0" fillOpacity={0.18} />
-                            <RechartsTooltip content={<CustomTooltip />} />
-                            <Legend layout="horizontal" align="center" verticalAlign="bottom"
-                                wrapperStyle={{ paddingTop: 14 }}
-                                formatter={v => <span style={{ fontSize: 12, color: '#374151', fontWeight: 600 }}>{v}</span>} />
-                        </RadarChart>
-                    </ResponsiveContainer>
-                </div>
-
-                {/* Score Breakdown panel — scrollable so nothing is cut off */}
-                <div style={{
-                    background: '#f8fafc', border: '1px solid #e2e8f0',
-                    borderRadius: 12, padding: '14px 13px',
-                    height: 'auto', overflowY: 'visible',
-                }}>
-                    {/* Panel header */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 36px 36px 58px', gap: 8, marginBottom: 10, paddingBottom: 9, borderBottom: '1px solid #e2e8f0' }}>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em' }}>Control</span>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#1565c0', textTransform: 'uppercase', letterSpacing: '.06em', textAlign: 'center' }}>Fn</span>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '.06em', textAlign: 'center' }}>Org</span>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '.06em', textAlign: 'right' }}>Diff</span>
-                    </div>
-
-                    {/* Rows */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        {chartData.map((d, i) => (
-                            <ScoreRow key={d.metric} metric={d.metric} score={d.score} orgAvg={d.orgAvg} index={i} />
-                        ))}
-                    </div>
-                </div>
+            {/* ── Body: Radar only ── */}
+            <div style={{ height: 420 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart cx="50%" cy="50%" outerRadius="65%" data={chartData}>
+                        <PolarGrid stroke="#e2e8f0" gridType="polygon" />
+                        <PolarAngleAxis dataKey="metric"
+                            tick={{ fill: '#334155', fontSize: 11, fontWeight: 600 }} />
+                        <PolarRadiusAxis angle={90} domain={[0, 100]}
+                            tick={{ fill: '#94a3b8', fontSize: 9 }}
+                            axisLine={false} tickCount={5} />
+                        <Radar name="Org Average" dataKey="orgAvg"
+                            stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 4"
+                            fill="#f59e0b" fillOpacity={0.07} />
+                        <Radar name={selectedFunction || 'Function'} dataKey="score"
+                            stroke="#1565c0" strokeWidth={2.5}
+                            fill="#1565c0" fillOpacity={0.18} />
+                        <RechartsTooltip content={<CustomTooltip />} />
+                        <Legend layout="horizontal" align="center" verticalAlign="bottom"
+                            wrapperStyle={{ paddingTop: 14 }}
+                            formatter={v => <span style={{ fontSize: 12, color: '#374151', fontWeight: 600 }}>{v}</span>} />
+                    </RadarChart>
+                </ResponsiveContainer>
             </div>
         </div>
     );

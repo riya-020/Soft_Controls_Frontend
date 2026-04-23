@@ -325,25 +325,25 @@ export function IntroductionPage() {
 // ─── Recommendations Page ─────────────────────────────────────────────────────
 export function RecommendationsPage({ recommendations }) {
     const defaultRecs = [
-        { theme: 'Discussability Forums',   action: 'Establish structured risk discussion forums across teams',        impact: 'Improves transparency and open dialogue',                  priority: 'High'   },
-        { theme: 'Leadership Role Modelling', action: 'Strengthen tone-at-the-top messaging on risk management',      impact: 'Encourages behavioural alignment across employees',         priority: 'High'   },
-        { theme: 'Policy Awareness',        action: 'Enhance communication of risk policies and procedures',          impact: 'Improves clarity of responsibilities and expectations',     priority: 'Medium' },
-        { theme: 'Enforcement',             action: 'Introduce scenario-based risk management training',              impact: 'Builds employee confidence in managing risks',              priority: 'Medium' },
-        { theme: 'Transparency',            action: 'Promote awareness of speak-up and escalation channels',          impact: 'Strengthens psychological safety for reporting concerns',   priority: 'High'   },
-        { theme: 'Accountability Framework', action: 'Embed risk ownership within performance objectives',            impact: 'Reinforces accountability and behavioural consistency',     priority: 'Medium' },
+        { theme: 'Discussability Forums',    action: 'Establish structured risk discussion forums across teams',       impact: 'Improves transparency and open dialogue',                 priority: 'High'   },
+        { theme: 'Leadership Role Modelling', action: 'Strengthen tone-at-the-top messaging on risk management',      impact: 'Encourages behavioural alignment across employees',        priority: 'High'   },
+        { theme: 'Policy Awareness',         action: 'Enhance communication of risk policies and procedures',         impact: 'Improves clarity of responsibilities and expectations',    priority: 'Medium' },
+        { theme: 'Enforcement',              action: 'Introduce scenario-based risk management training',             impact: 'Builds employee confidence in managing risks',             priority: 'Medium' },
+        { theme: 'Transparency',             action: 'Promote awareness of speak-up and escalation channels',         impact: 'Strengthens psychological safety for reporting concerns',  priority: 'High'   },
+        { theme: 'Accountability Framework', action: 'Embed risk ownership within performance objectives',            impact: 'Reinforces accountability and behavioural consistency',    priority: 'Medium' },
     ];
 
-    const recs = recommendations?.length > 0 ? recommendations : defaultRecs;
-    const priorityColor = p => p === 'High' ? '#C62828' : p === 'Medium' ? '#F9A825' : '#2E7D32';
-    const priorityBg    = p => p === 'High' ? '#ffebee' : p === 'Medium' ? '#fff8e1' : '#e8f5e9';
+    const recs           = recommendations?.length > 0 ? recommendations : defaultRecs;
+    const priorityColor  = p => p === 'High' ? '#C62828' : p === 'Medium' ? '#F9A825' : '#2E7D32';
+    const priorityBg     = p => p === 'High' ? '#ffebee' : p === 'Medium' ? '#fff8e1' : '#e8f5e9';
 
     return (
         <div style={{
-            padding: '50px', boxSizing: 'border-box', border: '1px solid #d9d9d9',
-            borderTop: '6px solid #00338D', width: '794px', height: '1123px',
+            padding: '50px', boxSizing: 'border-box',
+            border: '1px solid #d9d9d9', borderTop: '6px solid #00338D',
+            width: '794px', height: '1123px',
             overflow: 'hidden', pageBreakAfter: 'always', pageBreakInside: 'avoid',
-            fontFamily: 'Arial, sans-serif', background: '#fff',
-            position: 'relative',
+            fontFamily: 'Arial, sans-serif', background: '#fff', position: 'relative',
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #00338D', paddingBottom: 10, marginBottom: 28 }}>
                 <div style={{ fontSize: 13, color: '#00338D', fontWeight: 'bold' }}>Soft Risk Culture Report</div>
@@ -381,7 +381,6 @@ export function RecommendationsPage({ recommendations }) {
                 </tbody>
             </table>
 
-            {/* Footer */}
             <div style={{ position: 'absolute', bottom: 24, left: 50, right: 50, display: 'flex', justifyContent: 'space-between', fontSize: 11, borderTop: '1px solid #ccc', paddingTop: 8, color: '#666' }}>
                 <span>Confidential</span>
                 <span>Soft Control Assessment</span>
@@ -391,9 +390,8 @@ export function RecommendationsPage({ recommendations }) {
     );
 }
 
+
 // ─── Functional Risk Culture Insights Pages ───────────────────────────────────
-// 1 function per page → 6 functions = 6 pages.
-// 4 sections stacked VERTICALLY, full width. Professional report style.
 
 const FI = {
     brand:       '#00338D',
@@ -419,12 +417,8 @@ function FIPageHeader() {
             borderBottom: `2px solid ${FI.brand}`,
             paddingBottom: 8, marginBottom: 22,
         }}>
-            <span style={{ fontSize: 12, color: FI.brand, fontWeight: 700 }}>
-                Soft Risk Culture Report
-            </span>
-            <span style={{ fontSize: 11, color: FI.text3, fontWeight: 600 }}>
-                Functional Risk Culture Insights
-            </span>
+            <span style={{ fontSize: 12, color: FI.brand, fontWeight: 700 }}>Soft Risk Culture Report</span>
+            <span style={{ fontSize: 11, color: FI.text3, fontWeight: 600 }}>Functional Risk Culture Insights</span>
         </div>
     );
 }
@@ -450,25 +444,22 @@ function FunctionPage({ item, pageNum, isFirst }) {
             position: 'relative',
             padding: '36px 48px 64px',
             boxSizing: 'border-box',
-            width: '210mm',
-            height: '297mm',
+            width: '794px',
+            height: '1123px',
             overflow: 'hidden',
             fontFamily: 'Arial, sans-serif',
             background: FI.white,
             pageBreakBefore: 'always',
             pageBreakAfter: 'always',
             pageBreakInside: 'avoid',
+            border: '1px solid #d9d9d9',
             borderTop: `6px solid ${FI.brand}`,
         }}>
             <FIPageHeader />
 
-            {/* Section intro — first page only */}
             {isFirst && (
                 <div style={{ marginBottom: 18 }}>
-                    <h2 style={{
-                        color: FI.brand, fontSize: 18, fontWeight: 700,
-                        margin: '0 0 5px', letterSpacing: '-0.01em',
-                    }}>
+                    <h2 style={{ color: FI.brand, fontSize: 18, fontWeight: 700, margin: '0 0 5px', letterSpacing: '-0.01em' }}>
                         Functional Risk Culture Insights
                     </h2>
                     <p style={{ fontSize: 11, color: FI.text3, margin: '0 0 14px', lineHeight: 1.55 }}>
@@ -479,53 +470,30 @@ function FunctionPage({ item, pageNum, isFirst }) {
                 </div>
             )}
 
-            {/* Function name heading */}
-            <div style={{
-                display: 'flex', alignItems: 'center', gap: 14,
-                marginBottom: 18,
-            }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
                 <div style={{
                     background: FI.brand, color: FI.white,
                     padding: '6px 22px', borderRadius: 3,
-                    fontSize: 15, fontWeight: 700, letterSpacing: 0.4,
-                    flexShrink: 0,
+                    fontSize: 15, fontWeight: 700, letterSpacing: 0.4, flexShrink: 0,
                 }}>
                     {item.Function}
                 </div>
                 <div style={{ flex: 1, height: 2, background: FI.brandLight }} />
             </div>
 
-            {/* 4 sections — stacked vertically, full width */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
                 {SECTION_META.map(({ key, label, bg, borderClr, labelClr }) => (
                     <div key={key} style={{
-                        background:   bg,
-                        borderLeft:   `4px solid ${borderClr}`,
-                        borderRadius: '0 5px 5px 0',
-                        padding:      '10px 16px',
+                        background: bg, borderLeft: `4px solid ${borderClr}`,
+                        borderRadius: '0 5px 5px 0', padding: '10px 16px',
                     }}>
-                        {/* Label row */}
-                        <div style={{
-                            display: 'flex', alignItems: 'center', gap: 6,
-                            marginBottom: 6,
-                        }}>
-                            <div style={{
-                                width: 6, height: 6, borderRadius: '50%',
-                                background: borderClr, flexShrink: 0,
-                            }} />
-                            <span style={{
-                                fontSize: 10, fontWeight: 700, color: labelClr,
-                                textTransform: 'uppercase', letterSpacing: 0.8,
-                            }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: borderClr, flexShrink: 0 }} />
+                            <span style={{ fontSize: 10, fontWeight: 700, color: labelClr, textTransform: 'uppercase', letterSpacing: 0.8 }}>
                                 {label}
                             </span>
                         </div>
-                        {/* Body */}
-                        <p style={{
-                            fontSize: 11, color: FI.text1,
-                            lineHeight: 1.65, margin: 0,
-                            fontFamily: 'Arial, sans-serif',
-                        }}>
+                        <p style={{ fontSize: 11, color: FI.text1, lineHeight: 1.65, margin: 0, fontFamily: 'Arial, sans-serif' }}>
                             {item[key] || '—'}
                         </p>
                     </div>
@@ -539,7 +507,6 @@ function FunctionPage({ item, pageNum, isFirst }) {
 
 export function FunctionalInsightsPages({ data }) {
     if (!data || data.length === 0) return null;
-
     return (
         <>
             {data.map((item, idx) => (
@@ -548,6 +515,301 @@ export function FunctionalInsightsPages({ data }) {
                     item={item}
                     pageNum={`FI-${idx + 1}`}
                     isFirst={idx === 0}
+                />
+            ))}
+        </>
+    );
+}
+
+
+// ─── Policy Gap Analysis Pages ────────────────────────────────────────────────
+
+const PG = {
+    brand:      '#00338D',
+    brandLight: '#DBEAFE',
+    border:     '#E5E7EB',
+    text1:      '#1F2937',
+    text2:      '#374151',
+    text3:      '#6B7280',
+    white:      '#FFFFFF',
+};
+
+const RISK_STYLES = {
+    High:   { bg: '#FEF2F2', border: '#EF4444', text: '#B91C1C' },
+    Medium: { bg: '#FFFBEB', border: '#F59E0B', text: '#92400E' },
+    Low:    { bg: '#F0FDF4', border: '#22C55E', text: '#14532D' },
+};
+
+const ALIGN_STYLES = {
+    'Aligned':           { bg: '#F0FDF4', border: '#16A34A', text: '#14532D' },
+    'Partially Aligned': { bg: '#FFFBEB', border: '#D97706', text: '#92400E' },
+    'Not Aligned':       { bg: '#FEF2F2', border: '#DC2626', text: '#991B1B' },
+};
+
+function PGHeader() {
+    return (
+        <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            borderBottom: `2px solid ${PG.brand}`,
+            paddingBottom: 8, marginBottom: 20,
+        }}>
+            <span style={{ fontSize: 12, color: PG.brand, fontWeight: 700 }}>Soft Risk Culture Report</span>
+            <span style={{ fontSize: 11, color: PG.text3, fontWeight: 600 }}>Policy Compliance Gap Analysis</span>
+        </div>
+    );
+}
+
+function PGFooter({ pageNum }) {
+    return (
+        <div style={{
+            position: 'absolute', bottom: 20, left: 48, right: 48,
+            display: 'flex', justifyContent: 'space-between',
+            fontSize: 10, color: PG.text3,
+            borderTop: `1px solid ${PG.border}`, paddingTop: 6,
+        }}>
+            <span>Confidential</span>
+            <span>Policy Compliance Gap Analysis</span>
+            <span>Page {pageNum}</span>
+        </div>
+    );
+}
+
+function PolicyGapSummaryPage({ overallSummary, analysis, pageNum }) {
+    const riskCounts = { High: 0, Medium: 0, Low: 0 };
+    (analysis || []).forEach(p => { if (riskCounts[p.risk_level] !== undefined) riskCounts[p.risk_level]++; });
+
+    return (
+        <div style={{
+            position: 'relative',
+            padding: '36px 48px 64px',
+            boxSizing: 'border-box',
+            width: '794px',
+            height: '1123px',
+            overflow: 'hidden',
+            fontFamily: 'Arial, sans-serif',
+            background: PG.white,
+            pageBreakBefore: 'always',
+            pageBreakAfter: 'always',
+            pageBreakInside: 'avoid',
+            border: '1px solid #d9d9d9',
+            borderTop: `6px solid ${PG.brand}`,
+        }}>
+            <PGHeader />
+
+            <h2 style={{ color: PG.brand, fontSize: 18, fontWeight: 700, margin: '0 0 5px', letterSpacing: '-0.01em' }}>
+                Policy Compliance Gap Analysis
+            </h2>
+            <p style={{ fontSize: 11, color: PG.text3, margin: '0 0 16px', lineHeight: 1.55 }}>
+                This section maps the organisation's Code of Conduct policies to employee survey results,
+                identifying where actual behaviour aligns with — or deviates from — policy expectations.
+            </p>
+
+            {/* Risk summary counters */}
+            <div style={{ display: 'flex', gap: 12, marginBottom: 18 }}>
+                {[
+                    { label: 'High Risk',   count: riskCounts.High,   ...RISK_STYLES.High   },
+                    { label: 'Medium Risk', count: riskCounts.Medium, ...RISK_STYLES.Medium },
+                    { label: 'Low Risk',    count: riskCounts.Low,    ...RISK_STYLES.Low    },
+                ].map(({ label, count, bg, border, text }) => (
+                    <div key={label} style={{
+                        flex: 1, background: bg, border: `1px solid ${border}`,
+                        borderRadius: 6, padding: '12px 16px',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    }}>
+                        <span style={{ fontSize: 26, fontWeight: 700, color: text, lineHeight: 1 }}>{count}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: text, marginTop: 4, textTransform: 'uppercase', letterSpacing: 0.6 }}>{label}</span>
+                        <span style={{ fontSize: 9, color: PG.text3, marginTop: 2 }}>policies</span>
+                    </div>
+                ))}
+            </div>
+
+            {/* Overall summary box */}
+            <div style={{
+                background: '#EEF3F8', borderLeft: `4px solid ${PG.brand}`,
+                borderRadius: '0 6px 6px 0', padding: '12px 16px', marginBottom: 18,
+            }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: PG.brand, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }}>
+                    Executive Summary
+                </div>
+                <p style={{ fontSize: 11.5, color: PG.text1, lineHeight: 1.65, margin: 0 }}>
+                    {overallSummary}
+                </p>
+            </div>
+
+            {/* Policy overview table */}
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10.5 }}>
+                <thead>
+                    <tr>
+                        {['Policy','Gap Summary'].map((h, i) => (
+                            <th key={i} style={{
+                                background: PG.brand, color: PG.white,
+                                textAlign: 'left', padding: '8px 10px',
+                                fontSize: 10, letterSpacing: 0.3,
+                                borderRight: '1px solid rgba(255,255,255,0.15)',
+                            }}>{h}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {(analysis || []).map((p, i) => {
+                        const rs = RISK_STYLES[p.risk_level]         || RISK_STYLES.Medium;
+                        const as = ALIGN_STYLES[p.alignment_status]  || ALIGN_STYLES['Partially Aligned'];
+                        return (
+                            <tr key={i} style={{ background: i % 2 === 0 ? PG.white : '#F8FAFF' }}>
+                                <td style={{ padding: '7px 10px', borderBottom: `1px solid ${PG.border}`, fontSize: 10.5, fontWeight: 600, color: PG.brand }}>
+                                    {p.policy_name}
+                                </td>
+                                {/* <td style={{ padding: '7px 10px', borderBottom: `1px solid ${PG.border}` }}>
+                                    <span style={{
+                                        background: as.bg, color: as.text, border: `1px solid ${as.border}`,
+                                        padding: '2px 7px', borderRadius: 3, fontSize: 9.5, fontWeight: 700, whiteSpace: 'nowrap',
+                                    }}>
+                                        {p.alignment_status}
+                                    </span>
+                                </td>
+                                <td style={{ padding: '7px 10px', borderBottom: `1px solid ${PG.border}` }}>
+                                    <span style={{
+                                        background: rs.bg, color: rs.text, border: `1px solid ${rs.border}`,
+                                        padding: '2px 7px', borderRadius: 3, fontSize: 9.5, fontWeight: 700,
+                                    }}>
+                                        {p.risk_level}
+                                    </span>
+                                </td> */}
+                                <td style={{ padding: '7px 10px', borderBottom: `1px solid ${PG.border}`, fontSize: 10, color: PG.text2, lineHeight: 1.4 }}>
+                                    {p.gap_summary}
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+
+            <PGFooter pageNum={pageNum} />
+        </div>
+    );
+}
+
+function PolicyDetailCard({ policy }) {
+    const rs = RISK_STYLES[policy.risk_level]        || RISK_STYLES.Medium;
+    const as = ALIGN_STYLES[policy.alignment_status] || ALIGN_STYLES['Partially Aligned'];
+
+    return (
+        <div style={{ border: `1px solid ${PG.border}`, borderRadius: 6, overflow: 'hidden', marginBottom: 12 }}>
+
+            {/* Card header */}
+            <div style={{
+                background: '#F1F5F9', borderBottom: `1px solid ${PG.border}`,
+                padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: PG.brand }}>{policy.policy_name}</span>
+                <div style={{ display: 'flex', gap: 6 }}>
+                    <span style={{ background: as.bg, color: as.text, border: `1px solid ${as.border}`, padding: '2px 8px', borderRadius: 3, fontSize: 9, fontWeight: 700 }}>
+                        {policy.alignment_status}
+                    </span>
+                    <span style={{ background: rs.bg, color: rs.text, border: `1px solid ${rs.border}`, padding: '2px 8px', borderRadius: 3, fontSize: 9, fontWeight: 700 }}>
+                        {policy.risk_level} Risk
+                    </span>
+                </div>
+            </div>
+
+            {/* Card body */}
+            <div style={{ padding: '10px 14px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: PG.text3, textTransform: 'uppercase', letterSpacing: 0.7, marginBottom: 4 }}>Expected Behavior</div>
+                    <ul style={{ margin: 0, paddingLeft: 14 }}>
+                        {(policy.expected_behavior || []).map((b, i) => (
+                            <li key={i} style={{ fontSize: 10, color: PG.text2, lineHeight: 1.5, marginBottom: 2 }}>{b}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: PG.text3, textTransform: 'uppercase', letterSpacing: 0.7, marginBottom: 4 }}>Actual Behavior (Survey Signals)</div>
+                    <p style={{ fontSize: 10, color: PG.text2, lineHeight: 1.5, margin: 0 }}>{policy.actual_behavior}</p>
+                </div>
+            </div>
+
+            {/* Key drivers + action row */}
+            <div style={{ borderTop: `1px solid ${PG.border}`, padding: '8px 14px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, background: '#FAFBFF' }}>
+                <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: PG.text3, textTransform: 'uppercase', letterSpacing: 0.7, marginBottom: 4 }}>Key Drivers</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                        {(policy.key_drivers || []).map((d, i) => (
+                            <span key={i} style={{
+                                background: '#EEF3F8', color: PG.brand,
+                                border: `1px solid ${PG.brandLight}`,
+                                padding: '2px 7px', borderRadius: 3, fontSize: 9, fontWeight: 600,
+                            }}>
+                                {d}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: '#14532D', textTransform: 'uppercase', letterSpacing: 0.7, marginBottom: 4 }}>Directional Action</div>
+                    <p style={{ fontSize: 10, color: PG.text1, lineHeight: 1.45, margin: 0 }}>{policy.directional_action}</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function PolicyDetailPage({ policies, pageNum, isFirst }) {
+    return (
+        <div style={{
+            position: 'relative',
+            padding: '36px 48px 64px',
+            boxSizing: 'border-box',
+            width: '794px',
+            height: '1123px',
+            overflow: 'hidden',
+            fontFamily: 'Arial, sans-serif',
+            background: PG.white,
+            pageBreakBefore: 'always',
+            pageBreakAfter: 'always',
+            pageBreakInside: 'avoid',
+            border: '1px solid #d9d9d9',
+            borderTop: `6px solid ${PG.brand}`,
+        }}>
+            <PGHeader />
+
+            {isFirst && (
+                <h3 style={{ color: PG.brand, fontSize: 14, fontWeight: 700, margin: '0 0 14px' }}>
+                    Policy-Level Detail
+                </h3>
+            )}
+
+            {policies.map((p, i) => (
+                <PolicyDetailCard key={i} policy={p} />
+            ))}
+
+            <PGFooter pageNum={pageNum} />
+        </div>
+    );
+}
+
+export function PolicyGapPages({ data }) {
+    if (!data || !data.analysis || data.analysis.length === 0) return null;
+
+    const { analysis, overall_summary } = data;
+
+    const chunks = [];
+    for (let i = 0; i < analysis.length; i += 3) {
+        chunks.push(analysis.slice(i, i + 3));
+    }
+
+    return (
+        <>
+            <PolicyGapSummaryPage
+                overallSummary={overall_summary}
+                analysis={analysis}
+                pageNum="GA-1"
+            />
+            {chunks.map((chunk, i) => (
+                <PolicyDetailPage
+                    key={i}
+                    policies={chunk}
+                    pageNum={`GA-${i + 2}`}
+                    isFirst={i === 0}
                 />
             ))}
         </>

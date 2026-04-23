@@ -10,6 +10,7 @@ import FunctionRadarProfile from '../../components/FunctionRadarProfile';
 import SpiderChartWithDimensions from '../../components/SpiderChartWithDimensions';
 import RecommendationsSection from '../../components/RecommendationSection';
 import QuestionInsightsSection from '../../components/QuestionInsightsSection';
+import PolicyGapDashboard from '../../components/PolicyGapDashboard';
 
 const PILLAR_COLORS = {
     'Role Modelling':          '#3b82f6',
@@ -789,6 +790,10 @@ const LeaderDashboard = () => {
             <div id="question-insights-anchor">
                 <QuestionInsightsSection />
             </div>
+{/* 
+            <div id="question-insights-anchor">
+             <PolicyGapDashboard />
+            </div> */}
 
             {/* ── Recommendations ── */}
             <div id="recommendations-anchor">
@@ -796,6 +801,8 @@ const LeaderDashboard = () => {
             </div>
             </div>{/* end content wrapper */}
         </div>
+
+        
     );
 };
 

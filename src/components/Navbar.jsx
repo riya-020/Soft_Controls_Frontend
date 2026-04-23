@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Bell, FileText, Sparkles, LogOut, ChevronDown, LayoutDashboard, PieChart, BarChart3, MessageSquare } from 'lucide-react';
+import { Bell, FileText, Sparkles, LogOut, ChevronDown, LayoutDashboard, PieChart, BarChart3, MessageSquare, ShieldAlert } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../utils/auth.js';
 import kpmgLogo from '../assets/kpmg-logo.svg';
@@ -159,6 +159,11 @@ const Navbar = () => {
 
                     {/* Right */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                        {user?.role === 'leader' && (
+                            <button className="nb-report" onClick={() => navigate('/policy')}>
+                                <ShieldAlert size={13} /> Policy Gap
+                            </button>
+                        )}
                         {user?.role === 'leader' && (
                             <button className="nb-report" onClick={() => navigate('/report')}>
                                 <FileText size={13} /> View Report

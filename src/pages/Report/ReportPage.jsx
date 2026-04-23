@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
 import CoverPage from './CoverPage';
 import SoftControlPage from './SoftControlPage';
-import { IntroductionPage, FunctionalInsightsPages } from './ReportComponents';
+import { IntroductionPage, FunctionalInsightsPages, PolicyGapPages } from './ReportComponents';
 
-// ─── Maps FastAPI parameter keys → display names ──────────────────────────────
 const PARAM_MAP = {
     'role_modelling':          'Role Modelling',
     'open_to_discussion':      'Discussability',
@@ -33,10 +32,8 @@ const normSC = n => {
     return map[(n || '').toLowerCase().trim()] || n;
 };
 
-// Normalise dimension names: replace typographic hyphens, trim
 const normDim = s => (s || '').replace(/[\u2011\u2010]/g, '-').trim().toLowerCase();
 
-// ─── Fallback leader scores (FastAPI offline) ─────────────────────────────────
 const FALLBACK_LEADER = {
     'Role Modelling':          84,
     'Discussability':          85,
@@ -55,24 +52,23 @@ const SC_ORDER = [
 
 export default function ReportPage() {
     const reportRef = useRef(null);
-    const [softControls,     setSoftControls]     = useState([]);
-    const [loading,          setLoading]          = useState(true);
-    const [leaderOnline,     setLeaderOnline]     = useState(false);
-    const [respondents,      setRespondents]      = useState(25);
-    const [executiveSummary, setExecutiveSummary] = useState('');
-    const [insightsMap,      setInsightsMap]      = useState({});
-    const [functionalInsights,    setFunctionalInsights]    = useState([]);
+    const [softControls,       setSoftControls]       = useState([]);
+    const [loading,            setLoading]            = useState(true);
+    const [leaderOnline,       setLeaderOnline]       = useState(false);
+    const [respondents,        setRespondents]        = useState(25);
+    const [executiveSummary,   setExecutiveSummary]   = useState('');
+    const [insightsMap,        setInsightsMap]        = useState({});
+    const [functionalInsights, setFunctionalInsights] = useState([]);
+    const [gapAnalysis,        setGapAnalysis]        = useState(null);
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                // ── 1. Load Excel workbook ────────────────────────────────────
                 const res = await fetch('/data/soft_control_data1.xlsx');
                 if (!res.ok) throw new Error('Excel file not found at /data/soft_control_data1.xlsx');
                 const buf = await res.arrayBuffer();
                 const wb  = XLSX.read(buf, { type: 'array' });
 
-                // ── 2. Employee scores from SOFT CONTROL SCORECARD ────────────
                 const empScores = {};
                 if (wb.SheetNames.includes('SOFT CONTROL SCORECARD')) {
                     XLSX.utils.sheet_to_json(wb.Sheets['SOFT CONTROL SCORECARD']).forEach(row => {
@@ -84,8 +80,7 @@ export default function ReportPage() {
                     });
                 }
 
-                // ── 3. Dimension data from Dimension Sheet ─────────────────────
-                const dimData = {};   // normDimName → { score, favorable, unfavorable, neutral, originalName }
+                const dimData = {};
                 if (wb.SheetNames.includes('Dimension Sheet')) {
                     XLSX.utils.sheet_to_json(wb.Sheets['Dimension Sheet']).forEach(row => {
                         const dimName = String(row['Dimension'] || '').trim();
@@ -102,11 +97,10 @@ export default function ReportPage() {
                     });
                 }
 
-                // ── 4. Questions from FinalQuestions (rows 0-31 = Q001-Q032) ──
-                const questionsMap = {};  // normDimName → { questionText, softControl }
+                const questionsMap = {};
                 if (wb.SheetNames.includes('FinalQuestions')) {
                     XLSX.utils.sheet_to_json(wb.Sheets['FinalQuestions']).forEach((row, idx) => {
-                        if (idx > 31) return;   // only first 32 questions
+                        if (idx > 31) return;
                         const qid = String(row['QuestionID'] || '').trim();
                         if (!qid) return;
                         const dimName = String(row['Dimensions'] || '').trim();
@@ -119,14 +113,12 @@ export default function ReportPage() {
                     });
                 }
 
-                // ── 5. Respondent count ────────────────────────────────────────
                 if (wb.SheetNames.includes('Functions')) {
                     const rows  = XLSX.utils.sheet_to_json(wb.Sheets['Functions']);
                     const count = rows.filter(r => r['RespondentID']).length;
                     if (count > 0) setRespondents(count);
                 }
 
-                // ── 6. Leader scores from FastAPI /scores ──────────────────────
                 const ldrScores = {};
                 try {
                     const apiRes = await fetch('http://localhost:8000/scores');
@@ -145,26 +137,38 @@ export default function ReportPage() {
                 }
                 const finalLdrScores = Object.keys(ldrScores).length > 0 ? ldrScores : FALLBACK_LEADER;
 
-                // ── 7. Per-SC recommendations — try API, fall back to localStorage ──
                 const scRecommendations = {};
                 let execSummary = '';
 
+                // ── Map new 4-field structure (what_and_why / how / business_impact)
+                // ── with graceful fallback to old structure (why / what / who / when / impact)
                 const extractFromCached = (cached) => {
                     if (!cached?.parameters) return false;
                     execSummary = cached.executiveSummary || '';
                     cached.parameters.forEach(param => {
                         const sc = normSC(param.softControl || '');
-                        if (sc) scRecommendations[sc] = (param.recommendations || []).map(r => ({
-                            theme:    r.title    || r.theme    || sc,
-                            action:   r.what     || r.action   || '',
-                            impact:   r.impact   || '',
-                            priority: r.severity || r.priority || 'Medium',
-                            title:    r.title    || r.theme    || '',
-                            why:      r.why      || '',
-                            what:     r.what     || r.action   || '',
-                            who:      r.who      || '',
-                            when:     r.when     || '',
-                            severity: r.severity || r.priority || 'Medium',
+                        if (!sc) return;
+                        scRecommendations[sc] = (param.recommendations || []).map(r => ({
+                            // ── Display fields consumed by SoftControlPage / RecommendationsPage ──
+                            title:          r.title    || r.theme    || sc,
+                            severity:       r.severity || r.priority || 'Medium',
+
+                            // ── New 4-field structure (preferred) ──
+                            what_and_why:   r.what_and_why   || '',
+                            how:            r.how            || '',
+                            business_impact:r.business_impact|| r.impact || '',
+
+                            // ── Legacy fields — kept for RecommendationsPage summary table ──
+                            theme:          r.title    || r.theme    || sc,
+                            action:         r.what     || r.action   || r.what_and_why || '',
+                            impact:         r.business_impact || r.impact || '',
+                            priority:       r.severity || r.priority || 'Medium',
+
+                            // ── Old detail fields — kept for any legacy render paths ──
+                            why:            r.why  || r.what_and_why || '',
+                            what:           r.what || r.what_and_why || '',
+                            who:            r.who  || '',
+                            when:           r.when || '',
                         }));
                     });
                     return true;
@@ -173,11 +177,8 @@ export default function ReportPage() {
                 try {
                     const recRes = await fetch('http://localhost:8000/recommendations');
                     if (recRes.ok) {
-                        const recData = await recRes.json();
-                        extractFromCached(recData);
-                    } else {
-                        throw new Error('API not OK');
-                    }
+                        extractFromCached(await recRes.json());
+                    } else throw new Error('API not OK');
                 } catch {
                     console.warn('[Report] FastAPI /recommendations offline — trying localStorage cache');
                     try {
@@ -186,7 +187,6 @@ export default function ReportPage() {
                             const history = JSON.parse(raw);
                             if (Array.isArray(history) && history.length > 0) {
                                 extractFromCached(history[history.length - 1]);
-                                console.info('[Report] Loaded recommendations from localStorage cache');
                             }
                         }
                     } catch {
@@ -195,7 +195,6 @@ export default function ReportPage() {
                 }
                 setExecutiveSummary(execSummary);
 
-                // ── 8. Insights from FastAPI /insights ────────────────────────
                 const insightsData = {};
                 try {
                     const insRes = await fetch('http://localhost:8000/insights');
@@ -214,11 +213,10 @@ export default function ReportPage() {
                         });
                     }
                 } catch {
-                    console.warn('[Report] FastAPI /insights offline — insights will be empty');
+                    console.warn('[Report] FastAPI /insights offline');
                 }
                 setInsightsMap(insightsData);
 
-                // ── 9. Functional Insights from FastAPI /functional-insights ──
                 try {
                     const fiRes = await fetch('http://localhost:8000/functional-insights');
                     if (fiRes.ok) {
@@ -226,10 +224,19 @@ export default function ReportPage() {
                         if (Array.isArray(fiJson)) setFunctionalInsights(fiJson);
                     }
                 } catch {
-                    console.warn('[Report] FastAPI /functional-insights offline — section will be hidden');
+                    console.warn('[Report] FastAPI /functional-insights offline');
                 }
 
-                // ── 9. Build per-SC dimension list ─────────────────────────────
+                try {
+                    const gaRes = await fetch('http://localhost:8000/gap-analysis');
+                    if (gaRes.ok) {
+                        const gaJson = await gaRes.json();
+                        if (gaJson.analysis) setGapAnalysis(gaJson);
+                    }
+                } catch {
+                    console.warn('[Report] FastAPI /gap-analysis offline');
+                }
+
                 const scDimensions = {};
                 Object.values(questionsMap).forEach(({ softControl, dimensionName, questionText }) => {
                     if (!scDimensions[softControl]) scDimensions[softControl] = [];
@@ -242,12 +249,11 @@ export default function ReportPage() {
                         unfavorable: dimInfo.unfavorable,
                         neutral:     dimInfo.neutral,
                         question:    questionText,
-                        performance: dimInfo.score >= 80 ? 'Strong' : dimInfo.score >= 70 ? 'Moderate' : 'Weak',
-                        color:       dimInfo.score >= 80 ? 'green'  : dimInfo.score >= 70 ? 'amber'    : 'red',
+                        performance: dimInfo.score >= 80 ? 'Strong'   : dimInfo.score >= 70 ? 'Moderate' : 'Weak',
+                        color:       dimInfo.score >= 80 ? 'green'    : dimInfo.score >= 70 ? 'amber'    : 'red',
                     });
                 });
 
-                // ── 10. Final controls array ───────────────────────────────────
                 const controls = SC_ORDER.map(sc => {
                     const empScore = empScores[sc] ?? 75;
                     const ldrScore = finalLdrScores[sc] ?? 0;
@@ -278,9 +284,7 @@ export default function ReportPage() {
         loadData();
     }, []);
 
-    const handleDownload = () => {
-        window.print();
-    };
+    const handleDownload = () => { window.print(); };
 
     if (loading) return (
         <div style={{
@@ -290,17 +294,12 @@ export default function ReportPage() {
             fontFamily: "'Inter','Segoe UI',system-ui,sans-serif",
         }}>
             <style>{`
-                @keyframes spin   { to { transform: rotate(360deg); } }
-                @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:.4} }
+                @keyframes spin    { to { transform: rotate(360deg); } }
+                @keyframes pulse2  { 0%,100%{opacity:1} 50%{opacity:.4} }
                 @keyframes barAnim { 0%{transform:translateX(-100%)} 100%{transform:translateX(280%)} }
                 @keyframes fadeUp2 { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
             `}</style>
-
-            <div style={{
-                textAlign: 'center',
-                animation: 'fadeUp2 .45s ease both',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
-            }}>
+            <div style={{ textAlign: 'center', animation: 'fadeUp2 .45s ease both', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
                 <div style={{ position: 'relative', width: 56, height: 56, marginBottom: 24 }}>
                     <div style={{ width: 56, height: 56, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.12)', borderTop: '3px solid #60a5fa', animation: 'spin 0.9s linear infinite', position: 'absolute', inset: 0 }} />
                     <div style={{ width: 38, height: 38, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.08)', borderTop: '2px solid #93c5fd', animation: 'spin 1.5s linear infinite reverse', position: 'absolute', top: 9, left: 9 }} />
@@ -328,11 +327,9 @@ export default function ReportPage() {
             {/* Sticky nav bar */}
             <div className="no-print" style={{
                 position: 'sticky', top: 0, zIndex: 100,
-                background: '#1e3a8a',
-                borderBottom: '1px solid #1e40af',
+                background: '#1e3a8a', borderBottom: '1px solid #1e40af',
                 padding: '0 32px', height: 56,
-                display: 'flex', alignItems: 'center',
-                justifyContent: 'space-between',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 boxShadow: '0 1px 0 #1e40af',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -348,18 +345,15 @@ export default function ReportPage() {
                         </div>
                     </div>
                 </div>
-
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                     <button
                         onClick={handleDownload}
                         style={{
                             display: 'flex', alignItems: 'center', gap: 7,
-                            background: 'rgba(255,255,255,0.15)',
-                            border: '1px solid rgba(255,255,255,0.3)',
+                            background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)',
                             color: '#fff', padding: '8px 20px', borderRadius: 8,
                             fontWeight: 600, fontSize: 13, cursor: 'pointer',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                            transition: 'background .15s, transform .15s',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)', transition: 'background .15s, transform .15s',
                         }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}
@@ -372,8 +366,18 @@ export default function ReportPage() {
                 </div>
             </div>
 
-            {/* Report container */}
-            <div id="report-wrapper" ref={reportRef} style={{ width: '210mm', margin: '28px auto 40px', background: 'white', borderRadius: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)' }}>
+            {/* ── Report container — ALL pages inside here ── */}
+            <div
+                id="report-wrapper"
+                ref={reportRef}
+                style={{
+                    width: '794px',
+                    margin: '28px auto 40px',
+                    background: 'white',
+                    borderRadius: 4,
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)',
+                }}
+            >
                 <CoverPage
                     respondents={`${respondents} respondents`}
                     date={new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -389,6 +393,9 @@ export default function ReportPage() {
                 ))}
                 {functionalInsights.length > 0 && (
                     <FunctionalInsightsPages data={functionalInsights} />
+                )}
+                {gapAnalysis && (
+                    <PolicyGapPages data={gapAnalysis} />
                 )}
             </div>
 
