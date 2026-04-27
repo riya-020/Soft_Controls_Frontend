@@ -168,7 +168,7 @@ const PersonaSelection = () => {
             <nav className={`ps-nav${scrolled ? ' scrolled' : ''}`}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <img src={kpmgLogo} alt="KPMG" style={{ height: 34, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+                        <img src={kpmgLogo} alt="KPMG" style={{ height: 34, objectFit: 'contain', filter: scrolled ? 'none' : 'brightness(0) invert(1)' }} />
                         <div style={{ width: 1, height: 20, background: scrolled ? '#e5e7eb' : 'rgba(255,255,255,0.25)' }} />
                         <span style={{ fontSize: 13, fontWeight: 700, color: scrolled ? '#111827' : '#fff', letterSpacing: '-.01em' }}>Risk Culture</span>
                     </div>
@@ -190,7 +190,7 @@ const PersonaSelection = () => {
                         <div style={{ opacity: mounted ? 1 : 0, transform: mounted ? 'translateY(0)' : 'translateY(20px)', transition: 'all .6s ease .1s', marginBottom: 24 }}>
                             <span className="ps-badge" style={{ background: 'rgba(255,255,255,0.12)', color: '#93c5fd', border: '1px solid rgba(147,197,253,0.3)' }}>
                                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', animation: 'pulse3 2s ease infinite' }} />
-                                Risk Culture Intelligence Platform
+                                Risk Culture assessment Platform
                             </span>
                         </div>
 

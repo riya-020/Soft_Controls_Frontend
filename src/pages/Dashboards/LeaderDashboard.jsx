@@ -799,6 +799,7 @@ const LeaderDashboard = () => {
             <div id="recommendations-anchor">
                 <RecommendationsSection />
             </div>
+            
             </div>{/* end content wrapper */}
         </div>
 
