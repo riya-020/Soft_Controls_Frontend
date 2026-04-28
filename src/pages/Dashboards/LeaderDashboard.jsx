@@ -8,45 +8,44 @@ import WelcomeSection from '../../components/leader/WelcomeSection';
 import ExecutiveOverviewSection from '../../components/leader/ExecutiveOverviewSection';
 import ComparativeAnalysisSection from '../../components/leader/ComparativeAnalysisSection';
 import FunctionWiseSection from '../../components/leader/FunctionWiseSection';
-import ReportsSection from '../../components/leader/ReportsSection';
 import RecommendationsSection from '../../components/RecommendationSection';
 import PolicyGapDashboard from '../../components/PolicyGapDashboard';
 
 const PILLAR_COLORS = {
-    'Role Modelling':          '#3b82f6',
-    'Discussability':          '#6366f1',
-    'Achievability':           '#8b5cf6',
-    'Enforcement':             '#a855f7',
-    'Clarity':                 '#ec4899',
-    'Transparency':            '#f43f5e',
-    'Commitment':              '#f97316',
+    'Role Modelling': '#3b82f6',
+    'Discussability': '#6366f1',
+    'Achievability': '#8b5cf6',
+    'Enforcement': '#a855f7',
+    'Clarity': '#ec4899',
+    'Transparency': '#f43f5e',
+    'Commitment': '#f97316',
     'Call Someone to Account': '#eab308',
 };
 
 const PARAM_MAP = {
-    role_modelling:          'Role Modelling',
-    open_to_discussion:      'Discussability',
-    achievability:           'Achievability',
-    enforcement:             'Enforcement',
-    clarity:                 'Clarity',
-    transparency:            'Transparency',
-    commitment:              'Commitment',
+    role_modelling: 'Role Modelling',
+    open_to_discussion: 'Discussability',
+    achievability: 'Achievability',
+    enforcement: 'Enforcement',
+    clarity: 'Clarity',
+    transparency: 'Transparency',
+    commitment: 'Commitment',
     call_someone_to_account: 'Call Someone to Account',
 };
 
 const normSC = (n) => {
     const map = {
         'call someone to account': 'Call Someone to Account',
-        'role modelling':          'Role Modelling',
-        'discussability':          'Discussability',
-        'open_to_discussion':      'Discussability',
-        'open to discussion':      'Discussability',
-        'openness to discussion':  'Discussability',
-        'achievability':           'Achievability',
-        'enforcement':             'Enforcement',
-        'clarity':                 'Clarity',
-        'transparency':            'Transparency',
-        'commitment':              'Commitment',
+        'role modelling': 'Role Modelling',
+        'discussability': 'Discussability',
+        'open_to_discussion': 'Discussability',
+        'open to discussion': 'Discussability',
+        'openness to discussion': 'Discussability',
+        'achievability': 'Achievability',
+        'enforcement': 'Enforcement',
+        'clarity': 'Clarity',
+        'transparency': 'Transparency',
+        'commitment': 'Commitment',
     };
     return map[(n || '').toLowerCase().trim()] || n;
 };
@@ -56,6 +55,7 @@ const LeaderDashboard = () => {
     const [pillarsData, setPillarsData] = useState([]);
     const [radarData, setRadarData] = useState([]);
     const [dimensionData, setDimensionData] = useState({});
+    const [functionData, setFunctionData] = useState({});
     const [kpiData, setKpiData] = useState({ rci: 0, respondents: 0, totalQuestions: 0, strongControls: { count: 0, items: [] }, weakControls: { count: 0, items: [] } });
     const [employeeLeaderData, setEmployeeLeaderData] = useState([]);
     const [selectedControl, setSelectedControl] = useState(null);
@@ -244,11 +244,11 @@ const LeaderDashboard = () => {
     useEffect(() => {
         const handleNav = (e) => {
             const map = {
-                overview:             'dashboard-overview',
-                'soft-controls':      'soft-controls-anchor',
-                analytics:            'analytics-anchor',
-                'question-insights':  'question-insights-anchor',
-                recommendations:      'recommendations-anchor',
+                overview: 'dashboard-overview',
+                'soft-controls': 'soft-controls-anchor',
+                analytics: 'analytics-anchor',
+                'question-insights': 'question-insights-anchor',
+                recommendations: 'recommendations-anchor',
             };
             const el = document.getElementById(map[e.detail?.section]);
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -258,28 +258,28 @@ const LeaderDashboard = () => {
     }, []);
 
     const [activeTab, setActiveTab] = useState('welcome');
+    const [sidebarOpen, setSidebarOpen] = useState(true);
     const navigate = useNavigate();
     const user = getCurrentUser();
     const initials = (user?.email?.[0] || 'L').toUpperCase();
 
     const NAV_ITEMS = [
-        { id: 'welcome',         label: 'Welcome',            icon: Home          },
-        { id: 'overview',        label: 'Executive Overview', icon: LayoutDashboard },
-        { id: 'comparative',     label: 'Comparative',        icon: GitCompare    },
-        { id: 'function',        label: 'Function Analysis',  icon: Building2     },
-        { id: 'recommendations', label: 'Recommendations',    icon: Sparkles      },
-        { id: 'reports',         label: 'Reports',            icon: FileText      },
-        { id: 'policy-gap',      label: 'Policy Gap',         icon: ShieldAlert   },
+        { id: 'welcome', label: 'Home', icon: Home },
+        { id: 'overview', label: 'Executive Overview', icon: LayoutDashboard },
+        { id: 'comparative', label: 'Comparative', icon: GitCompare },
+        { id: 'function', label: 'Function Analysis', icon: Building2 },
+        { id: 'recommendations', label: 'Recommendations', icon: Sparkles },
+        { id: 'policy-gap', label: 'Policy Gap', icon: ShieldAlert },
     ];
 
     const TAB_LABELS = {
-        welcome:         'Welcome',
-        overview:        'Executive Overview',
-        comparative:     'Comparative Analysis',
-        function:        'Function Analysis',
+        welcome: 'Home',
+        overview: 'Executive Overview',
+        comparative: 'Comparative Analysis',
+        function: 'Function Analysis',
         recommendations: 'Recommendations',
-        reports:         'Reports',
-        'policy-gap':    'Policy Gap',
+        reports: 'Reports',
+        'policy-gap': 'Policy Gap',
     };
 
     if (isLoading) {
@@ -291,123 +291,167 @@ const LeaderDashboard = () => {
     }
 
     return (
-        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', fontFamily: "'Inter','Segoe UI',system-ui,sans-serif", background: '#F7FAFC' }}>
+        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', fontFamily: "'Inter','Segoe UI',system-ui,sans-serif", background: '#f5f7fb' }}>
 
             {/* ── SIDEBAR ── */}
             <aside style={{
-                width: 240, flexShrink: 0,
-                background: '#004A9F',
+                width: sidebarOpen ? 240 : 64, flexShrink: 0,
+                background: 'linear-gradient(180deg, #5e72e4 0%, #825ee4 100%)',
                 display: 'flex', flexDirection: 'column',
                 height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 50,
+                transition: 'width 0.22s cubic-bezier(.4,0,.2,1)',
+                overflow: 'hidden',
+                boxShadow: '4px 0 24px rgba(94,114,228,0.18)',
             }}>
-                {/* Logo */}
-                <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <img src={kpmgLogo} alt="KPMG" style={{ height: 28, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
-                        <div>
-                            <p style={{ fontSize: 12, fontWeight: 700, color: '#fff', margin: 0, letterSpacing: '-0.01em' }}>Risk Culture</p>
-                            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Dashboard</p>
+                {/* Logo + toggle */}
+                <div style={{ padding: '14px 12px', borderBottom: '1px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 58 }}>
+                    {sidebarOpen && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, overflow: 'hidden' }}>
+                            <img src={kpmgLogo} alt="KPMG" style={{ height: 24, objectFit: 'contain', filter: 'brightness(0) invert(1)', flexShrink: 0 }} />
+                            <div style={{ overflow: 'hidden' }}>
+                                <p style={{ fontSize: 12, fontWeight: 700, color: '#fff', margin: 0, whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>Risk Culture</p>
+                                <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.55)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Analytics</p>
+                            </div>
                         </div>
-                    </div>
+                    )}
+                    <button
+                        onClick={() => setSidebarOpen(o => !o)}
+                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', flexShrink: 0, marginLeft: sidebarOpen ? 0 : 'auto', marginRight: sidebarOpen ? 0 : 'auto' }}
+                    >
+                        {sidebarOpen
+                            ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6" /></svg>
+                            : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
+                        }
+                    </button>
                 </div>
 
                 {/* Nav items */}
-                <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+                <nav style={{ flex: 1, padding: '10px 8px', overflowY: 'auto', overflowX: 'hidden' }}>
                     {NAV_ITEMS.map(item => {
                         const active = activeTab === item.id;
                         return (
                             <button
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
+                                title={!sidebarOpen ? item.label : undefined}
                                 style={{
-                                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                                    padding: '10px 12px', borderRadius: 8, border: 'none',
-                                    background: active ? 'rgba(255,255,255,0.15)' : 'transparent',
-                                    color: active ? '#fff' : 'rgba(255,255,255,0.65)',
+                                    width: '100%', display: 'flex', alignItems: 'center',
+                                    gap: sidebarOpen ? 10 : 0,
+                                    justifyContent: sidebarOpen ? 'flex-start' : 'center',
+                                    padding: sidebarOpen ? '9px 14px' : '9px 0',
+                                    borderRadius: 8, border: 'none',
+                                    background: active ? 'rgba(255,255,255,0.18)' : 'transparent',
+                                    color: active ? '#fff' : 'rgba(255,255,255,0.6)',
                                     fontSize: 13, fontWeight: active ? 700 : 500,
                                     cursor: 'pointer', textAlign: 'left',
-                                    borderLeft: active ? '3px solid #fff' : '3px solid transparent',
-                                    marginBottom: 2,
-                                    transition: 'all 0.15s',
+                                    borderLeft: active ? '3px solid rgba(255,255,255,0.9)' : '3px solid transparent',
+                                    marginBottom: 2, transition: 'all 0.15s', whiteSpace: 'nowrap',
+                                    boxShadow: active ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                                 }}
-                                onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+                                onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
                                 onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
                             >
                                 <item.icon size={15} style={{ flexShrink: 0 }} />
-                                {item.label}
+                                {sidebarOpen && item.label}
                             </button>
                         );
                     })}
+
+                    {/* View Report */}
+                    <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.12)', paddingTop: 10 }}>
+                        <button
+                            onClick={() => navigate('/report')}
+                            title={!sidebarOpen ? 'View Report' : undefined}
+                            style={{
+                                width: '100%', display: 'flex', alignItems: 'center',
+                                gap: sidebarOpen ? 10 : 0,
+                                justifyContent: sidebarOpen ? 'flex-start' : 'center',
+                                padding: sidebarOpen ? '9px 14px' : '9px 0',
+                                borderRadius: 8, border: '1px solid rgba(255,255,255,0.22)',
+                                background: 'rgba(255,255,255,0.1)',
+                                color: '#fff', fontSize: 13, fontWeight: 600,
+                                cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.15s',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.2)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+                        >
+                            <FileText size={15} style={{ flexShrink: 0 }} />
+                            {sidebarOpen && 'View Report'}
+                        </button>
+                    </div>
                 </nav>
 
                 {/* Bottom: user + logout */}
-                <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 4 }}>
-                        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-                            {initials}
+                <div style={{ padding: '10px 8px', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+                    {sidebarOpen && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px', marginBottom: 4, overflow: 'hidden' }}>
+                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+                                {initials}
+                            </div>
+                            <div style={{ overflow: 'hidden' }}>
+                                <p style={{ fontSize: 11, fontWeight: 600, color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</p>
+                                <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', margin: 0, textTransform: 'capitalize' }}>{user?.role}</p>
+                            </div>
                         </div>
-                        <div style={{ overflow: 'hidden' }}>
-                            <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email}</p>
-                            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', margin: 0, textTransform: 'capitalize' }}>{user?.role}</p>
-                        </div>
-                    </div>
+                    )}
                     <button
                         onClick={() => { logoutUser(); navigate('/', { replace: true }); }}
+                        title={!sidebarOpen ? 'Logout' : undefined}
                         style={{
-                            width: '100%', display: 'flex', alignItems: 'center', gap: 8,
-                            padding: '8px 12px', borderRadius: 8, border: 'none',
-                            background: 'transparent', color: 'rgba(255,255,255,0.6)',
-                            fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                            transition: 'all 0.15s',
+                            width: '100%', display: 'flex', alignItems: 'center',
+                            gap: sidebarOpen ? 8 : 0,
+                            justifyContent: sidebarOpen ? 'flex-start' : 'center',
+                            padding: sidebarOpen ? '8px 14px' : '8px 0',
+                            borderRadius: 8, border: 'none',
+                            background: 'transparent', color: 'rgba(255,255,255,0.55)',
+                            fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
                         }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#fff'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
                     >
-                        <LogOut size={14} /> Logout
+                        <LogOut size={14} style={{ flexShrink: 0 }} />
+                        {sidebarOpen && 'Logout'}
                     </button>
                 </div>
             </aside>
 
-            {/* ── MAIN AREA (offset by sidebar width) ── */}
-            <div style={{ marginLeft: 240, flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100vh', overflow: 'hidden' }}>
+            {/* ── MAIN AREA ── */}
+            <div style={{ marginLeft: sidebarOpen ? 240 : 64, flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100vh', overflow: 'hidden', transition: 'margin-left 0.22s cubic-bezier(.4,0,.2,1)' }}>
 
                 {/* ── TOP HEADER ── */}
                 <header style={{
-                    background: '#fff',
-                    borderBottom: '1px solid #E5E7EB',
+                    background: 'linear-gradient(87deg, #5e72e4 0%, #825ee4 100%)',
                     padding: '0 28px',
-                    height: 60,
+                    height: 58,
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     flexShrink: 0,
-                    position: 'sticky', top: 0, zIndex: 40,
+                    boxShadow: '0 4px 20px rgba(94,114,228,0.25)',
                 }}>
                     <div>
-                        <h1 style={{ fontSize: 16, fontWeight: 700, color: '#1F2937', margin: 0 }}>
-                            Good morning, Leader 👋
+                        <h1 style={{ fontSize: 15, fontWeight: 700, color: '#fff', margin: 0, letterSpacing: '-0.01em' }}>
+                            Welcome, Leader
                         </h1>
-                        <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{TAB_LABELS[activeTab]}</p>
+                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', margin: 0 }}>{TAB_LABELS[activeTab]}</p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <button
-                            onClick={() => navigate('/report')}
-                            style={{
-                                display: 'flex', alignItems: 'center', gap: 6,
-                                padding: '7px 14px', borderRadius: 8,
-                                background: '#004A9F', color: '#fff',
-                                border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                            }}
-                        >
-                            <FileText size={13} /> View Report
-                        </button>
-                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#004A9F', fontSize: 12, fontWeight: 700 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '2px solid rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700 }}>
                             {initials}
                         </div>
                     </div>
                 </header>
 
                 {/* ── CONTENT ── */}
-                <main style={{ flex: 1, overflowY: 'auto', padding: '24px 28px 40px', background: '#F7FAFC' }}>
-                    {activeTab === 'welcome' && <WelcomeSection pillarsData={pillarsData} dimensionData={dimensionData} />}
+                <main style={{ flex: 1, overflowY: 'auto', padding: '20px 24px 40px', background: '#f5f7fb' }}>
+                    {activeTab === 'welcome' && (
+                        <WelcomeSection
+                            pillarsData={pillarsData}
+                            dimensionData={dimensionData}
+                            onNavigateToOverview={(controlName) => {
+                                setSelectedControl(controlName);
+                                setActiveTab('overview');
+                            }}
+                        />
+                    )}
                     {activeTab === 'overview' && (
                         <ExecutiveOverviewSection
                             kpiData={kpiData}
@@ -431,7 +475,6 @@ const LeaderDashboard = () => {
                     )}
                     {activeTab === 'function' && <FunctionWiseSection />}
                     {activeTab === 'recommendations' && <RecommendationsSection />}
-                    {activeTab === 'reports' && <ReportsSection />}
                     {activeTab === 'policy-gap' && <PolicyGapDashboard />}
                 </main>
             </div>
