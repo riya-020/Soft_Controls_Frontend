@@ -223,14 +223,10 @@ const PersonaSelection = () => {
                             opacity: mounted ? 1 : 0, transform: mounted ? 'translateY(0)' : 'translateY(20px)',
                             transition: 'all .7s ease .5s',
                         }}>
-                            <button className="ps-btn-primary" onClick={() => navigate('/leader-login')} style={{ fontSize: 15, padding: '15px 28px' }}>
+                            <button className="ps-btn-primary" onClick={() => navigate('/login')} style={{ fontSize: 15, padding: '15px 28px' }}>
                                 <BarChart3 size={18} />
-                                Access Leadership Insights
+                                Login Here
                                 <ArrowRight size={16} />
-                            </button>
-                            <button className="ps-btn-secondary" onClick={() => navigate('/employee-login')} style={{ fontSize: 15, padding: '14px 28px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.25)' }}>
-                                <Users size={18} />
-                                Contribute to Survey
                             </button>
                         </div>
                     </div>

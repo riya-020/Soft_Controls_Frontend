@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "529a",
-      "email": "ghadgesanjana0504@gmail.com",
+      "email": "employee@kpmg.com",
       "password": "zxcvbnm",
       "role": "employee"
     },
@@ -20,7 +20,7 @@
     },
     {
       "id": "6f86",
-      "email": "Hello@kpmg.com",
+      "email": "partner@kpmg.com",
       "password": "zxcvbnm",
       "role": "leader"
     },

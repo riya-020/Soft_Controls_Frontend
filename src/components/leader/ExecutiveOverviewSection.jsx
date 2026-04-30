@@ -1,95 +1,142 @@
-import { useState, useEffect } from 'react';
-import {
-    ResponsiveContainer, Cell, PieChart, Pie,
-} from 'recharts';
+import React from 'react';
+import { ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { Users, ShieldCheck, AlertTriangle, ArrowRight, BarChart2 } from 'lucide-react';
 import SpiderChartWithDimensions from '../SpiderChartWithDimensions';
 import QuestionInsightsSection from '../QuestionInsightsSection';
 
-// ─── Shared Components ────────────────────────────────────────────────────────
+// ─── Shared style tokens ──────────────────────────────────────────────────────
+const FONT = "'Inter','Segoe UI',system-ui,sans-serif";
+const CARD = {
+    background: '#fff',
+    border: '1px solid #ebebeb',
+    borderRadius: 14,
+    boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+};
 
+// ─── RCI Gauge ────────────────────────────────────────────────────────────────
 const RCIGauge = ({ score }) => {
-    const status = score >= 80 ? 'Low Risk' : score >= 70 ? 'Medium Risk' : 'High Risk';
-    const statusColor = score >= 80 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#ef4444';
+    const riskLabel = score >= 80 ? 'Low Risk' : score >= 70 ? 'Medium Risk' : 'High Risk';
+    const riskCol   = score >= 80 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#ef4444';
+    const riskBg    = score >= 80 ? '#dcfce7' : score >= 70 ? '#fef3c7' : '#fee2e2';
 
     return (
-        <div style={{ height: 75, width: 130, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ height: 80, width: 140, position: 'relative', overflow: 'hidden' }}>
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                     <defs>
-                        <linearGradient id="gaugeGradient" x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0%" stopColor="#5e72e4" />
-                            <stop offset="100%" stopColor="#825ee4" />
+                        <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor="#2563eb" />
+                            <stop offset="100%" stopColor="#7c3aed" />
                         </linearGradient>
                     </defs>
-                    <Pie
-                        data={[{ value: 100 }]}
-                        dataKey="value"
-                        startAngle={180}
-                        endAngle={0}
-                        innerRadius={45}
-                        outerRadius={55}
-                        stroke="none"
-                        cy="100%"
-                        fill="#f1f5f9"
-                        isAnimationActive={false}
-                    />
-                    <Pie
-                        data={[{ value: score }, { value: 100 - score }]}
-                        dataKey="value"
-                        startAngle={180}
-                        endAngle={0}
-                        innerRadius={45}
-                        outerRadius={55}
-                        stroke="none"
-                        cy="100%"
-                        cornerRadius={6}
-                        isAnimationActive={true}
-                        animationDuration={1000}
-                    >
-                        <Cell fill="url(#gaugeGradient)" />
+                    <Pie data={[{ value: 100 }]} dataKey="value" startAngle={180} endAngle={0}
+                        innerRadius={48} outerRadius={58} stroke="none" cy="100%" fill="#f3f4f6" isAnimationActive={false} />
+                    <Pie data={[{ value: score }, { value: 100 - score }]} dataKey="value"
+                        startAngle={180} endAngle={0} innerRadius={48} outerRadius={58}
+                        stroke="none" cy="100%" cornerRadius={6} animationDuration={1000}>
+                        <Cell fill="url(#gaugeGrad)" />
                         <Cell fill="transparent" />
                     </Pie>
                 </PieChart>
             </ResponsiveContainer>
-            <div style={{ position: 'absolute', top: '75%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                <div style={{ fontSize: 18, fontWeight: 900, color: '#1e293b', lineHeight: 1 }}>{score}%</div>
-                <div style={{ fontSize: 7, fontWeight: 800, color: statusColor, textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2, background: `${statusColor}15`, padding: '1px 5px', borderRadius: 2 }}>{status}</div>
+            <div style={{ position: 'absolute', top: '72%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center' }}>
+                <div style={{ fontSize: 20, fontWeight: 900, color: '#111827', lineHeight: 1, fontFamily: FONT }}>{score}</div>
+                <div style={{ fontSize: 9, fontWeight: 700, color: riskCol, background: riskBg, padding: '2px 7px', borderRadius: 20, marginTop: 3, whiteSpace: 'nowrap' }}>{riskLabel}</div>
             </div>
         </div>
     );
 };
 
-const KpiCardNew = ({ title, value, subtitle, icon, color, progress }) => (
+// ─── KPI Card ─────────────────────────────────────────────────────────────────
+const KpiCard = ({ title, value, sub, icon: Icon, color, progress, delay = 0 }) => (
     <div style={{
-        background: '#fff',
-        borderRadius: 10,
-        padding: '10px 12px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-        borderTop: `2px solid ${color}`,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100%',
-        minHeight: 110
+        ...CARD,
+        padding: '16px 18px',
+        display: 'flex', flexDirection: 'column', gap: 10,
+        borderTop: `3px solid ${color}`,
+        animation: `eoFadeUp .4s ease ${delay}s both`,
     }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-            <span style={{ fontSize: 8, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.04em' }}>{title}</span>
-            <span style={{ fontSize: 11 }}>{icon}</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.08em', fontFamily: FONT }}>{title}</span>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: `${color}12`, display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
+                <Icon size={15} />
+            </div>
         </div>
         <div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>{value}</div>
-            <div style={{ fontSize: 9, color: subtitle.toLowerCase().includes('priority') ? '#ef4444' : '#22c55e', fontWeight: 600, marginTop: 2 }}>{subtitle}</div>
+            <p style={{ fontSize: 28, fontWeight: 800, color: '#111827', margin: 0, lineHeight: 1, letterSpacing: '-0.03em', fontFamily: FONT }}>{value}</p>
+            <p style={{ fontSize: 11, color: '#6b7280', margin: '4px 0 0', fontFamily: FONT }}>{sub}</p>
         </div>
-        {/* Fill empty space with a subtle trend/progress bar */}
-        <div style={{ marginTop: 8 }}>
-            <div style={{ height: 4, width: '100%', background: '#f1f5f9', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${progress || 65}%`, background: color, borderRadius: 2 }} />
-            </div>
+        <div style={{ height: 4, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${progress}%`, background: color, borderRadius: 3, transition: 'width 1s ease' }} />
         </div>
     </div>
 );
 
-// ─── Main Section ─────────────────────────────────────────────────────────────
+// ─── Section Header ───────────────────────────────────────────────────────────
+const SectionHeader = ({ kicker, title, sub }) => (
+    <div style={{ marginBottom: 16 }}>
+        {kicker && <p style={{ fontSize: 10, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 5px', fontFamily: FONT }}>{kicker}</p>}
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: '#111827', margin: 0, letterSpacing: '-0.02em', fontFamily: FONT }}>{title}</h2>
+        {sub && <p style={{ fontSize: 13, color: '#6b7280', margin: '4px 0 0', fontFamily: FONT }}>{sub}</p>}
+    </div>
+);
+
+// ─── CTA Banner ───────────────────────────────────────────────────────────────
+const CTABanner = ({ onNavigate }) => (
+    <div style={{
+        background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)',
+        border: '1px solid #bfdbfe',
+        borderRadius: 16,
+        padding: '24px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 20,
+        flexWrap: 'wrap',
+        animation: 'eoFadeUp 0.5s ease 0.4s both',
+    }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+                width: 44, height: 44, borderRadius: 12,
+                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0, boxShadow: '0 4px 12px rgba(37,99,235,0.3)',
+            }}>
+                <BarChart2 size={20} color="#fff" />
+            </div>
+            <div>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 3px', fontFamily: FONT }}>
+                    Up Next
+                </p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 2px', fontFamily: FONT }}>
+                    Ready to explore the full comparison?
+                </p>
+                <p style={{ fontSize: 12, color: '#6b7280', margin: 0, fontFamily: FONT }}>
+                    Navigate to Comparative Analysis to see how leadership perception aligns with employee experience.
+                </p>
+            </div>
+        </div>
+        <button
+            onClick={() => onNavigate?.('comparative')}
+            style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                color: '#fff', border: 'none', borderRadius: 10,
+                padding: '11px 20px', fontSize: 13, fontWeight: 700,
+                cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: FONT,
+                transition: 'opacity 0.2s, transform 0.2s',
+                boxShadow: '0 4px 14px rgba(37,99,235,0.35)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+        >
+            View Comparative Analysis
+            <ArrowRight size={15} />
+        </button>
+    </div>
+);
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
 const ExecutiveOverviewSection = ({
     kpiData,
     radarData,
@@ -97,48 +144,69 @@ const ExecutiveOverviewSection = ({
     selectedControl,
     setSelectedControl,
     reportingData,
+    onNavigate,
 }) => {
+    const rci = Math.round(kpiData?.rci || 74);
+    const respondents = kpiData?.respondents || 25;
+    const strong = kpiData?.strongControls?.count || 3;
+    const weak = kpiData?.weakControls?.count || 2;
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: FONT }}>
+            <style>{`
+                @keyframes eoFadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+                * { font-family: 'Inter','Segoe UI',system-ui,sans-serif !important; }
+            `}</style>
 
-            {/* ── Compact KPI Row ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+            {/* ── KPI Row ── */}
+            <div>
+                <SectionHeader kicker="At a Glance" title="Executive Summary" />
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr 1fr', gap: 14, alignItems: 'stretch' }}>
 
-                {/* RCI Score with Gauge */}
-                <div style={{
-                    background: '#fff',
-                    borderRadius: 12,
-                    padding: '10px 12px',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-                    borderTop: '2px solid #5e72e4',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 6,
-                    height: '100%',
-                    minHeight: 110
-                }}>
-                    <span style={{ fontSize: 8, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.04em', alignSelf: 'flex-start' }}>Risk Culture Index</span>
-                    <RCIGauge score={Math.round(kpiData?.rci || 62)} />
+                    {/* RCI Gauge card */}
+                    <div style={{
+                        ...CARD,
+                        padding: '16px 20px',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                        borderTop: '3px solid #2563eb', minWidth: 170,
+                        animation: 'eoFadeUp .4s ease 0s both',
+                    }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.08em', alignSelf: 'flex-start' }}>Risk Culture Index</span>
+                        <RCIGauge score={rci} />
+                    </div>
+
+                    <KpiCard title="Respondents" value={respondents} sub="employees this cycle" icon={Users} color="#6366f1" progress={Math.min(100, (respondents / 30) * 100)} delay={0.08} />
+                    <KpiCard title="Strong Controls" value={strong} sub="performing above threshold" icon={ShieldCheck} color="#22c55e" progress={(strong / 8) * 100} delay={0.16} />
+                    <KpiCard title="Needs Attention" value={weak} sub="require intervention" icon={AlertTriangle} color="#f59e0b" progress={(weak / 8) * 100} delay={0.24} />
                 </div>
+            </div>
 
-                <KpiCardNew title="Respondents" value={kpiData?.respondents || 842} subtitle="92% Completion" icon="👥" color="#6366f1" progress={92} />
-                <KpiCardNew title="Strong Controls" value={kpiData?.strongControls?.count || 3} subtitle="Top Performance" icon="🛡️" color="#22c55e" progress={75} />
-                <KpiCardNew title="Needs Attention" value={kpiData?.weakControls?.count || 2} subtitle="High Priority" icon="⚠️" color="#f59e0b" progress={40} />
+            {/* ── Question Insights ── */}
+            <div>
+                <SectionHeader kicker="Survey Analysis" title="Question Insights" sub="Key behavioral signals from the survey" />
+                <QuestionInsightsSection reportingData={reportingData} />
             </div>
 
             {/* ── Spider Chart ── */}
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                <SpiderChartWithDimensions
-                    radarData={radarData}
-                    selectedControl={selectedControl}
-                    setSelectedControl={setSelectedControl}
-                    dimensionData={dimensionData}
-                />
+            <div>
+                <SectionHeader kicker="Risk Assessment" title="Soft Control Performance vs Risk Thresholds" sub="Click any control to drill into its dimensions" />
+                <div style={{
+                    ...CARD,
+                    overflow: 'hidden',
+                    padding: 0,
+                    boxShadow: '0 2px 16px rgba(0,0,0,0.07)',
+                }}>
+                    <SpiderChartWithDimensions
+                        radarData={radarData}
+                        selectedControl={selectedControl}
+                        setSelectedControl={setSelectedControl}
+                        dimensionData={dimensionData}
+                    />
+                </div>
             </div>
 
-            {/* ── Consolidated Question Insights ── */}
-            <QuestionInsightsSection reportingData={reportingData} />
+            {/* ── CTA ── */}
+            <CTABanner onNavigate={onNavigate} />
         </div>
     );
 };

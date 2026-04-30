@@ -258,7 +258,7 @@ const SpiderChartWithDimensions = ({ radarData, selectedControl, setSelectedCont
     const controlColor = PILLAR_COLORS[selectedControl] || '#00338D';
 
     return (
-        <div className="bg-white border border-gray-200 border-t-4 border-t-kpmg-navy p-6 shadow-card rounded-b-md">
+        <div style={{ background: '#fff', borderRadius: 14, padding: '24px 28px' }}>
 
             {/* Hover tooltip */}
             <HoverTooltip
@@ -267,13 +267,11 @@ const SpiderChartWithDimensions = ({ radarData, selectedControl, setSelectedCont
                 visible={!!hoveredDim}
             />
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap' }}>
 
                 {/* Spider Chart */}
-                <div style={{ flex: '1 1 450px', minWidth: 300 }}>
-                    <h2 style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', textAlign: 'center', marginBottom: 2 }}>Soft Control Performance vs Risk Thresholds</h2>
-                    <p style={{ fontSize: 11, color: '#64748b', textAlign: 'center', marginBottom: 6 }}>Click a label to view dimension breakdown</p>
-                    <div style={{ width: '100%', height: 300 }}>
+                <div style={{ flex: '1 1 480px', minWidth: 320 }}>
+                    <div style={{ width: '100%', height: 420 }}>
                         <StableRadarChart
                             radarData={radarData}
                             selectedControl={selectedControl}
@@ -283,14 +281,15 @@ const SpiderChartWithDimensions = ({ radarData, selectedControl, setSelectedCont
                             CustomRadarTooltip={CustomRadarTooltip}
                         />
                     </div>
+                    <p style={{ fontSize: 11, color: '#9ca3af', textAlign: 'center', marginTop: 8, fontStyle: 'italic' }}>Click any label to view dimension breakdown</p>
                 </div>
 
                 {/* Dimension Panel */}
-                <div style={{ flex: '0 0 260px', minHeight: 380, display: 'flex', flexDirection: 'column', justifyContent: selectedControl ? 'flex-start' : 'center', alignItems: selectedControl ? 'stretch' : 'center' }}>
+                <div style={{ flex: '0 0 280px', minHeight: 420, display: 'flex', flexDirection: 'column', justifyContent: selectedControl ? 'flex-start' : 'center', alignItems: selectedControl ? 'stretch' : 'center' }}>
                     {!selectedControl ? (
-                        <div style={{ textAlign: 'center', color: '#94a3b8', padding: '24px 12px', border: '1px dashed #e2e8f0', borderRadius: 12 }}>
-                            <div style={{ fontSize: 24, marginBottom: 8 }}>👆</div>
-                            <p style={{ fontSize: 12, fontWeight: 500, color: '#64748b', lineHeight: 1.5 }}>Select a soft control to see dimension details</p>
+                        <div style={{ textAlign: 'center', color: '#94a3b8', padding: '32px 16px', border: '1px dashed #e5e7eb', borderRadius: 14, background: '#f9fafb' }}>
+                            <div style={{ fontSize: 32, marginBottom: 12 }}>👆</div>
+                            <p style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>Select a soft control<br />to see dimension details</p>
                         </div>
                     ) : (
                         <div style={{ animation: 'fadeInDim 0.2s ease' }}>

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, FileText } from 'lucide-react';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const RISK_CFG = {
@@ -85,15 +87,9 @@ const PolicyModal = ({ policy, onClose }) => {
                             <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
                                 Policy Detail
                             </div>
-                            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 12px', lineHeight: 1.3 }}>
+                            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '0 0 4px', lineHeight: 1.3 }}>
                                 {policy.policy_name}
                             </h3>
-                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                <Pill bg={rc.badge} color={rc.badgeText}>{rc.label}</Pill>
-                                <span style={{ background: ac.bg, color: ac.color, fontSize: 10, fontWeight: 700, padding: '2px 9px', borderRadius: 20 }}>
-                                    {ac.icon} {policy.alignment_status}
-                                </span>
-                            </div>
                         </div>
                         <button
                             onClick={onClose}
@@ -190,8 +186,7 @@ const PolicyModal = ({ policy, onClose }) => {
 
 // ─── Policy row (table view) ──────────────────────────────────────────────────
 const PolicyRow = ({ policy, index, onSelect }) => {
-    const rc = RISK_CFG[policy.risk_level]        || RISK_CFG.Medium;
-    const ac = ALIGN_CFG[policy.alignment_status] || ALIGN_CFG['Partially Aligned'];
+    const rc = RISK_CFG[policy.risk_level] || RISK_CFG.Medium;
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -201,58 +196,42 @@ const PolicyRow = ({ policy, index, onSelect }) => {
             onMouseLeave={() => setHovered(false)}
             style={{
                 cursor: 'pointer',
-                background: hovered ? '#F8FAFF' : index % 2 === 0 ? '#fff' : '#FAFBFF',
+                background: hovered ? '#F0F4FF' : index % 2 === 0 ? '#fff' : '#FAFBFF',
                 transition: 'background 0.12s',
                 borderBottom: '1px solid #F1F5F9',
             }}
         >
             {/* Risk indicator bar */}
             <td style={{ padding: '0 0 0 6px', width: 4 }}>
-                <div style={{ width: 4, height: 44, background: rc.ring, borderRadius: 2 }} />
+                <div style={{ width: 4, height: 52, background: rc.ring, borderRadius: 2 }} />
             </td>
 
-            {/* Policy name */}
-            <td style={{ padding: '12px 14px' }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#001B41', lineHeight: 1.35, marginBottom: 3 }}>
+            {/* Policy name + summary */}
+            <td style={{ padding: '14px 16px' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#001B41', lineHeight: 1.35, marginBottom: 4 }}>
                     {policy.policy_name}
                 </div>
-                <div style={{
-                    fontSize: 11, color: '#6B7280', lineHeight: 1.4,
-                    display: '-webkit-box', WebkitLineClamp: 1,
-                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                }}>
+                <div style={{ fontSize: 11.5, color: '#6B7280', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {policy.gap_summary}
                 </div>
             </td>
 
-            {/* Risk level */}
-            <td style={{ padding: '12px 10px', textAlign: 'center', whiteSpace: 'nowrap' }}>
-                <Pill bg={rc.badge} color={rc.badgeText}>{policy.risk_level}</Pill>
-            </td>
-
-            {/* Alignment */}
-            <td style={{ padding: '12px 10px', textAlign: 'center', whiteSpace: 'nowrap' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: ac.color }}>
-                    {ac.icon} {ac.label}
-                </span>
-            </td>
-
-            {/* Key drivers preview */}
-            <td style={{ padding: '12px 14px' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                    {(policy.key_drivers || []).slice(0, 3).map((d, i) => (
-                        <span key={i} style={{ background: '#EEF3F8', color: '#00338D', border: '1px solid #DBEAFE', padding: '2px 7px', borderRadius: 4, fontSize: 10, fontWeight: 600 }}>
+            {/* Key drivers */}
+            <td style={{ padding: '14px 16px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {(policy.key_drivers || []).slice(0, 4).map((d, i) => (
+                        <span key={i} style={{ background: '#EEF3F8', color: '#00338D', border: '1px solid #DBEAFE', padding: '3px 9px', borderRadius: 6, fontSize: 10.5, fontWeight: 600 }}>
                             {d}
                         </span>
                     ))}
-                    {(policy.key_drivers || []).length > 3 && (
-                        <span style={{ fontSize: 10, color: '#9CA3AF', padding: '2px 4px' }}>+{policy.key_drivers.length - 3}</span>
+                    {(policy.key_drivers || []).length > 4 && (
+                        <span style={{ fontSize: 10, color: '#9CA3AF', padding: '3px 4px' }}>+{policy.key_drivers.length - 4}</span>
                     )}
                 </div>
             </td>
 
             {/* Arrow */}
-            <td style={{ padding: '12px 16px 12px 4px', textAlign: 'right' }}>
+            <td style={{ padding: '14px 16px 14px 4px', textAlign: 'right' }}>
                 <span style={{ fontSize: 16, color: hovered ? '#00338D' : '#CBD5E1', transition: 'color 0.12s' }}>→</span>
             </td>
         </tr>
@@ -266,6 +245,7 @@ export default function PolicyGapDashboard() {
     const [error,          setError]          = useState(null);
     const [selectedPolicy, setSelectedPolicy] = useState(null);
     const [filterRisk,     setFilterRisk]     = useState('All');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch('http://localhost:8000/gap-analysis')
@@ -310,74 +290,11 @@ export default function PolicyGapDashboard() {
             <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
                 <div>
                     <h2 style={{ fontSize: 18, fontWeight: 700, color: '#001B41', margin: '0 0 3px', letterSpacing: '-0.02em' }}>
-                        Policy Compliance Gap Analysis
+                        Policy Compliance Analysis
                     </h2>
                     <p style={{ fontSize: 12, color: '#6B7280', margin: 0 }}>
                         {policies.length} policies assessed · Click any row to view full detail
                     </p>
-                </div>
-            </div>
-
-            {/* ── KPI row — 3 risk counters + 1 alignment summary ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1.6fr', gap: 12, marginBottom: 20 }}>
-
-                {/* Risk counters */}
-                {(['High', 'Medium', 'Low']).map(level => {
-                    const rc = RISK_CFG[level];
-                    return (
-                        <button
-                            key={level}
-                            onClick={() => setFilterRisk(filterRisk === level ? 'All' : level)}
-                            style={{
-                                background: filterRisk === level ? rc.badge : '#fff',
-                                border: `1px solid ${filterRisk === level ? rc.ring : '#E5E7EB'}`,
-                                borderTop: `3px solid ${rc.ring}`,
-                                borderRadius: 10, padding: '14px 16px',
-                                cursor: 'pointer', textAlign: 'left',
-                                transition: 'all 0.15s',
-                                boxShadow: filterRisk === level ? `0 4px 14px ${rc.ring}28` : '0 1px 3px rgba(0,0,0,0.05)',
-                            }}
-                        >
-                            <div style={{ fontSize: 28, fontWeight: 800, color: rc.ring, lineHeight: 1, marginBottom: 3 }}>
-                                {counts[level]}
-                            </div>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: rc.badgeText }}>{rc.label}</div>
-                            <div style={{ marginTop: 8 }}>
-                                <HeatBar
-                                    high={level === 'High' ? counts.High : 0}
-                                    medium={level === 'Medium' ? counts.Medium : 0}
-                                    low={level === 'Low' ? counts.Low : 0}
-                                />
-                            </div>
-                        </button>
-                    );
-                })}
-
-                {/* Alignment summary */}
-                <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderTop: '3px solid #00338D', borderRadius: 10, padding: '14px 16px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
-                        Alignment Breakdown
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                        {[
-                            { key: 'Aligned',           color: '#16A34A', icon: '●' },
-                            { key: 'Partially Aligned', color: '#D97706', icon: '◑' },
-                            { key: 'Not Aligned',       color: '#DC2626', icon: '○' },
-                        ].map(({ key, color, icon }) => {
-                            const count = alignCounts[key] || 0;
-                            const pct   = policies.length > 0 ? Math.round((count / policies.length) * 100) : 0;
-                            return (
-                                <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <span style={{ fontSize: 11, color, width: 12, flexShrink: 0 }}>{icon}</span>
-                                    <span style={{ fontSize: 11, color: '#374151', flex: 1, fontWeight: 500 }}>{key}</span>
-                                    <div style={{ width: 60, height: 5, background: '#F1F5F9', borderRadius: 3, overflow: 'hidden' }}>
-                                        <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 3 }} />
-                                    </div>
-                                    <span style={{ fontSize: 11, fontWeight: 700, color, width: 20, textAlign: 'right' }}>{count}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
                 </div>
             </div>
 
@@ -435,9 +352,7 @@ export default function PolicyGapDashboard() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                     <colgroup>
                         <col style={{ width: 4 }} />
-                        <col style={{ width: '38%' }} />
-                        <col style={{ width: '10%' }} />
-                        <col style={{ width: '13%' }} />
+                        <col style={{ width: '42%' }} />
                         <col />
                         <col style={{ width: 40 }} />
                     </colgroup>
@@ -446,12 +361,6 @@ export default function PolicyGapDashboard() {
                             <th style={{ padding: 0 }} />
                             <th style={{ padding: '10px 14px', textAlign: 'left', fontSize: 10.5, fontWeight: 700, color: '#374151', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                                 Policy
-                            </th>
-                            <th style={{ padding: '10px 10px', textAlign: 'center', fontSize: 10.5, fontWeight: 700, color: '#374151', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                                Risk
-                            </th>
-                            <th style={{ padding: '10px 10px', textAlign: 'center', fontSize: 10.5, fontWeight: 700, color: '#374151', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                                Alignment
                             </th>
                             <th style={{ padding: '10px 14px', textAlign: 'left', fontSize: 10.5, fontWeight: 700, color: '#374151', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                                 Key Drivers
@@ -462,7 +371,7 @@ export default function PolicyGapDashboard() {
                     <tbody>
                         {filtered.length === 0 ? (
                             <tr>
-                                <td colSpan={6} style={{ padding: '28px', textAlign: 'center', color: '#9CA3AF', fontSize: 13 }}>
+                                <td colSpan={4} style={{ padding: '28px', textAlign: 'center', color: '#9CA3AF', fontSize: 13 }}>
                                     No policies match this filter.
                                 </td>
                             </tr>
@@ -484,6 +393,61 @@ export default function PolicyGapDashboard() {
             <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 10, textAlign: 'right' }}>
                 Click any row to view full policy detail, expected vs actual behaviour, and recommended actions.
             </p>
+
+            {/* ── View Report CTA ── */}
+            <div style={{
+                marginTop: 20,
+                background: 'linear-gradient(135deg, #f0f4ff 0%, #e8f5e9 100%)',
+                border: '1px solid #c7d7fe',
+                borderRadius: 16,
+                padding: '24px 28px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 20,
+                flexWrap: 'wrap',
+                fontFamily: "'Inter','Segoe UI',system-ui,sans-serif",
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{
+                        width: 44, height: 44, borderRadius: 12,
+                        background: 'linear-gradient(135deg, #00338D, #0052cc)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0, boxShadow: '0 4px 12px rgba(0,51,141,0.3)',
+                    }}>
+                        <FileText size={20} color="#fff" />
+                    </div>
+                    <div>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#00338D', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 3px' }}>
+                            Final Step
+                        </p>
+                        <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 2px' }}>
+                            Ready to generate your full report?
+                        </p>
+                        <p style={{ fontSize: 12, color: '#6b7280', margin: 0 }}>
+                            View the complete Risk Culture Assessment report with all findings, scores, and recommendations.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    onClick={() => navigate('/report')}
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        background: 'linear-gradient(135deg, #00338D, #0052cc)',
+                        color: '#fff', border: 'none', borderRadius: 10,
+                        padding: '11px 20px', fontSize: 13, fontWeight: 700,
+                        cursor: 'pointer', whiteSpace: 'nowrap',
+                        transition: 'opacity 0.2s, transform 0.2s',
+                        boxShadow: '0 4px 14px rgba(0,51,141,0.35)',
+                        fontFamily: "'Inter','Segoe UI',system-ui,sans-serif",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                >
+                    View Full Report
+                    <ArrowRight size={15} />
+                </button>
+            </div>
 
             {/* ── Modal ── */}
             {selectedPolicy && (

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { AlertTriangle, TrendingUp, Lightbulb, ChevronDown, ChevronUp, Sparkles, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { AlertTriangle, TrendingUp, Lightbulb, ChevronDown, ChevronUp, Sparkles, RefreshCw, ArrowRight, FileText } from 'lucide-react';
 
 // ─── Normalize soft control names from API ────────────────────────────────────
 const normSC = n => {
@@ -25,18 +25,18 @@ const normSC = n => {
 // ─── Risk level config ────────────────────────────────────────────────────────
 const RISK_CONFIG = {
     High: {
-        barColor:    '#ef4444',
-        badgeBg:     '#fee2e2',
-        badgeText:   '#b91c1c',
-        headerBg:    '#fff5f5',
-        headerBorder:'#fecaca',
+        barColor:    '#6366f1',
+        badgeBg:     '#eef2ff',
+        badgeText:   '#4338ca',
+        headerBg:    '#f8faff',
+        headerBorder:'#c7d2fe',
     },
     Medium: {
-        barColor:    '#f59e0b',
-        badgeBg:     '#fef3c7',
-        badgeText:   '#92400e',
-        headerBg:    '#fffdf0',
-        headerBorder:'#fde68a',
+        barColor:    '#0891b2',
+        badgeBg:     '#ecfeff',
+        badgeText:   '#0e7490',
+        headerBg:    '#f0fdff',
+        headerBorder:'#a5f3fc',
     },
 };
 
@@ -45,10 +45,10 @@ const RecommendationCard = ({ rec, index }) => {
     const [expanded, setExpanded] = useState(index === 0);
 
     const isHigh      = rec.severity === 'High';
-    const accentColor = isHigh ? '#dc2626' : '#d97706';
-    const accentBg    = isHigh ? '#fff8f8' : '#fffdf0';
-    const accentBorder= isHigh ? '#fecaca' : '#fde68a';
-    const accentLight = isHigh ? '#fee2e2' : '#fef3c7';
+    const accentColor = isHigh ? '#6366f1' : '#0891b2';
+    const accentBg    = isHigh ? '#f8faff' : '#f0fdff';
+    const accentBorder= isHigh ? '#c7d2fe' : '#a5f3fc';
+    const accentLight = isHigh ? '#eef2ff' : '#ecfeff';
 
     return (
         <div style={{
@@ -115,10 +115,10 @@ const RecommendationCard = ({ rec, index }) => {
                     <div style={{ display: 'flex', gap: 10 }}>
                         <div style={{
                             width: 28, height: 28, borderRadius: 8,
-                            background: '#fff7ed', display: 'flex',
+                            background: '#eef2ff', display: 'flex',
                             alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                         }}>
-                            <AlertTriangle size={14} color="#f97316" />
+                            <AlertTriangle size={14} color="#6366f1" />
                         </div>
                         <div style={{ flex: 1 }}>
                             <p style={{
@@ -138,10 +138,10 @@ const RecommendationCard = ({ rec, index }) => {
                     <div style={{ display: 'flex', gap: 10 }}>
                         <div style={{
                             width: 28, height: 28, borderRadius: 8,
-                            background: '#eff6ff', display: 'flex',
+                            background: '#ecfeff', display: 'flex',
                             alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                         }}>
-                            <Lightbulb size={14} color="#3b82f6" />
+                            <Lightbulb size={14} color="#0891b2" />
                         </div>
                         <div style={{ flex: 1 }}>
                             <p style={{
@@ -164,7 +164,7 @@ const RecommendationCard = ({ rec, index }) => {
                             background: '#f0fdf4', display: 'flex',
                             alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                         }}>
-                            <TrendingUp size={14} color="#16a34a" />
+                            <TrendingUp size={14} color="#059669" />
                         </div>
                         <div style={{ flex: 1 }}>
                             <p style={{
@@ -277,8 +277,64 @@ const Skeleton = () => (
     </div>
 );
 
+// ─── CTA Banner ───────────────────────────────────────────────────────────────
+const CTABanner = ({ onNavigate }) => (
+    <div style={{
+        marginTop: 8,
+        background: 'linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%)',
+        border: '1px solid #fde68a',
+        borderRadius: 16,
+        padding: '24px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 20,
+        flexWrap: 'wrap',
+        animation: 'fadeUp 0.6s ease 0.3s both',
+    }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+                width: 44, height: 44, borderRadius: 12,
+                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+            }}>
+                <FileText size={20} color="#fff" />
+            </div>
+            <div>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 3px' }}>
+                    Up Next
+                </p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 2px' }}>
+                    Ready to review policy gaps?
+                </p>
+                <p style={{ fontSize: 12, color: '#6b7280', margin: 0 }}>
+                    Navigate to Policy Gap Analysis to see where your policies may need strengthening.
+                </p>
+            </div>
+        </div>
+        <button
+            onClick={() => onNavigate?.('policy-gap')}
+            style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                color: '#fff', border: 'none', borderRadius: 10,
+                padding: '11px 20px', fontSize: 13, fontWeight: 700,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+                transition: 'opacity 0.2s, transform 0.2s',
+                boxShadow: '0 4px 14px rgba(245,158,11,0.35)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+        >
+            View Policy Gap
+            <ArrowRight size={15} />
+        </button>
+    </div>
+);
+
 // ─── Main export ──────────────────────────────────────────────────────────────
-const RecommendationsSection = () => {
+const RecommendationsSection = ({ onNavigate }) => {
     const [data,        setData]        = useState(null);
     const [loading,     setLoading]     = useState(true);
     const [error,       setError]       = useState(null);
@@ -313,9 +369,9 @@ const RecommendationsSection = () => {
         <div id="recommendations-section" style={{
             borderRadius: 20, border: '1px solid #e5e7eb',
             borderTop: '4px solid #00338D',
-            background: 'linear-gradient(180deg,#fff 0%,#f6f9fd 100%)',
+            background: '#fff',
             padding: 24,
-            boxShadow: '0 20px 45px rgba(15,23,42,0.07)',
+            boxShadow: '0 2px 12px rgba(15,23,42,0.05)',
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
                 <Sparkles size={18} color="#00338D" />
@@ -344,6 +400,7 @@ const RecommendationsSection = () => {
             borderRadius: 20, border: '1px solid #fca5a5',
             borderTop: '4px solid #ef4444',
             background: '#fff', padding: 24,
+            boxShadow: '0 2px 12px rgba(15,23,42,0.05)',
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                 <Sparkles size={18} color="#ef4444" />
@@ -390,9 +447,9 @@ const RecommendationsSection = () => {
             borderRadius: 20,
             border: '1px solid #e5e7eb',
             borderTop: '4px solid #00338D',
-            background: 'linear-gradient(180deg,#ffffff 0%,#f6f9fd 100%)',
+            background: '#fff',
             padding: 24,
-            boxShadow: '0 20px 45px rgba(15,23,42,0.07)',
+            boxShadow: '0 2px 12px rgba(15,23,42,0.05)',
         }}>
 
             {/* ── Header ── */}
@@ -437,9 +494,9 @@ const RecommendationsSection = () => {
                 ].map(({ label, count }) => {
                     const active = filter === label;
                     const colors = label === 'High'
-                        ? { bg: '#fee2e2', text: '#b91c1c', activeBg: '#dc2626' }
+                        ? { bg: '#eef2ff', text: '#4338ca', activeBg: '#6366f1' }
                         : label === 'Medium'
-                        ? { bg: '#fef3c7', text: '#92400e', activeBg: '#d97706' }
+                        ? { bg: '#ecfeff', text: '#0e7490', activeBg: '#0891b2' }
                         : { bg: '#eff6ff', text: '#1d4ed8', activeBg: '#00338D' };
                     return (
                         <button
@@ -480,7 +537,13 @@ const RecommendationsSection = () => {
                 )}
             </div>
 
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            {/* ── CTA ── */}
+            <CTABanner onNavigate={onNavigate} />
+
+            <style>{`
+                @keyframes spin { to { transform: rotate(360deg); } }
+                @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+            `}</style>
         </div>
     );
 };

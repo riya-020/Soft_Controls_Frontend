@@ -137,6 +137,8 @@ const FunctionRadarProfile = () => {
     const [funcScores,       setFuncScores]       = useState(FALLBACK_FUNC_DATA);
     const [orgAverages,      setOrgAverages]      = useState(FALLBACK_ORG);
     const [isLoading,        setIsLoading]        = useState(true);
+    const [insights,         setInsights]         = useState(null);
+    const [insightsLoading,  setInsightsLoading]  = useState(false);
 
     useEffect(() => {
         const load = async () => {
@@ -203,6 +205,26 @@ const FunctionRadarProfile = () => {
         };
         load();
     }, []);
+
+    // ── Fetch functional insights when function changes ────────────────────────
+    useEffect(() => {
+        if (!selectedFunction) return;
+        const fetch_ = async () => {
+            setInsightsLoading(true);
+            setInsights(null);
+            try {
+                const res = await fetch(`http://localhost:8000/functional-insights?function=${encodeURIComponent(selectedFunction)}`);
+                if (!res.ok) throw new Error('API not available');
+                const data = await res.json();
+                setInsights(data);
+            } catch {
+                setInsights(null);
+            } finally {
+                setInsightsLoading(false);
+            }
+        };
+        fetch_();
+    }, [selectedFunction]);
 
     const chartData = METRICS.map(metric => {
         const fnScores = funcScores[selectedFunction] || {};
@@ -307,10 +329,146 @@ const FunctionRadarProfile = () => {
                     </RadarChart>
                 </ResponsiveContainer>
             </div>
+
+            {/* ── Functional Insights ── */}
+            {insightsLoading && (
+                <div style={{ marginTop: 16, padding: '14px 16px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 16, height: 16, border: '2px solid #1565c0', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+                    <span style={{ fontSize: 12, color: '#64748b' }}>Loading insights for {selectedFunction}…</span>
+                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                </div>
+            )}
+
+            {!insightsLoading && insights && (
+                <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+                    {/* Section header */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 9, background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        </div>
+                        <div>
+                            <p style={{ fontSize: 9, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 1px' }}>AI-Generated</p>
+                            <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                                AI Insights — {selectedFunction}
+                            </h3>
+                        </div>
+                    </div>
+
+                    {/* Summary */}
+                    {insights.summary && (
+                        <div style={{
+                            background: 'linear-gradient(135deg, #f8faff 0%, #f5f7ff 100%)',
+                            border: '1px solid #e0e7ff',
+                            borderRadius: 12, padding: '14px 16px',
+                            animation: 'insightFade 0.4s ease 0s both',
+                        }}>
+                            <p style={{ fontSize: 9.5, fontWeight: 700, color: '#6366f1', textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 6px' }}>Summary</p>
+                            <p style={{ fontSize: 12.5, color: '#3730a3', lineHeight: 1.7, margin: 0 }}>{insights.summary}</p>
+                        </div>
+                    )}
+
+                    {/* Strengths + Risks in 2 cols */}
+                    {(insights.strengths?.length > 0 || insights.risks?.length > 0) && (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                            {insights.strengths?.length > 0 && (
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 100%)',
+                                    border: '1px solid #a7f3d0',
+                                    borderRadius: 12, padding: '12px 14px',
+                                    animation: 'insightFade 0.4s ease 0.05s both',
+                                }}>
+                                    <p style={{ fontSize: 9.5, fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 8px' }}>Strengths</p>
+                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                        {insights.strengths.map((s, i) => (
+                                            <li key={i} style={{ display: 'flex', gap: 8, fontSize: 12, color: '#065f46', lineHeight: 1.55 }}>
+                                                <span style={{ color: '#10b981', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>{s}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            {insights.risks?.length > 0 && (
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #fef5f8 0%, #fdf2f8 100%)',
+                                    border: '1px solid #fbcfe8',
+                                    borderRadius: 12, padding: '12px 14px',
+                                    animation: 'insightFade 0.4s ease 0.1s both',
+                                }}>
+                                    <p style={{ fontSize: 9.5, fontWeight: 700, color: '#db2777', textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 8px' }}>Risk Areas</p>
+                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                        {insights.risks.map((r, i) => (
+                                            <li key={i} style={{ display: 'flex', gap: 8, fontSize: 12, color: '#831843', lineHeight: 1.55 }}>
+                                                <span style={{ color: '#ec4899', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>!</span>{r}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Recommendations */}
+                    {insights.recommendations?.length > 0 && (
+                        <div style={{
+                            background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: 12, padding: '12px 14px',
+                            animation: 'insightFade 0.4s ease 0.15s both',
+                        }}>
+                            <p style={{ fontSize: 9.5, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 10px' }}>Recommendations</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                {insights.recommendations.map((rec, i) => (
+                                    <div key={i} style={{ display: 'flex', gap: 10, fontSize: 12, color: '#334155', lineHeight: 1.6, animation: `insightFade 0.4s ease ${0.15 + i * 0.05}s both` }}>
+                                        <span style={{
+                                            width: 20, height: 20, borderRadius: '50%',
+                                            background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                                            color: '#fff', fontSize: 10, fontWeight: 800,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                                        }}>{i + 1}</span>
+                                        {rec}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Structured API response fields */}
+                    {(() => {
+                        const items = Array.isArray(insights) ? insights : [insights];
+                        const item = items.find(i => i.Function?.toLowerCase() === selectedFunction?.toLowerCase()) || items[0];
+                        if (!item) return null;
+                        const fields = [
+                            { key: 'ObservedRiskPattern',        label: 'Observed Risk Pattern',        bg: 'linear-gradient(135deg, #fef5f8 0%, #fdf2f8 100%)', border: '#fbcfe8', labelColor: '#db2777', textColor: '#831843' },
+                            { key: 'WhyRiskIsConcentratedHere',  label: 'Why Risk Is Concentrated Here', bg: 'linear-gradient(135deg, #fef3f2 0%, #fef2f2 100%)', border: '#fecaca', labelColor: '#dc2626', textColor: '#7f1d1d' },
+                            { key: 'FunctionalGap',              label: 'Functional Gap',                bg: 'linear-gradient(135deg, #f8faff 0%, #f5f7ff 100%)', border: '#e0e7ff', labelColor: '#6366f1', textColor: '#3730a3' },
+                            { key: 'BusinessImpact',             label: 'Business Impact',               bg: 'linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 100%)', border: '#a7f3d0', labelColor: '#059669', textColor: '#065f46' },
+                        ];
+                        return (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {fields.map(({ key, label, bg, border, labelColor, textColor }, idx) =>
+                                    item[key] ? (
+                                        <div key={key} style={{
+                                            background: bg, border: `1px solid ${border}`,
+                                            borderRadius: 12, padding: '14px 16px',
+                                            animation: `insightFade 0.4s ease ${0.1 + idx * 0.07}s both`,
+                                        }}>
+                                            <p style={{ fontSize: 9.5, fontWeight: 700, color: labelColor, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 6px' }}>{label}</p>
+                                            <p style={{ fontSize: 12.5, color: textColor, lineHeight: 1.7, margin: 0 }}>{item[key]}</p>
+                                        </div>
+                                    ) : null
+                                )}
+                            </div>
+                        );
+                    })()}
+
+                    <style>{`
+                        @keyframes insightFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+                    `}</style>
+                </div>
+            )}
         </div>
     );
 };
 
 export default FunctionRadarProfile;
-
-

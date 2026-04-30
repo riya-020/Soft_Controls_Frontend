@@ -6,6 +6,7 @@ import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import ReportPage from './pages/Report/ReportPage';
 import PolicyGapPage from './pages/PolicyGapPage';
+import UnifiedLogin from './pages/Auth/UnifiedLogin';
 
 // Dashboards
 import DashboardLayout from './layouts/DashboardLayout';
@@ -21,6 +22,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<PersonaSelection />} />
+        <Route path="/login" element={<UnifiedLogin />} />
 
         {/* Auth Routes */}
         <Route path="/admin-login" element={<Login role="admin" />} />
