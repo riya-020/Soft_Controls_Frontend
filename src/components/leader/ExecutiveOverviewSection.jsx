@@ -41,7 +41,7 @@ const RCIGauge = ({ score }) => {
             </ResponsiveContainer>
             <div style={{ position: 'absolute', top: '72%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center' }}>
                 <div style={{ fontSize: 20, fontWeight: 900, color: '#111827', lineHeight: 1, fontFamily: FONT }}>{score}</div>
-                <div style={{ fontSize: 9, fontWeight: 700, color: riskCol, background: riskBg, padding: '2px 7px', borderRadius: 20, marginTop: 3, whiteSpace: 'nowrap' }}>{riskLabel}</div>
+                {/* <div style={{ fontSize: 9, fontWeight: 700, color: riskCol, background: riskBg, padding: '2px 7px', borderRadius: 20, marginTop: 3, whiteSpace: 'nowrap' }}>{riskLabel}</div> */}
             </div>
         </div>
     );
@@ -130,7 +130,7 @@ const CTABanner = ({ onNavigate }) => (
             onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
             onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
         >
-            View Comparative Analysis
+            View Comparative Insights
             <ArrowRight size={15} />
         </button>
     </div>
@@ -159,7 +159,7 @@ const ExecutiveOverviewSection = ({
             `}</style>
 
             {/* ── KPI Row ── */}
-            <div>
+            <div id="kpi-top">
                 <SectionHeader kicker="At a Glance" title="Executive Summary" />
                 <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1fr 1fr', gap: 14, alignItems: 'stretch' }}>
 

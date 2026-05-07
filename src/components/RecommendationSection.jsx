@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, TrendingUp, Lightbulb, ChevronDown, ChevronUp, Sparkles, RefreshCw, ArrowRight, FileText } from 'lucide-react';
 
 // ─── Normalize soft control names from API ────────────────────────────────────
@@ -278,11 +279,13 @@ const Skeleton = () => (
 );
 
 // ─── CTA Banner ───────────────────────────────────────────────────────────────
-const CTABanner = ({ onNavigate }) => (
+const CTABanner = ({ onNavigate }) => {
+    const navigate = useNavigate();
+    return (
     <div style={{
         marginTop: 8,
-        background: 'linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%)',
-        border: '1px solid #fde68a',
+        background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)',
+        border: '1px solid #bfdbfe',
         borderRadius: 16,
         padding: '24px 28px',
         display: 'flex',
@@ -295,43 +298,44 @@ const CTABanner = ({ onNavigate }) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
                 width: 44, height: 44, borderRadius: 12,
-                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
             }}>
                 <FileText size={20} color="#fff" />
             </div>
             <div>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 3px' }}>
-                    Up Next
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 3px' }}>
+                    Final Step
                 </p>
                 <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 2px' }}>
-                    Ready to review policy gaps?
+                    Ready to generate your full report?
                 </p>
                 <p style={{ fontSize: 12, color: '#6b7280', margin: 0 }}>
-                    Navigate to Policy Gap Analysis to see where your policies may need strengthening.
+                    View the complete Risk Culture Assessment report with all findings and scores.
                 </p>
             </div>
         </div>
         <button
-            onClick={() => onNavigate?.('policy-gap')}
+            onClick={() => navigate('/report')}
             style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
                 color: '#fff', border: 'none', borderRadius: 10,
                 padding: '11px 20px', fontSize: 13, fontWeight: 700,
                 cursor: 'pointer', whiteSpace: 'nowrap',
                 transition: 'opacity 0.2s, transform 0.2s',
-                boxShadow: '0 4px 14px rgba(245,158,11,0.35)',
+                boxShadow: '0 4px 14px rgba(37,99,235,0.35)',
             }}
             onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
             onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
         >
-            View Policy Gap
+            View Full Report
             <ArrowRight size={15} />
         </button>
     </div>
-);
+    );
+};
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 const RecommendationsSection = ({ onNavigate }) => {

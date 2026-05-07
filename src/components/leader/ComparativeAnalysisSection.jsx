@@ -4,7 +4,7 @@ import {
     ResponsiveContainer, Legend,
 } from 'recharts';
 
-const ComparativeAnalysisSection = ({ employeeLeaderData, toneAtTopIndex, leaderChartLoading }) => {
+const ComparativeAnalysisSection = ({ employeeLeaderData, toneAtTopIndex, leaderChartLoading, onNavigate }) => {
     const [insightsData, setInsightsData] = useState({});
 
     useEffect(() => {
@@ -108,6 +108,20 @@ const ComparativeAnalysisSection = ({ employeeLeaderData, toneAtTopIndex, leader
                             );
                         })}
                     </div>
+                </div>
+            )}
+
+            {/* CTA */}
+            {onNavigate && (
+                <div style={{ background: 'linear-gradient(135deg,#f0fdf4,#eff6ff)', border: '1px solid #bbf7d0', borderRadius: 14, padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                    <div>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 0 3px' }}>Up Next</p>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: '#111827', margin: '0 0 2px' }}>Explore Function-Level Analysis</p>
+                        <p style={{ fontSize: 12, color: '#6b7280', margin: 0 }}>See how each function performs across soft controls.</p>
+                    </div>
+                    <button onClick={() => onNavigate('function')} style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                        Function Analysis →
+                    </button>
                 </div>
             )}
         </div>

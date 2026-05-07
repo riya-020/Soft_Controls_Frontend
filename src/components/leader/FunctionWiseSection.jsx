@@ -50,6 +50,7 @@ const StatPill = ({ label, value, color, bg, delay }) => (
     </FadeIn>
 );
 
+
 // ─── CTA Banner ───────────────────────────────────────────────────────────────
 const CTABanner = ({ onNavigate }) => (
     <FadeIn delay={0.1}>
@@ -79,15 +80,15 @@ const CTABanner = ({ onNavigate }) => (
                         Up Next
                     </p>
                     <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 2px', fontFamily: FONT }}>
-                        Ready to see AI-powered recommendations?
+                        Ready to explore compliance gaps?
                     </p>
                     <p style={{ fontSize: 12, color: '#6b7280', margin: 0, fontFamily: FONT }}>
-                        Navigate to Recommendations to see targeted actions for each soft control.
+                        Navigate to Compliance Analysis to see policy alignment across soft controls.
                     </p>
                 </div>
             </div>
             <button
-                onClick={() => onNavigate?.('recommendations')}
+                onClick={() => onNavigate?.('policy-gap')}
                 style={{
                     display: 'flex', alignItems: 'center', gap: 8,
                     background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
@@ -100,7 +101,7 @@ const CTABanner = ({ onNavigate }) => (
                 onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
             >
-                View Recommendations
+                View Compliance Analysis
                 <ArrowRight size={15} />
             </button>
         </div>

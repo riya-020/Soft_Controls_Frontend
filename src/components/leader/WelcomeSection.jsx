@@ -1,3 +1,4 @@
+import SoftControlsDashboard from './SoftControl';
 import { useState, useEffect, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import { ChevronRight, X, Users, Eye, Target, Lock, MessageCircle, Lightbulb, ShieldCheck, CheckCircle, ArrowRight, BarChart2, Database, Cpu, FileText, LayoutDashboard } from 'lucide-react';
@@ -523,66 +524,128 @@ const SCDrillDown = ({ name, liveDims, expandedDim, setExpandedDim, onClose }) =
 // --- AlternatingTimeline -----------------------------------------------------
 const TOOL_STEPS = [
     {
-        num: '01', side: 'left',
+        num: '01',
+        side: 'left',
         label: 'Leadership Interviews',
         icon: Users,
-        color: '#2563eb', bg: '#eff6ff',
-                desc: 'In-depth structured interviews are conducted with senior leaders across the organisation. These conversations capture leadership intent, tone from the top, and how risk culture is communicated and reinforced at the executive level.',
-        features: ['Structured interview protocol aligned to 8 soft controls', 'Captures leadership intent vs. observed behaviour', 'Identifies tone-from-the-top signals'],
+        color: '#2563eb',
+        bg: '#eff6ff',
+
+        desc: 'Structured leadership interviews capture leadership intent, accountability, and tone from the top across the organisation.',
+
+        features: [
+            'Aligned to 8 soft controls',
+            'Captures leadership perspective',
+            'Identifies behavioural signals',
+        ],
     },
+
     {
-        num: '02', side: 'right',
+        num: '02',
+        side: 'right',
         label: 'Employee Surveys',
         icon: MessageCircle,
-        color: '#7c3aed', bg: '#f5f3ff',
+        color: '#7c3aed',
+        bg: '#f5f3ff',
         img: leader8,
-        desc: 'Anonymous surveys are distributed across all functions and seniority levels. Employees share their lived experience of risk culture � how it feels on the ground, not just how it looks on paper.',
-        features: ['Anonymous to encourage honest responses', 'Covers all 8 soft control dimensions', 'Quantitative scoring + qualitative insights'],
+
+        desc: 'Anonymous employee surveys capture real workplace experiences, behaviours, and perceptions of organisational risk culture.',
+
+        features: [
+            'Anonymous employee feedback',
+            'Covers all risk culture dimensions',
+            'Quantitative and qualitative insights',
+        ],
     },
+
     {
-        num: '03', side: 'left',
+        num: '03',
+        side: 'left',
         label: 'Policy Ingestion',
         icon: FileText,
-        color: '#059669', bg: '#f0fdf4',
+        color: '#6366f1',
+        bg: '#eef2ff',
         img: leader9,
-        desc: 'Relevant governance documents, risk policies, and frameworks are ingested and mapped to the 8 soft control dimensions. This establishes a baseline of stated intent � what the organisation says it does.',
-        features: ['Automated policy-to-dimension mapping', 'Identifies gaps between policy and practice', 'Baseline of formal risk expectations established'],
+
+        desc: 'Policies, governance frameworks, and control documents are mapped to behavioural dimensions to establish expected standards.',
+
+        features: [
+            'Policy-to-dimension mapping',
+            'Defines expected behaviours',
+            'Identifies policy-practice gaps',
+        ],
     },
+
     {
-        num: '04', side: 'right',
-        label: 'KPMG Framework Scoring',
+        num: '04',
+        side: 'right',
+        label: 'Framework Scoring',
         icon: Database,
-        color: '#d97706', bg: '#fffbeb',
+        color: '#8b5cf6',
+        bg: '#f5f3ff',
         img: leader5,
-        desc: 'All data � interview transcripts, survey responses, and policy content � is scored using KPMG\'s proprietary risk culture framework. Each response is mapped to a soft control and dimension, producing a quantitative risk culture score.',
-        features: ['Proprietary KPMG scoring methodology', 'Scores across 8 controls � multiple dimensions', 'Identifies statistical patterns and outliers'],
+
+        desc: 'Interview responses, survey data, and policy content are scored across soft controls and behavioural dimensions.',
+
+        features: [
+            'Dimension-level scoring',
+            'Cross-control analysis',
+            'Identifies patterns and outliers',
+        ],
     },
+
     {
-        num: '05', side: 'left',
+        num: '05',
+        side: 'left',
         label: 'AI-Powered Analysis',
         icon: Cpu,
-        color: '#dc2626', bg: '#fff1f2',
+        color: '#3b82f6',
+        bg: '#eff6ff',
         img: leader7,
-        desc: 'Advanced AI analysis surfaces key themes, intent-practice gaps, and areas of concern that manual review would miss. The system identifies where leadership intent diverges from employee experience across functions and seniority levels.',
-        features: ['Natural language processing of interview transcripts', 'Cross-function and cross-level gap analysis', 'Intent vs. practice divergence quantified'],
+
+        desc: 'AI analysis identifies behavioural themes, cultural gaps, and misalignment between leadership intent and employee experience.',
+
+        features: [
+            'NLP-based insight extraction',
+            'Cross-functional comparisons',
+            'Intent vs. practice assessment',
+        ],
     },
+
     {
-        num: '06', side: 'right',
+        num: '06',
+        side: 'right',
         label: 'Interactive Dashboard',
         icon: LayoutDashboard,
-        color: '#0891b2', bg: '#ecfeff',
+        color: '#7c3aed',
+        bg: '#f5f3ff',
         img: leader15,
-        desc: 'Your personalised leadership dashboard presents all insights in an interactive, navigable format. Drill into any soft control, explore function-level breakdowns, compare leadership and employee perspectives, and track culture over time.',
-        features: ['Real-time interactive data exploration', 'Function-level and seniority-level breakdowns', 'Leadership vs. employee alignment view'],
+
+        desc: 'Insights are presented through an interactive dashboard with drilldowns, comparisons, and behavioural analytics.',
+
+        features: [
+            'Interactive insight exploration',
+            'Function and level breakdowns',
+            'Leadership vs. employee comparison',
+        ],
     },
+
     {
-        num: '07', side: 'left',
+        num: '07',
+        side: 'left',
         label: 'Recommendations & Report',
         icon: ArrowRight,
-        color: '#9333ea', bg: '#faf5ff',
+        color: '#9333ea',
+        bg: '#faf5ff',
         img: leader10,
-        desc: 'Prioritised, actionable recommendations are generated for each soft control area. A comprehensive PDF report is produced for board-level communication, regulatory submissions, and strategic planning.',
-        features: ['Prioritised by impact and urgency', 'Mapped to specific soft controls and dimensions', 'Board-ready PDF report with executive summary'],
+
+        desc: 'Actionable recommendations and executive-ready reports are generated to support decision-making and governance.',
+
+        features: [
+            'Prioritised recommendations',
+            'Mapped to controls and dimensions',
+            'Executive summary reporting',
+        ],
     },
 ];
 
@@ -892,7 +955,7 @@ const WelcomeSection = ({ pillarsData = [], dimensionData = {}, onNavigateToOver
                         opacity: heroVis ? 1 : 0, transform: heroVis ? 'translateY(0)' : 'translateY(10px)',
                         transition: 'all .5s ease 0s',
                     }}>
-                        KPMG Risk Culture � Q1 2026
+                        KPMG Risk Culture 2026
                     </p>
                     <h1 style={{
                         fontSize: 'clamp(28px,3.5vw,44px)', fontWeight: 900, color: '#fff',
@@ -986,7 +1049,7 @@ const WelcomeSection = ({ pillarsData = [], dimensionData = {}, onNavigateToOver
                     {[
                       { num: '8', label: 'Soft Controls', color: '#2563eb', bg: '#eff6ff' },
                       { num: '360°', label: 'Culture View', color: '#7c3aed', bg: '#f5f3ff' },
-                      { num: '3+', label: 'Dimensions each', color: '#059669', bg: '#f0fdf4' },
+                      { num: '4', label: 'Dimensions each', color: '#059669', bg: '#f0fdf4' },
                     ].map((s, i) => (
                       <div key={i} style={{
                         background: s.bg, borderRadius: 12, padding: '14px 12px', textAlign: 'center',
@@ -1007,9 +1070,8 @@ const WelcomeSection = ({ pillarsData = [], dimensionData = {}, onNavigateToOver
             </div>
 
             {/* 4. WHY IS IT IMPORTANT */}
-            <div ref={whyRef}>x
+            <div ref={whyRef}>
                 <div style={{ marginBottom: 20 }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 6px' }}>Significance</p>
                     <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111827', margin: 0, letterSpacing: '-0.025em' }}>Why is it Important?</h2>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -1030,9 +1092,6 @@ const WelcomeSection = ({ pillarsData = [], dimensionData = {}, onNavigateToOver
                             <div style={{ height: 140, overflow: 'hidden', position: 'relative' }}>
                                 <img className="why-img" src={card.img} alt={card.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
                                 <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(180deg, transparent 40%, ${card.accent}22 100%)` }} />
-                                <div style={{ position: 'absolute', top: 12, right: 12, width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
-                                    {card.icon}
-                                </div>
                             </div>
                             <div style={{ padding: '20px 22px 24px' }}>
                                 <h3 style={{ fontSize: 15, fontWeight: 800, color: '#111827', margin: '0 0 10px', letterSpacing: '-0.01em' }}>{card.title}</h3>
@@ -1043,107 +1102,12 @@ const WelcomeSection = ({ pillarsData = [], dimensionData = {}, onNavigateToOver
                 </div>
             </div>
 
-            {/* 5. THE 8 SOFT CONTROLS � above timeline */}
+            {/* 5. THE 8 SOFT CONTROLS above timeline */}
             <div>
-                <div
-                    ref={scHeaderRef}
-                    style={{
-                        marginBottom: 20,
-                        opacity: scHeaderVis ? 1 : 0, transform: scHeaderVis ? 'translateY(0)' : 'translateY(20px)',
-                        transition: 'opacity .55s ease, transform .55s ease',
-                    }}
-                >
-                   
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.1em', margin: '0 0 6px' }}>Interactive Framework</p>
-                    <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111827', margin: '0 0 8px', letterSpacing: '-0.025em' }}>The 8 Soft Controls</h2>
-                    
-                    <div style={{ background: '#eff6ff', border: '1px solid #dbeafe', borderRadius: 12, padding: '13px 18px', borderLeft: '4px solid #2563eb' }}>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 0 5px' }}>Why we break soft controls into dimensions</p>
-                        <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.65, margin: 0 }}>
-                            Soft controls are complex behaviours that cannot be measured by a single question. Breaking each into dimensions lets us pinpoint exactly where an organisation is strong and where it needs to improve, enabling targeted interventions.
-                        </p>
-                    </div>
-                </div>
-
-                {/* Each SC as an accordion row � expands inline */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {scList.map((name) => {
-                        const meta = SC_META[name] || {};
-                        const Icon = meta.icon || ShieldCheck;
-                        const isOpen = expandedSC === name;
-                        const dims = liveDimMap[name] || meta.dims || [];
-                        return (
-                            <div key={name} style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${isOpen ? meta.color + '40' : '#ebebeb'}`, transition: 'border-color .2s, box-shadow .2s', boxShadow: isOpen ? `0 4px 20px ${meta.color}12` : '0 1px 3px rgba(0,0,0,0.04)' }}>
-                                {/* Header row */}
-                                <div
-                                    onClick={() => { setExpandedSC(isOpen ? null : name); setExpandedDim(null); }}
-                                    style={{ background: isOpen ? `${meta.color}07` : '#fff', padding: '16px 20px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 14, transition: 'background .18s' }}
-                                    onMouseEnter={e => { if (!isOpen) e.currentTarget.style.background = '#f9fafb'; }}
-                                    onMouseLeave={e => { if (!isOpen) e.currentTarget.style.background = '#fff'; }}
-                                >
-                                    <div style={{ width: 4, height: 44, borderRadius: 4, background: meta.color, flexShrink: 0 }} />
-                                    <div style={{ width: 46, height: 46, borderRadius: '50%', overflow: 'hidden', border: `2px solid ${meta.color}30`, flexShrink: 0 }}>
-                                        {meta.img ? <img src={meta.img} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: meta.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon size={20} color={meta.color} /></div>}
-                                    </div>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <h3 style={{ fontSize: 15, fontWeight: 800, color: '#111827', margin: '0 0 2px' }}>{name}</h3>
-                                        <p style={{ fontSize: 12, color: '#9ca3af', margin: 0, fontStyle: 'italic' }}>{meta.tagline}</p>
-                                    </div>
-                                    <span style={{ fontSize: 11, fontWeight: 600, color: meta.color, background: meta.bg, borderRadius: 20, padding: '3px 10px', border: `1px solid ${meta.color}25`, flexShrink: 0 }}>{dims.length} dimensions</span>
-                                    <ChevronRight size={17} color={meta.color} style={{ flexShrink: 0, transition: 'transform .25s', transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }} />
-                                </div>
-
-                                {/* Expanded content */}
-                                {isOpen && (
-                                    <div style={{ background: '#fff', borderTop: `1px solid ${meta.color}18`, padding: '20px 24px', animation: 'drillDown .28s ease' }}>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
-                                            <div>
-                                                <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 0 7px' }}>What it means</p>
-                                                <p style={{ fontSize: 13.5, color: '#374151', lineHeight: 1.7, margin: 0 }}>{meta.definition}</p>
-                                            </div>
-                                            <div style={{ background: `${meta.color}08`, borderRadius: 10, padding: '13px 15px', borderLeft: `3px solid ${meta.color}` }}>
-                                                <p style={{ fontSize: 11, fontWeight: 700, color: meta.color, textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 0 6px' }}>Why it matters</p>
-                                                <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.65, margin: 0 }}>{meta.why}</p>
-                                            </div>
-                                        </div>
-                                        <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 0 10px' }}>Dimensions</p>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 8 }}>
-                                            {dims.map((d, di) => {
-                                                const isDimOpen = expandedDim === d.name;
-                                                return (
-                                                    <div key={di}>
-                                                        <div
-                                                            onClick={() => setExpandedDim(isDimOpen ? null : d.name)}
-                                                            style={{ background: isDimOpen ? meta.bg : '#f8f9fa', border: `1px solid ${isDimOpen ? meta.color + '50' : '#ebebeb'}`, borderRadius: isDimOpen ? '10px 10px 0 0' : 10, padding: '11px 14px', cursor: 'pointer', transition: 'all .18s', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}
-                                                            onMouseEnter={e => { if (!isDimOpen) { e.currentTarget.style.borderColor = meta.color + '55'; e.currentTarget.style.background = meta.bg; } }}
-                                                            onMouseLeave={e => { if (!isDimOpen) { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.background = '#f8f9fa'; } }}
-                                                        >
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                                <div style={{ width: 7, height: 7, borderRadius: '50%', background: meta.color, flexShrink: 0 }} />
-                                                                <span style={{ fontSize: 13, fontWeight: 700, color: isDimOpen ? meta.color : '#111827' }}>{d.name}</span>
-                                                            </div>
-                                                            <ChevronRight size={13} color={meta.color} style={{ flexShrink: 0, transition: 'transform .2s', transform: isDimOpen ? 'rotate(90deg)' : 'rotate(0deg)' }} />
-                                                        </div>
-                                                        {isDimOpen && (
-                                                            <div style={{ background: '#fff', border: `1px solid ${meta.color}30`, borderTop: 'none', borderRadius: '0 0 10px 10px', padding: '13px 15px', animation: 'drillDown .2s ease' }}>
-                                                                <p style={{ fontSize: 10, fontWeight: 700, color: meta.color, textTransform: 'uppercase', letterSpacing: '.08em', margin: '0 0 6px' }}>What this measures</p>
-                                                                <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.65, margin: '0 0 8px' }}>{d.desc || `Captures behavioural patterns related to ${d.name} within ${name}.`}</p>
-                                                                <p style={{ fontSize: 11, color: '#9ca3af', margin: 0 }}>Part of <strong style={{ color: meta.color }}>{name}</strong> � {dims.length} dimensions total</p>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
+               <SoftControlsDashboard />
             </div>
 
-            {/* 6. ALTERNATING TIMELINE � below soft controls */}
+            {/* 6. ALTERNATING TIMELINE below soft controls */}
             <AlternatingTimeline />
 
             {/* NAVIGATE CTA */}

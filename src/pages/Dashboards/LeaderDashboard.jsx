@@ -266,9 +266,9 @@ const LeaderDashboard = () => {
     const NAV_ITEMS = [
         { id: 'welcome', label: 'Home', icon: Home },
         { id: 'overview', label: 'Executive Overview', icon: LayoutDashboard },
-        { id: 'comparative', label: 'Comparative', icon: GitCompare },
+        { id: 'comparative', label: 'Comparative Insights', icon: GitCompare },
         { id: 'function', label: 'Function Analysis', icon: Building2 },
-        { id: 'policy-gap', label: 'Policy Gap', icon: ShieldAlert },
+        { id: 'policy-gap', label: 'Compliance Analysis', icon: ShieldAlert },
         { id: 'recommendations', label: 'Recommendations', icon: Sparkles },
     ];
 
@@ -449,9 +449,11 @@ const LeaderDashboard = () => {
                         <WelcomeSection
                             pillarsData={pillarsData}
                             dimensionData={dimensionData}
-                            onNavigateToOverview={(controlName) => {
-                                setSelectedControl(controlName);
+                            onNavigateToOverview={() => {
                                 setActiveTab('overview');
+                                setTimeout(() => {
+                                    document.getElementById('kpi-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }, 100);
                             }}
                         />
                     )}
@@ -480,7 +482,7 @@ const LeaderDashboard = () => {
                     )}
                     {activeTab === 'function' && <FunctionWiseSection onNavigate={setActiveTab} />}
                     {activeTab === 'recommendations' && <RecommendationsSection onNavigate={setActiveTab} />}
-                    {activeTab === 'policy-gap' && <PolicyGapDashboard />}
+                    {activeTab === 'policy-gap' && <PolicyGapDashboard onNavigate={setActiveTab} />}
                 </main>
             </div>
         </div>

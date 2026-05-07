@@ -285,55 +285,65 @@ const SpiderChartWithDimensions = ({ radarData, selectedControl, setSelectedCont
                 </div>
 
                 {/* Dimension Panel */}
-                <div style={{ flex: '0 0 280px', minHeight: 420, display: 'flex', flexDirection: 'column', justifyContent: selectedControl ? 'flex-start' : 'center', alignItems: selectedControl ? 'stretch' : 'center' }}>
+                <div style={{ flex: '0 0 300px', minHeight: 420, display: 'flex', flexDirection: 'column', justifyContent: selectedControl ? 'flex-start' : 'center', alignItems: selectedControl ? 'stretch' : 'center' }}>
                     {!selectedControl ? (
-                        <div style={{ textAlign: 'center', color: '#94a3b8', padding: '32px 16px', border: '1px dashed #e5e7eb', borderRadius: 14, background: '#f9fafb' }}>
-                            <div style={{ fontSize: 32, marginBottom: 12 }}>👆</div>
-                            <p style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>Select a soft control<br />to see dimension details</p>
+                        <div style={{ position: 'relative', width: '100%', padding: '40px 24px', borderRadius: 20, background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)', border: '1px solid #e2e8f0', boxShadow: '0 6px 24px rgba(15,23,42,0.04)', overflow: 'hidden', textAlign: 'center' }}>
+                            {/* subtle background dots */}
+                            <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'radial-gradient(circle at center, #6366f1 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
+                            {/* soft glow */}
+                            <div style={{ position: 'absolute', width: 160, height: 160, background: controlColor, opacity: 0.06, borderRadius: '50%', filter: 'blur(60px)', top: '-40px', right: '-40px' }} />
+                            <div style={{ position: 'relative', zIndex: 2 }}>
+                                
+                                <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 12, lineHeight: 1.2 }}>Dimension Insights</h3>
+                                <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.8, margin: '0 auto', maxWidth: 240 }}>Select a soft control from the radar chart to explore detailed behavioral dimensions, scoring patterns, and assessment observations.</p>
+                                <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center', gap: 6 }}>
+                                    {[1, 2, 3].map(d => (
+                                        <span key={d} style={{ width: d === 2 ? 22 : 6, height: 6, borderRadius: 999, background: d === 2 ? '#6366F1' : '#CBD5E1', transition: 'all 0.3s ease' }} />
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     ) : (
                         <div style={{ animation: 'fadeInDim 0.2s ease' }}>
                             {/* Panel header */}
-                            <div style={{ background: controlColor, borderRadius: '8px 8px 0 0', padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ background: controlColor, borderRadius: '10px 10px 0 0', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 14px rgba(0,0,0,0.06)' }}>
                                 <div>
-                                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 1 }}>Breakdown</p>
-                                    <p style={{ fontSize: 13, color: '#fff', fontWeight: 700, margin: 0 }}>{selectedControl}</p>
+                                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.72)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>Dimension Breakdown</p>
+                                    <p style={{ fontSize: 15, color: '#fff', fontWeight: 800, margin: 0 }}>{selectedControl}</p>
                                 </div>
-                                <button onClick={() => { setSelectedControl(null); setSelectedDim(null); }}
-                                    style={{ background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 4, color: '#fff', fontSize: 16, cursor: 'pointer', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>×</button>
+                                <button onClick={() => { setSelectedControl(null); setSelectedDim(null); }} style={{ background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 18, cursor: 'pointer', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, transition: 'all 0.2s ease' }}>×</button>
                             </div>
 
                             {/* Dimension rows */}
-                            <div style={{ border: `1px solid #e2e8f0`, borderTop: 'none', borderRadius: '0 0 8px 8px', overflow: 'hidden' }}>
-                                {dims.length === 0
-                                    ? <div style={{ padding: 12, color: '#94a3b8', fontSize: 12, textAlign: 'center' }}>No data available</div>
-                                    : dims.map((dim, i) => {
+                            <div style={{ border: '1px solid #e2e8f0', borderTop: 'none', borderRadius: '0 0 12px 12px', overflow: 'hidden', background: '#fff' }}>
+                                {dims.length === 0 ? (
+                                    <div style={{ padding: 18, color: '#94a3b8', fontSize: 12, textAlign: 'center' }}>No dimension data available</div>
+                                ) : (
+                                    dims.map((dim, i) => {
                                         const isActive = selectedDim?.name === dim.name;
                                         const isHov = hoveredDim === dim.name;
-                                        // Using consistent theme color for dimension bars
-                                        const barColor = controlColor;
                                         return (
                                             <div key={i}
                                                 onClick={() => setSelectedDim(isActive ? null : dim)}
                                                 onMouseEnter={e => handleHover(dim.name, e)}
                                                 onMouseMove={handleMouseMove}
                                                 onMouseLeave={() => handleHover(null)}
-                                                style={{ padding: '10px 14px', background: isActive ? `${controlColor}08` : isHov ? '#f8fafc' : '#fff', borderBottom: i < dims.length - 1 ? '1px solid #f1f5f9' : 'none', cursor: 'pointer', transition: 'all 0.1s' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-                                                    <p style={{ fontSize: 11, fontWeight: isActive ? 700 : 500, color: '#334155', margin: 0, flex: 1, lineHeight: 1.3 }}>{dim.name}</p>
-                                                    <span style={{ fontSize: 13, fontWeight: 700, color: barColor, flexShrink: 0 }}>{dim.score}</span>
+                                                style={{ padding: '12px 16px', background: isActive ? `${controlColor}08` : isHov ? '#f8fafc' : '#fff', borderBottom: i < dims.length - 1 ? '1px solid #f1f5f9' : 'none', cursor: 'pointer', transition: 'all 0.18s ease' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+                                                    <p style={{ fontSize: 11, fontWeight: isActive ? 700 : 600, color: '#334155', margin: 0, flex: 1, lineHeight: 1.4 }}>{dim.name}</p>
+                                                    <span style={{ fontSize: 14, fontWeight: 800, color: controlColor, marginLeft: 10 }}>{dim.score}</span>
                                                 </div>
-                                                <div style={{ height: 4, background: '#f1f5f9', borderRadius: 2, marginBottom: 2 }}>
-                                                    <div style={{ width: `${dim.score}%`, height: '100%', background: barColor, borderRadius: 2, transition: 'width 0.4s ease', opacity: 0.8 }} />
+                                                <div style={{ height: 5, background: '#eef2f7', borderRadius: 999, overflow: 'hidden', marginBottom: 4 }}>
+                                                    <div style={{ width: `${dim.score}%`, height: '100%', background: controlColor, borderRadius: 999, transition: 'width 0.5s ease' }} />
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <span style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600 }}>{bandLabel(dim.score)}</span>
-                                                    {dim.favorable > 0 && <span style={{ fontSize: 9, color: '#cbd5e1' }}>{dim.favorable}% fav.</span>}
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <span style={{ fontSize: 9, color: '#64748b', fontWeight: 700, letterSpacing: '0.03em' }}>{bandLabel(dim.score)}</span>
+                                                    {dim.favorable > 0 && <span style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600 }}>{dim.favorable}% favorable</span>}
                                                 </div>
                                             </div>
                                         );
                                     })
-                                }
+                                )}
                             </div>
                         </div>
                     )}

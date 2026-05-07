@@ -239,7 +239,7 @@ const PolicyRow = ({ policy, index, onSelect }) => {
 };
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
-export default function PolicyGapDashboard() {
+export default function PolicyGapDashboard({ onNavigate }) {
     const [data,           setData]           = useState(null);
     const [loading,        setLoading]        = useState(true);
     const [error,          setError]          = useState(null);
@@ -422,15 +422,15 @@ export default function PolicyGapDashboard() {
                             Final Step
                         </p>
                         <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 2px' }}>
-                            Ready to generate your full report?
+                            Ready to see AI-powered recommendations?
                         </p>
                         <p style={{ fontSize: 12, color: '#6b7280', margin: 0 }}>
-                            View the complete Risk Culture Assessment report with all findings, scores, and recommendations.
+                            Navigate to Recommendations to see targeted actions for each soft control.
                         </p>
                     </div>
                 </div>
                 <button
-                    onClick={() => navigate('/report')}
+                    onClick={() => onNavigate?.('recommendations')}
                     style={{
                         display: 'flex', alignItems: 'center', gap: 8,
                         background: 'linear-gradient(135deg, #00338D, #0052cc)',
@@ -444,7 +444,7 @@ export default function PolicyGapDashboard() {
                     onMouseEnter={e => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                     onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
-                    View Full Report
+                    View Recommendations
                     <ArrowRight size={15} />
                 </button>
             </div>
